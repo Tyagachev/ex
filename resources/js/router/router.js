@@ -1,0 +1,48 @@
+import {createRouter, createWebHistory} from "vue-router";
+
+const routes = [
+    {
+        path: '/',
+        name: 'main',
+        redirect: '/posts',
+        component: () => import('../pages/App.vue')
+    },
+    {
+        path: '/login',
+        name: 'login.page',
+        component: () => import('../pages/Auth/Login/Login.vue')
+    },
+    {
+        path: '/register',
+        name: 'register.page',
+        component: () => import('../pages/Auth/Registration/Registration.vue')
+    },
+    {
+        path: '/posts',
+        name: 'posts.page',
+        component: () => import('@/pages/posts/index.vue')
+    },
+    {
+        path: '/posts/create',
+        name: 'posts.create',
+        component: () => import('@/pages/posts/create.vue')
+    },
+    {
+        path: '/posts/edit/:id',
+        name: 'posts.edit',
+        component: () => import('@/pages/posts/edit.vue')
+    },
+    {
+        path: '/posts/show/:id',
+        name: 'posts.show',
+        component: () => import('@/pages/posts/show.vue')
+    }
+]
+
+const router = createRouter({
+    history: createWebHistory(),
+    routes
+});
+
+export default router
+

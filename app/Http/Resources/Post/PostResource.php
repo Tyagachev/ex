@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Http\Resources\Post;
+
+use App\Http\Resources\UserResource;
+use App\Models\Comment;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class PostResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        $user = new UserResource($this->whenLoaded('user'));
+
+        $commentsCount = Comment::query()
+            ->where('post_id', '=', $this->id)
+            ->get()
+            ->count();
+
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'content' => $this->content,
+            'viewCount' => $this->view,
+            'createdAtHuman' => $this->created_at->diffForHumans(),
+            'updatedAtHuman' => $this->updated_at->diffForHumans(),
+            'user' => $user->resolve(),
+            'commetsCount' => $commentsCount,
+            'votes' => count($this->votes) ? $this->votes : [0],
+            'totalVotes' => $this->totalVotes(),
+            'blocks' => $this->blocks,
+            'shareCount' => $this->share_count
+        ];
+    }
+}

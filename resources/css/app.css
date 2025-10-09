@@ -1,0 +1,121 @@
+@import '@fortawesome/fontawesome-free/css/all.css';
+@import 'tailwindcss';
+@import "./posts.css";
+@import "./comments.css";
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.container {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+.text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+}
+
+.text-red-500 {
+    color: #ef4444;
+}
+
+.quote-block {
+    position: relative;
+    margin: 5px auto;
+    border-radius: 0.375rem;
+    padding: 30px 30px;
+    background-color: rgba(65, 65, 65, 0.32);
+    border-color: rgb(107 114 128);
+    border-left: 2px solid #ff6b6b;
+    font-size: 13px;
+    line-height: 1;
+    color: #b7cad7;
+}
+
+.quote-block::before,
+.quote-block::after {
+    position: absolute;
+    font-size: 4em;
+    color: #ff6b6b;
+}
+
+.quote-block::before {
+    content: "“";
+    top: 10px;
+    left: 10px;
+}
+
+.quote-block::after {
+    content: "”";
+    right: 10px;
+    bottom: -20px;
+}
+
+.quote-block p {
+    margin: 0;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #121212;
+}
+.container {
+    width: 1000px;
+    margin: 0 auto;
+}
+ul {
+    list-style: auto;
+}
+
+li {
+    list-style: auto;
+}
+
+.total_white {
+    color: white;
+}
+
+.total_green {
+    color: #2bf10d;
+}
+
+.total_red {
+    color: red;
+}
+
+a {
+//color: blue!important;
+//text-decoration: underline;
+}
+
+
+html, body, #app {
+    height: 100%;
+}
+
+.lt {
+    scrollbar-width: thin;
+    scrollbar-color: #c5c5c5 #f1f1f1;
+}
+
+.lt::-webkit-scrollbar {
+    width: 8px;
+}
+
+.lt::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.lt::-webkit-scrollbar-thumb {
+    background: #c5c5c5;
+    border-radius: 4px;
+}
+
+.lt::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
