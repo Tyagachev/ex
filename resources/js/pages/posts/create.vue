@@ -64,7 +64,7 @@
                 type="button"
                 @click="showMenu = !showMenu"
                 class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl
-         shadow-md transition transform hover:scale-110 hover:bg-blue-500 focus:outline-none"
+         shadow-md transition transform hover:scale-110 hover:bg-blue-500 focus:outline-none cursor-pointer"
                 :disabled="imageBlocksCount >= 10"
                 :class="{ 'opacity-50 cursor-not-allowed': imageBlocksCount >= 10 }"
             >
@@ -91,7 +91,7 @@
         </div>
         <BlueButton
             @click="submitContent"
-            class="submit-btn my-6"
+            class="submit-btn my-6 cursor-pointer"
             :disabled="title.length === 0 || title.length > 255"
         >
             Отправить
@@ -136,6 +136,7 @@ const imageBlocksCount = computed(() => {
     });
     return imageBlocks.length;
 });
+
 const handleFileUpload = (e, index) => {
     const file = e.target.files[0];
 
@@ -143,7 +144,6 @@ const handleFileUpload = (e, index) => {
         return;
     }
 
-    // Правильное обращение к свойствам блока
     blocks.value[index].file = file;
     blocks.value[index].preview = URL.createObjectURL(file);
 }

@@ -1,0 +1,21 @@
+#nprogress .spinner {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    right: auto !important;
+}
+
+/* Увеличить спиннер */
+#nprogress .spinner-icon {
+    width: 40px !important;
+    height: 40px !important;
+    border-width: 3px !important;
+}
+
+#nprogress .spinner {
+    transition: none !important; /* убрать плавное исчезновение */
+}
+
+#nprogress .spinner.nprogress-custom-parent {
+    display: none !important; /* мгновенно скрыть */
+}

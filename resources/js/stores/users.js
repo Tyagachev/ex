@@ -25,7 +25,7 @@ export const useUserStore = defineStore('user', {
                 localStorage.setItem('token', res.data.token);
 
                 // Устанавливаем заголовок авторизации для будущих запросов
-                axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
+                //axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
 
                 return res.data;
             } catch (error) {

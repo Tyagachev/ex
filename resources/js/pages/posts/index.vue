@@ -82,7 +82,7 @@
                                                 <div class="mr-1 text-white" ><i class="fa fa-eye-slash" aria-hidden="true"></i></div>
                                                 <div class="text-white">Скрыть</div>
                                             </button>
-                                            <button @click.prevent="destroy(post)" class="menu-item">
+                                            <button @click.prevent="destroyPost.destroyPost(post)" class="menu-item">
                                                 <div class="mr-1 text-red-500"><i class="fa fa-trash" aria-hidden="true"></i></div>
                                                 <div class="text-red-500">Удалить</div>
                                             </button>
@@ -108,7 +108,7 @@
                             </div>
                             <div class="post-footer">
                                 <!--Кнопки голосования-->
-                                <div v-if="authUser?.id !== post.user.id" class="vote-panel flex items-center">
+                                <div v-if="user?.id !== post.user.id" class="vote-panel flex items-center">
                                     <button @click.prevent="upVote(post)" class="vote-btn">
                                             <span>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 127 124.848">
@@ -219,11 +219,16 @@ onMounted(async () => {
     await postStore.getPosts();
 });
 
-const postStore = usePostsStore();
-const userStore = useUserStore();
+const posts = computed(() => postStore.allPosts);
+const user = computed(() => userStore.u)
+
 const store = useStore();
 const router = useRouter();
-const {user, isAuthenticated} = useAuth();
+
+const postStore = usePostsStore();
+const userStore = useUserStore();
+const destroyPost = usePostsStore();
+
 const authUser = reactive(user);
 const activeMenu = ref(null);
 const url = window.location.origin;
@@ -233,8 +238,6 @@ const showImageModal = ref(false);
 const currentImage = ref("")
 const currentImageAlt = ref("")
 
-const posts = computed(() => postStore.allPosts);
-const u = computed(() => userStore.u)
 const avatarColor = (author) => {
     const str = (author || "u").toLowerCase();
     let hash = 0;
@@ -328,13 +331,6 @@ const postShow = (post) => {
         params: {id: post.id}
     });
 }
-
-const destroy = (post) => {
-    console.log(post);
-}
-
-
-
 
 </script>
 

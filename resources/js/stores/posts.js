@@ -1,8 +1,9 @@
 import axios from "axios";
 import {defineStore} from "pinia";
 import {useRouter} from "vue-router";
+import router from "../router/router.js";
 
-const router = useRouter();
+
 
 export const usePostsStore = defineStore('posts', {
     state: () => ({
@@ -12,13 +13,25 @@ export const usePostsStore = defineStore('posts', {
         allPosts: (state) => state.posts,
     },
     actions: {
-        //Получение постов
+        /**
+         * Получение постов
+         *
+         * @returns {Promise<void>}
+         */
         async getPosts() {
                 const res = await axios.get('/api/posts');
                 this.posts = res.data;
         },
-        //Отправка в БД
-        async storePosts(title, from, blocks){
+
+        /**
+         * Отправка в БД
+         *
+         * @param title
+         * @param from
+         * @param blocks
+         * @returns {Promise<void>}
+         */
+        async storePosts(title, from, blocks) {
             const titleText = String(title.value || ''); // Гарантируем, что это строка
             if (!titleText.trim()) return;
 
@@ -40,12 +53,23 @@ export const usePostsStore = defineStore('posts', {
                     }
                 }
             });
-            const res = await axios.post('/api/posts/store', { formData });
+            const res = await axios.post('/api/posts', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
             if (res.status === 200) {
-                router.push({
+                await router.push({
                     name: 'main',
                 });
             }
-        }
+        },
+    async destroyPost(post) {
+            const res = await axios.delete(`/api/posts/${post.id}`);
+            if (res.status === 200) {
+                await this.getPosts()
+            }
+    }
     },
 })

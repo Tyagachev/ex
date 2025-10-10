@@ -21,6 +21,7 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^6.7.2",
         "@tailwindcss/forms": "^0.5.10",
+        "nprogress": "^0.2.0",
         "pinia": "^3.0.3",
         "quill": "^2.0.3",
         "vue-router": "^4.3.0",
