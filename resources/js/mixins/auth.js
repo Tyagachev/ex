@@ -2,7 +2,7 @@ import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 
 export default function useAuth() {
-    const store = useStore()
+    //const store = useStore()
 
     // computed для реактивности
     //const user = computed(() => store.state.user)

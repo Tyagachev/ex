@@ -4,7 +4,7 @@
 
 <script setup>
 defineOptions({
-    name: "edit"
+    name: "Edit"
 })
 </script>
 

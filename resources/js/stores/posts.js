@@ -1,26 +1,45 @@
 import axios from "axios";
 import {defineStore} from "pinia";
-import {useRouter} from "vue-router";
 import router from "../router/router.js";
+import NProgress from "nprogress";
 
 
 
 export const usePostsStore = defineStore('posts', {
     state: () => ({
-        posts: []
+        posts: [],
+        postShow: {},
+        loading: false,
     }),
     getters: {
         allPosts: (state) => state.posts,
+        post: (state) => state.postShow
     },
     actions: {
+
         /**
          * Получение постов
          *
          * @returns {Promise<void>}
          */
         async getPosts() {
-                const res = await axios.get('/api/posts');
-                this.posts = res.data;
+            const res = await axios.get('/api/posts');
+            this.posts = res.data;
+        },
+        /**
+         *
+         * @param post
+         * @returns {Promise<void>}
+         */
+        async getPost(post) {
+
+            this.postShow = {};
+            this.loading = true;
+            NProgress.start()
+            const res = await axios.get(`/api/posts/show/${post}`);
+            NProgress.done()
+            this.postShow = res.data;
+
         },
 
         /**
@@ -65,6 +84,12 @@ export const usePostsStore = defineStore('posts', {
                 });
             }
         },
+
+        /**
+         * Удаление поста
+         * @param post
+         * @returns {Promise<void>}
+         */
     async destroyPost(post) {
             const res = await axios.delete(`/api/posts/${post.id}`);
             if (res.status === 200) {

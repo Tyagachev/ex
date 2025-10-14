@@ -1,7 +1,6 @@
 <template>
     <div>
         <div ref="editor" class="border rounded p-2 min-h-[100px]"></div>
-        <h1 class="text-red-500">TTTTTT</h1>
     </div>
 </template>
 

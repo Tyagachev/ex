@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Vote;
+namespace App\Http\Controllers\api\Vote;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Post\PostResource;
@@ -39,13 +39,13 @@ class VoteController extends Controller
     public function store(Request $request, VoteService $service)
     {
         $request = $request->all();
-        $result = $service->voteStore($request);
-
-        return response()->json([
-            'success' => true,
+        $service->voteStore($request);
+        return response()->json(['status' => 200, 'user' => Auth::user()]);
+        /*return response()->json([
+            'status' => 200,
             'totalVotes' => $result->totalVotes(),
             'obj' => !count($result->votes) ? null : $result->votes
-        ]);
+        ]);*/
     }
     public function postVote(Post $post)
     {

@@ -6,7 +6,7 @@ export const useUserStore = defineStore('user', {
         user: null,
         token: localStorage.getItem('token') || null,
         isLoading: false,
-        isInitialized: false // Флаг инициализации
+        isInitialized: false,
     }),
 
     getters: {
@@ -15,6 +15,7 @@ export const useUserStore = defineStore('user', {
     },
 
     actions: {
+
         async login(email, password) {
             try {
                 const res = await axios.post('/login', { email, password });

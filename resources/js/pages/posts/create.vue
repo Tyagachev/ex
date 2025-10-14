@@ -108,7 +108,7 @@ import {usePostsStore} from "@/stores/posts.js";
 
 
 defineOptions({
-    name: "create"
+    name: "Create"
 })
 
 const postStore = usePostsStore();

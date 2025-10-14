@@ -18,13 +18,10 @@ axios.interceptors.request.use(config => {
 
 NProgress.configure({
     easing: 'ease',
-    speed: 200, // уменьшить с 500 до 300
+    speed: 50, // уменьшить с 500 до 300
     minimum: 0.1,
-    trickleSpeed: 200,
-    showSpinner: false
+    trickleSpeed: 100,
+    showSpinner: true
 });
 
-axios.interceptors.request.use(config => { NProgress.start(); return config; });
-axios.interceptors.response.use(response => { NProgress.done(); return response; },
-    error => { NProgress.done(); return Promise.reject(error); });
 
