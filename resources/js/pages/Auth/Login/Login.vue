@@ -78,13 +78,10 @@
 import {useUserStore} from "@/stores/users.js";
 import { useRouter } from 'vue-router'
 import Checkbox from '../../../сomponents/Inertia/Checkbox.vue';
-import InputError from '../../../сomponents/Inertia/InputError.vue';
 import InputLabel from '../../../сomponents/Inertia/InputLabel.vue';
 import PrimaryButton from '../../../сomponents/Inertia/PrimaryButton.vue';
 import TextInput from '../../../сomponents/Inertia/TextInput.vue';
-import Sidebar from '../../../layouts/Sidebar.vue';
 import {reactive} from "vue";
-import {useStore} from "vuex";
 
 defineProps({
     canResetPassword: {

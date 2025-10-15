@@ -1,0 +1,110 @@
+<?php
+
+namespace App\Http\Controllers\api\Comment;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Comment\StoreCommentRequest;
+use App\Http\Resources\Comments\CommentResource;
+use App\Models\Comment;
+use App\Models\Post;
+use App\Services\Comment\CommentService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+class CommentController extends Controller
+{
+    /**
+     * Сохранение комментария
+     *
+     * @param CommentService $service
+     * @param StoreCommentRequest $request
+     * @return JsonResponse
+     */
+    public function store(CommentService $service, StoreCommentRequest $request): JsonResponse
+    {
+        $request->validated();
+
+        $post = Post::findOrFail($request['postId']);
+
+        $comment = $service->storeComment($post, $request);
+
+        $post = $post->load([
+            'user',
+            'comments' => function ($query) {
+                $query->whereNull('parent_id')
+                    ->with(['user', 'replyUser', 'replies']);
+            },
+        ]);
+
+        return response()->json([
+            'commentId' => $comment->id,
+            'comments' => CommentResource::collection($post->comments)
+        ]);
+    }
+
+    /**
+     * Редактирование комментария
+     *
+     * @param Comment $comment
+     * @param CommentService $service
+     * @return JsonResponse
+     */
+    public function edit(Comment $comment, CommentService $service): JsonResponse
+    {
+        $commentText = $service->editComment($comment);
+
+        return response()->json([
+            'text' => $commentText
+        ]);
+    }
+
+    /**
+     * Обновление комментария
+     *
+     * @param Comment $comment
+     * @param Request $request
+     * @param CommentService $service
+     * @return JsonResponse
+     */
+    public function update(Comment $comment, CommentService $service, Request $request): JsonResponse
+    {
+        $service->updateComment($comment, $request);
+
+        return response()->json([
+            'message' => 'Обновлено',
+            'status' => 200
+        ]);
+    }
+
+    /**
+     * Удаление коммента
+     *
+     * @param Comment $comment
+     * @return JsonResponse
+     */
+    public function destroy(Comment $comment): JsonResponse
+    {
+        $comment->delete();
+
+        return response()->json([
+            'status' => 200
+        ]);
+    }
+
+    /**
+     * Получение текста коммента
+     * на который ответил пользователь
+     *
+     * @param Request $request
+     * @return null
+     */
+    public function getCommentText(Request $request)
+    {
+        $r = $request->all();
+        $text = Comment::query()
+            ->where('id', '=', $r['parentId'])
+            ->where('user_id', '=', $r['replyUserId'])
+            ->first('text');
+        return $text;
+    }
+}

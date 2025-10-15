@@ -52,13 +52,17 @@ export const usePostsStore = defineStore('posts', {
              * @returns {Promise<void>}
              */
             async getPost(post) {
+                this.loading = true;
                 this.postShow = {};
-                NProgress.start()
-                const res = await axios.get(`/api/posts/show/${post}`);
 
-                NProgress.done()
-
-                this.postShow = res.data;
+                try {
+                    NProgress.start()
+                    const res = await axios.get(`/api/posts/show/${post}`);
+                    this.postShow = res.data;
+                    NProgress.done()
+                } finally {
+                    this.loading = false;
+                }
             },
 
             /**

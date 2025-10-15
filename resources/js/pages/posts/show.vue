@@ -1,5 +1,5 @@
 <template>
-    <div class="container overflow-y-auto">
+    <div v-if="!postStore.loading" class="container overflow-y-auto">
         <transition name="fade">
             <div v-if="showNotification" class="notification">
                 Ссылка скопирована
@@ -11,10 +11,9 @@
         >
             Назад
         </button>
-        <div v-show="!postStore.loading">
             <div class="post">
                 <div class="post-content">
-                    <div class="flex justify-between">
+                    <div>
                         <div class="post-header">
                             <div v-if="post.user?.id === user?.id">
                                 <div class="flex items-center gap-2 ">
@@ -26,7 +25,7 @@
                                         {{ post.user?.name[0] }}
                                     </div>
                                     <span class="author">
-                                    <p class="text-black pr-1 pl-1 bg-green-300">{{post.user.name}}</p>
+                                    <p class="text-black pr-1 pl-1 bg-green-300">{{post.user?.name}}</p>
                                 </span>
                                 </div>
                             </div>
@@ -105,8 +104,47 @@
                     </div>
                 </div>
             </div>
+        <!--Textarea-->
+        <div v-if="user" class="comment-area">
+            <div class="textarea-container">
+                    <textarea
+                        ref="textarea"
+                        class="comment-textarea"
+                        :placeholder="placeholder"
+                        v-model="commentText"
+                        @input="autoResize"
+                        rows="1"
+                    ></textarea>
+            </div>
+            <div class="flex justify-between items-center mt-2">
+                <div class="text-xs text-slate-400 ml-2" :class="{ 'text-red-500': commentText.length > 3000 }">
+                    {{ commentText.length }}/3000
+                </div>
+                <div class="comment-actions">
+                    <button class="cancel-button text-sm" @click="clearText">Отмена</button>
+                    <button
+                        class="submit-button text-sm"
+                        @click.prevent="submitComment"
+                        :disabled="!commentText || commentText.length > 3000"
+                    >
+                        Отправить
+                    </button>
+                </div>
+            </div>
         </div>
-
+        <div v-else>
+            <router-link :to="{name: 'login.page'}"><p class="text-blue-400">Авторизируйтесь чтобы оставлять комментарии :)</p></router-link>
+        </div>
+        <div class="my-5">
+            <CommentNote
+                v-for="comment in post.comments"
+                :key="comment.id"
+                :comment="comment"
+                :depth="0"
+                :active-comment-menu="activeCommentMenu"
+                @update:active-comment-menu="activeCommentMenu = $event"
+            />
+        </div>
     </div>
 </template>
 
@@ -118,6 +156,7 @@ import {usePostsStore} from "@/stores/posts.js";
 import {useUserStore} from "@/stores/users.js";
 import {useAvatarStore} from "@/stores/avatars.js";
 import Panel from "@/сomponents/Panel/Panel.vue";
+import CommentNote from "@/сomponents/Comment/CommentNote.vue";
 
 defineOptions({
     name: "Show"
@@ -140,8 +179,24 @@ const activeMenu = ref(null);
 
 const componentType = 'post'
 const bodyUrl = 'posts'
+const placeholder = 'Напишите комментарий...'
+
+const activeCommentMenu = ref(null)
 const showNotification = ref(false);
 const notificationTimeout = ref(null);
+
+const commentText = ref('');
+const textarea = ref(null);
+
+const autoResize = () => {
+
+    if (!textarea.value) return;
+
+    textarea.value.style.height = 'auto';
+    const newHeight = Math.min(textarea.value.scrollHeight, 200);
+    textarea.value.style.height = newHeight + 'px';
+    textarea.value.style.overflowY = textarea.value.scrollHeight > 200 ? 'auto' : 'hidden';
+}
 
 const goBack = () => {
     router.back();
@@ -281,13 +336,6 @@ const closeMenuOnClickOutside = () => {
     padding: 12px;
     flex: 1;
     word-wrap: break-word;
-}
-
-.post-header {
-    display: flex;
-    font-size: 12px;
-    color: #b0b0b0;
-    margin-bottom: 10px;
 }
 
 .post-body {

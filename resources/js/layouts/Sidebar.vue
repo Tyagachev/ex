@@ -75,7 +75,7 @@
                     @click="toggleSidebar">
                 </div>
 
-                <section class="lt pt-4 pb-10 pl-4 pr-4 custom-scrollbar overflow-auto flex-1 min-h-0 w-full z-10">
+                <section class="lt pt-4 pb-10 pl-4 pr-4 custom-scrollbar flex-1 min-h-0 w-full z-10">
                     <aside>
                         <slot/>
                     </aside>
@@ -179,7 +179,7 @@ const searchPost = () => {};
 
 /* Стили для кастомного скроллбара */
 .custom-scrollbar {
-    scrollbar-width: none;
+    //scrollbar-width: none;
     scrollbar-color: #2d3748 transparent;
 }
 

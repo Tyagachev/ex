@@ -132,13 +132,12 @@
 </template>
 
 <script setup>
-import {computed, defineOptions, nextTick, onBeforeUnmount, onMounted, onUnmounted, ref} from "vue";
+import {computed, defineOptions, nextTick, onMounted, onUnmounted, ref} from "vue";
 import {useRouter} from "vue-router";
 import {usePostsStore} from "@/stores/posts.js";
 import {useUserStore} from "@/stores/users.js";
 import {useAvatarStore} from "@/stores/avatars.js";
 import Panel from "@/сomponents/Panel/Panel.vue";
-import NProgress from "nprogress";
 
 defineOptions({
     name: "Index"
@@ -190,6 +189,7 @@ onUnmounted(() => {
 
 let observer = null;
 let handleScroll;
+
 const scrollContainer = ref(null);
 const loadTrigger = ref(null);
 
@@ -274,7 +274,7 @@ const closeMenuOnClickOutside = () => {
     width: 1000px;
     margin: 0 auto;
     max-height: 100vh;
-    scrollbar-width: none;
+    //scrollbar-width: none;
    //scrollbar-track-color: #2bf10d;
 }
 
