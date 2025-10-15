@@ -18,6 +18,7 @@ export const useVotesStore = defineStore('votes',{
                 await this.refreshPosts(post);
             }
         },
+
         async downVote(post) {
             const res = await axios.post('/api/votes', {
                 id: post.id,
@@ -28,6 +29,7 @@ export const useVotesStore = defineStore('votes',{
                 await this.refreshPosts(post);
             }
         },
+
         getUserVote(post, user) {
             if (!user || !post || !Array.isArray(post.votes)) return 0;
             const voteObj = post.votes.find(vote => vote.user_id === user.id);

@@ -20,18 +20,13 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
-    /**
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function index()
     {
         $posts = Post::with('user')
-            ->orderBy('created_at','desc')
-            ->get();
+            ->orderBy('created_at','desc')->paginate(10);
 
-        $postsResource =  PostResource::collection($posts);
-
-        return response()->json($postsResource);
+        return PostResource::collection($posts);
     }
 
 

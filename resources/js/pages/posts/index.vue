@@ -1,5 +1,5 @@
 <template>
-    <div class="container flex-1 align-center overflow-y-auto">
+    <div class="container flex-1 align-center overflow-y-auto" ref="scrollContainer">
 
         <transition name="fade">
             <div v-if="showNotification" class="notification">
@@ -121,14 +121,18 @@
                     <!-- Горизонтальная линия между постами -->
                     <div v-if="index < posts.length - 1" class="post-divider"></div>
                     </div>
+                <div v-show="postsStore.hasMore" ref="loadTrigger" class="h-50"></div>
+
+                <div v-if="!postsStore.hasMore && !postsStore.loading" class="text-center py-4 text-gray-400">
+                    Больше постов нет
+                </div>
             </div>
         </div>
         </div>
 </template>
 
 <script setup>
-import {computed, defineOptions, onMounted, ref} from "vue";
-import {useStore} from "vuex";
+import {computed, defineOptions, nextTick, onBeforeUnmount, onMounted, onUnmounted, ref} from "vue";
 import {useRouter} from "vue-router";
 import {usePostsStore} from "@/stores/posts.js";
 import {useUserStore} from "@/stores/users.js";
@@ -140,21 +144,64 @@ defineOptions({
     name: "Index"
 })
 
-onMounted(() => {
-    postList()
+onMounted(async () => {
+    await nextTick();
+
+    let scrollElement;
+
+    scrollElement = scrollContainer.value;
+
+    handleScroll = () => {
+        postsStore.scrollPosition = scrollElement.scrollTop;
+    };
+
+    scrollElement.addEventListener('scroll', handleScroll, { passive: true });
+
+    scrollElement.scrollTop = postsStore.scrollPosition;
+
+    observer = new IntersectionObserver(async (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting && postsStore.hasMore && !postsStore.loading) {
+            await postsStore.getPosts();
+        }
+    }, {
+        rootMargin: '200px'
+    })
+    if (loadTrigger.value) {
+        observer.observe(loadTrigger.value);
+    }
 });
 
-const posts = computed(() => postStore.allPosts);
+
+onUnmounted(() => {
+
+    if (scrollContainer.value) {
+        postsStore.scrollPosition = scrollContainer.value.scrollTop;
+    }
+
+    if (handleScroll && scrollContainer.value) {
+        scrollContainer.value.removeEventListener('scroll', handleScroll);
+    }
+
+    if (observer && loadTrigger.value) {
+        observer.unobserve(loadTrigger.value);
+    }
+})
+
+let observer = null;
+let handleScroll;
+const scrollContainer = ref(null);
+const loadTrigger = ref(null);
+
+const posts = computed(() => postsStore.allPosts);
 const user = computed(() => userStore.u)
 
-const store = useStore();
 const router = useRouter();
 
-const postStore = usePostsStore();
+const postsStore = usePostsStore();
+const destroyPost = usePostsStore();
 const userStore = useUserStore();
 const avatar = useAvatarStore();
-const destroyPost = usePostsStore();
-
 
 const componentType = 'post'
 const bodyUrl = 'posts'
@@ -166,11 +213,8 @@ const showImageModal = ref(false);
 const currentImage = ref("")
 const currentImageAlt = ref("")
 
-const postList = async () => {
-    NProgress.start()
-    await postStore.getPosts();
-    NProgress.done()
-}
+
+
 const closeImageModal = () => {
     showImageModal.value = false;
     currentImage.value = '';
@@ -229,6 +273,9 @@ const closeMenuOnClickOutside = () => {
 .container {
     width: 1000px;
     margin: 0 auto;
+    max-height: 100vh;
+    scrollbar-width: none;
+   //scrollbar-track-color: #2bf10d;
 }
 
 

@@ -179,7 +179,7 @@ const searchPost = () => {};
 
 /* Стили для кастомного скроллбара */
 .custom-scrollbar {
-    scrollbar-width: thin;
+    scrollbar-width: none;
     scrollbar-color: #2d3748 transparent;
 }
 
@@ -204,7 +204,7 @@ const searchPost = () => {};
 /* Скрываем скроллбар по умолчанию и показываем при наведении */
 .custom-scrollbar {
     overflow: auto;
-//scrollbar-width: none; /* Firefox */
+    scrollbar-width: none; /* Firefox */
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -212,7 +212,7 @@ const searchPost = () => {};
 }
 
 .custom-scrollbar:hover {
-    scrollbar-width: thin; /* Firefox */
+    scrollbar-width: none; /* Firefox */
 }
 
 .custom-scrollbar:hover::-webkit-scrollbar {

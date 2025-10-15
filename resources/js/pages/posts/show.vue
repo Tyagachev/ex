@@ -5,110 +5,114 @@
                 Ссылка скопирована
             </div>
         </transition>
-        <router-link :to="{name: 'main'}">
-            <button class="mb-2 py-2.5 px-4 bg-orange-600 hover:bg-gray-500 text-sm text-white rounded-full cursor-pointer">
-                Назад
-            </button>
-        </router-link>
-        <div class="post">
-            <h5 class="text-red-500" v-if="!postStore.loading">Загрузка</h5>
-            <div v-else class="post-content">
-                <div class="flex justify-between">
-                    <div class="post-header">
-                        <div v-if="post.user?.id === user?.id">
-                            <div class="flex items-center gap-2 ">
-                                <div
-                                    class="w-8 h-8 rounded-full flex-shrink-0 grid place-items-center text-slate-900 font-bold"
-                                    :style="{ background: avatar.avatarColor(post.user?.name) }"
-                                    :title="post.user?.name"
-                                >
-                                    {{ post.user?.name[0] }}
-                                </div>
-                                <span class="author">
+        <button
+            @click="goBack"
+            class="mb-2 py-2.5 px-4 bg-orange-600 hover:bg-gray-500 text-sm text-white rounded-full cursor-pointer"
+        >
+            Назад
+        </button>
+        <div v-show="!postStore.loading">
+            <div class="post">
+                <div class="post-content">
+                    <div class="flex justify-between">
+                        <div class="post-header">
+                            <div v-if="post.user?.id === user?.id">
+                                <div class="flex items-center gap-2 ">
+                                    <div
+                                        class="w-8 h-8 rounded-full flex-shrink-0 grid place-items-center text-slate-900 font-bold"
+                                        :style="{ background: avatar.avatarColor(post.user?.name) }"
+                                        :title="post.user?.name"
+                                    >
+                                        {{ post.user?.name[0] }}
+                                    </div>
+                                    <span class="author">
                                     <p class="text-black pr-1 pl-1 bg-green-300">{{post.user.name}}</p>
                                 </span>
-                            </div>
-                        </div>
-                        <div v-else>
-                            <div class="flex items-center gap-2 ">
-                                <div
-                                    class="w-8 h-8 rounded-full flex-shrink-0 grid place-items-center text-slate-900 font-bold"
-                                    :style="{ background: avatar.avatarColor(post.user?.name) }"
-                                    :title="post.user?.name"
-                                >
-                                    {{ post.user?.name[0] }}
                                 </div>
-                                <span class="author">
+                            </div>
+                            <div v-else>
+                                <div class="flex items-center gap-2 ">
+                                    <div
+                                        class="w-8 h-8 rounded-full flex-shrink-0 grid place-items-center text-slate-900 font-bold"
+                                        :style="{ background: avatar.avatarColor(post.user?.name) }"
+                                        :title="post.user?.name"
+                                    >
+                                        {{ post.user?.name[0] }}
+                                    </div>
+                                    <span class="author">
                                     <router-link :to="({name: 'posts.show', params: {id: post.user?.id}})" class="hover:underline cursor-pointer">
                                         {{ post.user?.name }}
                                     </router-link>
                                 </span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="circle"></div>
-                            <span class="time">{{ post.createdAtHuman }}</span>
-                        </div>
-                        <div class="post-menu-container" @click.stop>
-                            <button class="vote-btn" @click="toggleMenu(post.id)">
-                                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="16px" height="16px" viewBox="0 0 100 20">
+                            <div class="flex items-center gap-2">
+                                <div class="circle"></div>
+                                <span class="time">{{ post.createdAtHuman }}</span>
+                            </div>
+                            <div class="post-menu-container" @click.stop>
+                                <button class="vote-btn" @click="toggleMenu(post.id)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="16px" height="16px" viewBox="0 0 100 20">
                                         <g id="Objects">
                                             <circle class="share str0" cx="10" cy="10" r="10"/>
                                             <circle class="share str0" cx="50" cy="10" r="10"/>
                                             <circle class="share str0" cx="90" cy="10" r="10"/>
                                         </g>
                                     </svg>
-                            </button>
-                            <div v-if="activeMenu === post.id" class="post-menu">
-                                <div v-if="post.user.id === user?.id">
-                                    <button class="menu-item">
-                                        <router-link :to="({name: 'posts.edit', params: {id:post.id}})">
-                                            <span class="text-white">Редактировать</span>
-                                        </router-link>
-                                    </button>
-                                    <button class="menu-item">
-                                        <span class="text-white">Скрыть</span>
-                                    </button>
-                                    <button @click="postStore.destroyPost(post)" class="menu-item">
-                                        <span class="text-white">Удалить</span>
-                                    </button>
-                                </div>
-                                <div v-else-if="post.user.id !== user?.id || !user" class="post-menu">
-                                    <button class="menu-item">
-                                        <span class="text-white">Пожаловаться</span>
-                                    </button>
+                                </button>
+                                <div v-if="activeMenu === post.id" class="post-menu">
+                                    <div v-if="post.user.id === user?.id">
+                                        <button class="menu-item">
+                                            <router-link :to="({name: 'posts.edit', params: {id:post.id}})">
+                                                <span class="text-white">Редактировать</span>
+                                            </router-link>
+                                        </button>
+                                        <button class="menu-item">
+                                            <span class="text-white">Скрыть</span>
+                                        </button>
+                                        <button @click="postStore.destroyPost(post)" class="menu-item">
+                                            <span class="text-white">Удалить</span>
+                                        </button>
+                                    </div>
+                                    <div v-else-if="post.user.id !== user?.id || !user" class="post-menu">
+                                        <button class="menu-item">
+                                            <span class="text-white">Пожаловаться</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <h3 class="post-title">{{ post.title }}</h3>
-                <div>
-                    <div v-for="(block, index) in post.blocks" :key="index">
-                        <div v-if="block.type === 'text'">
-                            <div v-html="block.content" class="post-body"></div>
-                        </div>
-                        <div class="mt-2 mb-2" v-else-if="block.type === 'image'">
-                            <img class="m-auto" :src="block.path">
+                    <h3 class="post-title">{{ post.title }}</h3>
+                    <div>
+                        <div v-for="(block, index) in post.blocks" :key="index">
+                            <div v-if="block.type === 'text'">
+                                <div v-html="block.content" class="post-body"></div>
+                            </div>
+                            <div class="mt-2 mb-2" v-else-if="block.type === 'image'">
+                                <img class="m-auto" :src="block.path">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="post-footer">
+                    <div class="post-footer">
 
-                    <Panel
-                        :item = post
-                        :componentType = componentType
-                        :bodyUrl = bodyUrl
-                        @shownotificationmessage="showNotificationMessage"
-                    />
+                        <Panel
+                            :item = post
+                            :componentType = componentType
+                            :bodyUrl = bodyUrl
+                            @shownotificationmessage="showNotificationMessage"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 
 <script setup>
 import {useRoute} from "vue-router";
+import {useRouter} from "vue-router";
 import {computed, onMounted, ref} from "vue";
 import {usePostsStore} from "@/stores/posts.js";
 import {useUserStore} from "@/stores/users.js";
@@ -126,6 +130,7 @@ onMounted( async ()=>{
 const postStore = usePostsStore();
 const userStore = useUserStore();
 const avatar = useAvatarStore();
+const router = useRouter();
 const route = useRoute();
 
 const user = computed(() => userStore.u);
@@ -137,6 +142,10 @@ const componentType = 'post'
 const bodyUrl = 'posts'
 const showNotification = ref(false);
 const notificationTimeout = ref(null);
+
+const goBack = () => {
+    router.back();
+}
 
 const toggleMenu = (postId) => {
     activeMenu.value = activeMenu.value === postId ? null : postId;
