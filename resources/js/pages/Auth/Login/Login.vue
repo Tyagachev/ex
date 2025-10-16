@@ -10,9 +10,11 @@
             <div v-if="status" class="mb-4 text-sm font-medium text-green-400 bg-green-900/20 py-2 px-4 rounded-md">
                 {{ status }}
             </div>
-
+            <div v-for="error in userStore.errors">
+                {{error.email[0]}}
+            </div>
             <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
-                <form class="space-y-6" @submit.prevent="submit">
+                <form  class="space-y-6" @submit.prevent="submit">
                     <div>
                         <InputLabel for="email" value="Email" class="text-gray-300" />
                         <TextInput
@@ -100,9 +102,11 @@ const form = reactive({
     remember: false,
 });
 
-const submit = () => {
-    userStore.login(form.email, form.password);
-    router.push({name: 'main'});
+const submit = async () => {
+    const login = await userStore.login(form.email, form.password);
+    if (login.status === 200) {
+        router.push({name: 'main'});
+    }
 }
 
 

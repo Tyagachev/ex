@@ -34,15 +34,17 @@ class LoginController extends Controller
         }
 
         // Генерация нового токена
-        $user->api_token = Str::random(60);
+        $string = Str::random(100);
+        $user->api_token = Hash::make($string);
         $user->save();
 
         return response()->json([
-            'message' => 'OK',
+            'status' => 200,
             'token' => $user->api_token,
             'user' => $user,
         ]);
     }
+
 
     /**
      * @param Request $request

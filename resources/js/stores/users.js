@@ -7,6 +7,7 @@ export const useUserStore = defineStore('user', {
         token: localStorage.getItem('token') || null,
         isLoading: false,
         isInitialized: false,
+        errors: []
     }),
 
     getters: {
@@ -15,11 +16,9 @@ export const useUserStore = defineStore('user', {
     },
 
     actions: {
-
         async login(email, password) {
             try {
                 const res = await axios.post('/login', { email, password });
-                console.log('Login response:', res.data);
 
                 this.user = res.data.user;
                 this.token = res.data.token;
@@ -30,7 +29,8 @@ export const useUserStore = defineStore('user', {
 
                 return res.data;
             } catch (error) {
-                console.error('Login error:', error);
+                this.errors.push(error.response.data.errors);
+                console.error('Login error:', error.response.data.errors);
                 throw error;
             }
         },

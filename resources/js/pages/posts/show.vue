@@ -111,21 +111,21 @@
                         ref="textarea"
                         class="comment-textarea"
                         :placeholder="placeholder"
-                        v-model="commentText"
+                        v-model="commentStore.commentText"
                         @input="autoResize"
                         rows="1"
                     ></textarea>
             </div>
             <div class="flex justify-between items-center mt-2">
-                <div class="text-xs text-slate-400 ml-2" :class="{ 'text-red-500': commentText.length > 3000 }">
-                    {{ commentText.length }}/3000
+                <div class="text-xs text-slate-400 ml-2" :class="{ 'text-red-500': commentStore.commentText.length > 3000 }">
+                    {{ commentStore.commentText.length }}/3000
                 </div>
                 <div class="comment-actions">
                     <button class="cancel-button text-sm" @click="clearText">Отмена</button>
                     <button
                         class="submit-button text-sm"
-                        @click.prevent="submitComment"
-                        :disabled="!commentText || commentText.length > 3000"
+                        @click.prevent="commentStore.submitComment(post)"
+                        :disabled="!commentStore.commentText || commentStore.commentText.length > 3000"
                     >
                         Отправить
                     </button>
@@ -137,7 +137,7 @@
         </div>
         <div class="my-5">
             <CommentNote
-                v-for="comment in post.comments"
+                v-for="comment in commentStore.comments"
                 :key="comment.id"
                 :comment="comment"
                 :depth="0"
@@ -157,6 +157,7 @@ import {useUserStore} from "@/stores/users.js";
 import {useAvatarStore} from "@/stores/avatars.js";
 import Panel from "@/сomponents/Panel/Panel.vue";
 import CommentNote from "@/сomponents/Comment/CommentNote.vue";
+import {useCommentsStore} from "@/stores/comments.js";
 
 defineOptions({
     name: "Show"
@@ -167,6 +168,7 @@ onMounted( async ()=>{
 })
 
 const postStore = usePostsStore();
+const commentStore = useCommentsStore();
 const userStore = useUserStore();
 const avatar = useAvatarStore();
 const router = useRouter();
@@ -188,15 +190,7 @@ const notificationTimeout = ref(null);
 const commentText = ref('');
 const textarea = ref(null);
 
-const autoResize = () => {
 
-    if (!textarea.value) return;
-
-    textarea.value.style.height = 'auto';
-    const newHeight = Math.min(textarea.value.scrollHeight, 200);
-    textarea.value.style.height = newHeight + 'px';
-    textarea.value.style.overflowY = textarea.value.scrollHeight > 200 ? 'auto' : 'hidden';
-}
 
 const goBack = () => {
     router.back();
@@ -226,6 +220,20 @@ const showNotificationMessage = () => {
 const closeMenuOnClickOutside = () => {
     activeMenu.value = null;
     document.removeEventListener('click', closeMenuOnClickOutside);
+}
+
+const clearText = () => {
+    textarea.value.style.height = 'auto';
+    commentStore.commentText = '';
+}
+
+const autoResize = () => {
+    if (!textarea.value) return;
+
+    textarea.value.style.height = 'auto';
+    const newHeight = Math.min(textarea.value.scrollHeight, 200);
+    textarea.value.style.height = newHeight + 'px';
+    textarea.value.style.overflowY = textarea.value.scrollHeight > 200 ? 'auto' : 'hidden';
 }
 //
 </script>

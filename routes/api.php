@@ -20,9 +20,12 @@ Route::get('/posts', [PostController::class, 'index']);
 Route::post('/posts', [PostController::class,'store'])->middleware('auth:api_token');
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->middleware('auth:api_token');
 Route::get('/posts/show/{post}', [PostController::class, 'show']);
+
 //COMMENTS
-Route::resource('comments', CommentController::class)->middleware('auth:api_token');;
-Route::post('comments/text', [CommentController::class, 'getCommentText']);
+Route::resource('comments', CommentController::class)->middleware('auth:api_token');
+Route::delete('/posts/{post}/comments/{comment}', [CommentController::class, 'destroy'])->middleware('auth:api_token');
+Route::post('/comments/text', [CommentController::class, 'getCommentText']);
+
 //VOTES
 Route::resource('/votes', VoteController::class)->middleware('auth:api_token');
 Route::get('/votes/{post}/vote', [VoteController::class, 'postVote']);

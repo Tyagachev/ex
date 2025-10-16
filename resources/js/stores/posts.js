@@ -2,6 +2,7 @@ import axios from "axios";
 import {defineStore} from "pinia";
 import router from "../router/router.js";
 import NProgress from "nprogress";
+import {useCommentsStore} from "@/stores/comments.js";
 
 
 
@@ -59,6 +60,8 @@ export const usePostsStore = defineStore('posts', {
                     NProgress.start()
                     const res = await axios.get(`/api/posts/show/${post}`);
                     this.postShow = res.data;
+                    const commentStore = useCommentsStore();
+                    commentStore.getComments(this.postShow.comments);
                     NProgress.done()
                 } finally {
                     this.loading = false;

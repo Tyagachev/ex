@@ -1,7 +1,6 @@
 import axios from "axios";
 import {defineStore} from "pinia";
 import {usePostsStore} from "@/stores/posts.js";
-import NProgress from "nprogress";
 
 export const useVotesStore = defineStore('votes',{
     state: () => ({

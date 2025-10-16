@@ -82,7 +82,7 @@ class CommentController extends Controller
      * @param Comment $comment
      * @return JsonResponse
      */
-    public function destroy(Comment $comment): JsonResponse
+    public function destroy(Post $post, Comment $comment): JsonResponse
     {
         $comment->delete();
 
