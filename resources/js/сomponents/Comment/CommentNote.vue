@@ -94,14 +94,14 @@
                             <button  @click.prevent="getCommentText(comment.user, comment.reply_user, comment.parent)">
                                 <div class="flex">
                                     <div>
-                                        <a href="#" style="font-size: 0.8rem; color: #dfba8b;">{{!showCommentText ? 'Показать' : 'Скрыть' }} комментарий <i class="fa fa-caret-down" aria-hidden="true"></i></a>
+                                        <a href="#" style="font-size: 0.8rem; color: #dfba8b;">{{!showCommentText ? 'Показать' : 'Скрыть' }} комментарий <i :class="[showCommentText ? 'fa rotate-180 fa-caret-down' : 'fa fa-caret-down']"></i></a>
                                     </div>
                                 </div>
                             </button>
                         </div>
-                        <div v-else>
+                        <!--<div v-else>
                             <p  style="font-size: 0.8rem; color: #dfba8b;">Ответ на пост</p>
-                        </div>
+                        </div>-->
                         <div v-if="showCommentText">
                             <div class="quote-block border border-gray-100">
                                 <p class="comment_text pl-2">{{responseCommentText}}</p>
@@ -208,11 +208,11 @@
                                 <p style="font-size: 12px">{{ countStore.formatCount(comment.shareCount) }}</p>
                             </button>
                         </div>-->
-                        <div class="ml-2">
+                        <div class="">
                             <button v-if="user?.id !== comment.user.id && user"
                                     class="footer-btn hover:text-slate-200"
                                     @click.prevent="toggleReply">
-                                <p class="p-0 text-blue-400 text-sm font-semibold">
+                                <p class="text-blue-400 text-sm font-semibold">
                                     Ответить
                                 </p>
 

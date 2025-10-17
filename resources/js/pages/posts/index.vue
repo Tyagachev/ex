@@ -274,16 +274,8 @@ const closeMenuOnClickOutside = () => {
     width: 1000px;
     margin: 0 auto;
     max-height: 100vh;
-    //scrollbar-width: none;
-   //scrollbar-track-color: #2bf10d;
-}
-
-
-.vote-panel {
-    padding: 5px;
-    background: #2a2a2a;
-    border-radius: 18px;
-    margin-right: 6px;
+    scrollbar-width: thin;
+    scrollbar-track-color: #2bf10d;
 }
 
 .vote-btn {

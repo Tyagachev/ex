@@ -15,7 +15,7 @@
     overflow-wrap: break-word;
     word-break: break-word;
     hyphens: auto;
-    color: #b7cad7;
+    color: #fff;
     line-height: 2
 }
 
@@ -103,6 +103,7 @@
 .v-up {
     fill: #2bf10d!important;
     stroke: #2bf10d!important;
+
 }
 
 .v-down {
@@ -151,13 +152,13 @@
 
 .vote-icon {
     stroke: #9ca3af;
-    stroke-width: 8;
+    stroke-width: 15px;
     fill: none;
     transition: all 0.2s ease;
 }
 
 .vote-panel {
-    padding: 5px;
+    /*padding: 5px;*/
     background: #2a2a2a;
     border-radius: 18px;
     margin-right: 6px;
