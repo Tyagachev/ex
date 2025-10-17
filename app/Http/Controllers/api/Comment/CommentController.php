@@ -37,6 +37,7 @@ class CommentController extends Controller
         ]);
 
         return response()->json([
+            'post' => $post,
             'commentId' => $comment->id,
             'comments' => CommentResource::collection($post->comments)
         ]);

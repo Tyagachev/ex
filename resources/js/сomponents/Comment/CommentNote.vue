@@ -4,6 +4,7 @@
             Ссылка скопирована
         </div>
     </transition>
+    <!--<div :class="['relative', depth > 0 ? 'ml-2 pl-2 border-l border-slate-700' : '']">-->
     <div :class="['relative', depth > 0 ? 'ml-2 pl-2 border-l border-slate-700' : '']">
         <div :id="comment.id" class="flex items-start gap-2">
             <div v-if="depth > 0" class="absolute -left-1.5 top-2 w-3 h-3 rounded-full bg-slate-500 border border-slate-700"></div>
@@ -23,7 +24,7 @@
                     <span class="time_comment">{{ comment.createdAtHuman }}</span>
                     <!-- Кнопка троеточия для меню -->
                     <div class="ml-auto relative">
-                        <button class="p-2 rounded-full hover:bg-slate-700" @click.stop="toggleCommentMenu(comment.id)">
+                        <button class="rotate-90 p-2 rounded-full hover:bg-slate-700" @click.stop="toggleCommentMenu(comment.id)">
                             <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="16" height="16" viewBox="0 0 100 20">
                                 <g>
                                     <circle cx="10" cy="10" r="10" fill="white"/>
@@ -90,13 +91,10 @@
                 <div class="mt-1 whitespace-pre-line text-slate-200 leading-6">
                     <div class="mt-1 mb-1">
                         <div v-if="comment.reply_user != null || comment.parent != null">
-                            <button  @click.prevent="commentStore.getCommentText(comment.user, comment.reply_user, comment.parent)">
+                            <button  @click.prevent="getCommentText(comment.user, comment.reply_user, comment.parent)">
                                 <div class="flex">
-                                    <div class="pr-2">
-                                        <p class="text-sm hover:underline cursor-pointer text-blue-400">{{comment.reply_user?.name ? `@${comment.reply_user.name}` : null}}</p>
-                                    </div>
                                     <div>
-                                        <p style="font-size: 0.8rem; color: #dfba8b;">{{!commentStore.showCommentText ? 'Показать' : 'Скрыть' }} комментарий <i class="fa fa-caret-down" aria-hidden="true"></i></p>
+                                        <a href="#" style="font-size: 0.8rem; color: #dfba8b;">{{!showCommentText ? 'Показать' : 'Скрыть' }} комментарий <i class="fa fa-caret-down" aria-hidden="true"></i></a>
                                     </div>
                                 </div>
                             </button>
@@ -104,13 +102,16 @@
                         <div v-else>
                             <p  style="font-size: 0.8rem; color: #dfba8b;">Ответ на пост</p>
                         </div>
-                        <div v-if="commentStore.showCommentText">
+                        <div v-if="showCommentText">
                             <div class="quote-block border border-gray-100">
-                                <p class="comment_text pl-2">{{commentStore.responseCommentText}}</p>
+                                <p class="comment_text pl-2">{{responseCommentText}}</p>
                             </div>
                         </div>
                     </div>
-                    <p v-if="!commentStore.editArea" class="comment_text">{{ comment.text }}</p>
+                    <div v-if="!commentStore.editArea" >
+                        <p class="text-sm hover:underline cursor-pointer text-blue-400 inline-block">{{comment.reply_user?.name ? `@${comment.reply_user.name}` : null}}</p>
+                        <p class="comment_text inline-block ml-1">{{comment.text }}</p>
+                    </div>
 
                     <!-- Текстовое поле для редактирования -->
                     <div v-if="commentStore.editArea" class="mt-2">
@@ -147,7 +148,7 @@
                     <!-- Кнопки голосования и ответа -->
 
                     <div class="flex">
-                        <div v-if="user?.id !== comment.user.id" class="vote-panel vote-panel_bckg">
+                        <div v-if="user?.id !== comment.user?.id" class="vote-panel vote-panel_bckg">
                             <div class="flex">
                                 <button @click.prevent="voteStore.upVote(comment)" class="vote-btn">
                                     <span>
@@ -189,23 +190,8 @@
                                     </span>
                                 </button>
                             </div>
-
                         </div>
-                        <div class="ml-2">
-                            <button v-if="user?.id !== comment.user.id && user"
-                                    class="footer-btn text-sm hover:text-slate-200"
-                                    @click.prevent="toggleReply">
-                                <span class="footer-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="16px" height="16px" version="1.1" viewBox="0 0 60 52.008">
-                                        <g id="Objects">
-                                            <path class="comment_img" d="M30.909 0c14.409,0 26.091,11.682 26.091,26.091 0,13.271 -9.91,24.229 -22.733,25.876 -2.323,0 -4.428,0.093 -6.713,0.001 -9.185,0 -18.369,0 -27.554,0 3.372,-3.373 6.744,-6.745 10.116,-10.117 -3.324,-4.379 -5.298,-9.838 -5.298,-15.76 0,-14.409 11.682,-26.091 26.091,-26.091z"/>
-                                        </g>
-                                    </svg>
-                                </span>
-                                Ответить
-                            </button>
-                        </div>
-                        <div class="">
+                        <!--<div>
                             <button class="footer-btn" @click="copyLink(comment.id)">
                             <span class="footer-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14px" height="14px" version="1.1"
@@ -220,6 +206,16 @@
                                 </svg>
                             </span>
                                 <p style="font-size: 12px">{{ countStore.formatCount(comment.shareCount) }}</p>
+                            </button>
+                        </div>-->
+                        <div class="ml-2">
+                            <button v-if="user?.id !== comment.user.id && user"
+                                    class="footer-btn hover:text-slate-200"
+                                    @click.prevent="toggleReply">
+                                <p class="p-0 text-blue-400 text-sm font-semibold">
+                                    Ответить
+                                </p>
+
                             </button>
                         </div>
                     </div>
@@ -248,7 +244,7 @@
                             </button>
                             <button
                                 class="submit-button text-sm"
-                                @click="commentStore.sendReplyComment(comment)"
+                                @click="submitReply(comment)"
                                 :disabled="!commentStore.replyText || commentStore.replyText.length > 3000"
                             >
                                 Отправить
@@ -309,13 +305,19 @@ const commentStore = useCommentsStore();
 const userStore = useUserStore();
 const user = computed(() => userStore.u);
 
+let showCommentText = ref(false);
+let responseCommentText = ref('');
 const showNotification = ref(false);
 const activeMenu = ref(null);
-const showCommentText = ref(false)
 const showReply = ref(false);
 const textarea = ref(null);
 const commentMenu = ref(null);
-const emits = defineEmits(['shownotificationmessage'])
+const emits = defineEmits(['shownotificationmessage']);
+
+/**
+ *
+ * @param commentId
+ */
 const toggleCommentMenu = (commentId) => {
     activeMenu.value = activeMenu.value === commentId ? null : commentId;
     if (activeMenu.value === commentId) {
@@ -324,15 +326,44 @@ const toggleCommentMenu = (commentId) => {
         document.removeEventListener('click', closeMenuOnClickOutside);
     }
 }
+
+/**
+ *
+ */
 const closeMenuOnClickOutside = () => {
     activeMenu.value = null;
     document.removeEventListener('click', closeMenuOnClickOutside);
 }
 
+/**
+ *
+ * @param userId
+ * @param replyUserId
+ * @param parent
+ * @returns {Promise<void>}
+ */
+const getCommentText = async (userId, replyUserId, parent) => {
+    const res = await axios.post('/api/comments/text', {
+        userId: userId.id,
+        replyUserId: replyUserId?.id || null,
+        parentId: parent || null
+    })
+    responseCommentText.value = res.data.text;
+    showCommentText.value = !showCommentText.value;
+}
+
+/**
+ *
+ * @param comment
+ * @returns {string}
+ */
 const setPlaceholder = (comment) => {
     return `Ответить пользователю ${comment.user.name}`
 }
 
+/**
+ *
+ */
 const autoResize = () => {
 
     if (!textarea.value) return;
@@ -343,37 +374,63 @@ const autoResize = () => {
     textarea.value.style.overflowY = textarea.value.scrollHeight > 200 ? 'auto' : 'hidden';
 }
 
+/**
+ *
+ */
 const cancelEdit = () => {
     commentStore.editArea = false;
     closeCommentMenu();
 }
+/**
+ *
+ */
 const clearText = () => {
     commentStore.replyText = '';
     autoResize();
     showReply.value = false;
 }
+/**
+ *
+ */
 const closeCommentMenu = () => {
     updateActiveCommentMenu(null);
     document.removeEventListener('click', handleDocumentClick);
 }
-
+/**
+ *
+ * @param commentId
+ */
 const  updateActiveCommentMenu = (commentId) => {
     //$emit('update:active-comment-menu', commentId);
 }
-
+/**
+ *
+ * @param event
+ */
 const handleDocumentClick = (event) => {
     const menu = commentMenu;
     const menuButton = event.target.closest('button');
 
     if (menu && !menu.contains(event.target) && menuButton !== event.target) {
-        this.closeCommentMenu();
+        closeCommentMenu();
     }
 }
 
+/**
+ *
+ * @param comment
+ */
+const submitReply = async (comment) => {
+    await commentStore.sendReplyComment(comment);
+    showReply.value = false;
+}
+/**
+ *
+ */
 const toggleReply = () => {
     showReply.value = !showReply.value;
+    commentStore.replyText.length ? commentStore.replyText = '' : commentStore.replyText
 }
-
 
 </script>
 

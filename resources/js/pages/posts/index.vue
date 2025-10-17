@@ -62,7 +62,7 @@
                                     </div>
                                 </div>
                                 <div class="post-menu-container" @click.stop>
-                                    <button class="vote-btn" @click="toggleMenu(post.id)">
+                                    <button class="rotate-90 vote-btn" @click="toggleMenu(post.id)">
                                         <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="16px" height="16px" viewBox="0 0 100 20">
                                             <g id="Objects">
                                                 <circle class="fil0 str0" cx="10" cy="10" r="10"/>

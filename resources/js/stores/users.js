@@ -16,6 +16,12 @@ export const useUserStore = defineStore('user', {
     },
 
     actions: {
+        /**
+         * Вход в систему
+         * @param email
+         * @param password
+         * @returns {Promise<any>}
+         */
         async login(email, password) {
             try {
                 const res = await axios.post('/login', { email, password });
@@ -23,11 +29,8 @@ export const useUserStore = defineStore('user', {
                 this.user = res.data.user;
                 this.token = res.data.token;
                 localStorage.setItem('token', res.data.token);
-
-                // Устанавливаем заголовок авторизации для будущих запросов
-                //axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
-
                 return res.data;
+
             } catch (error) {
                 this.errors.push(error.response.data.errors);
                 console.error('Login error:', error.response.data.errors);
@@ -35,6 +38,11 @@ export const useUserStore = defineStore('user', {
             }
         },
 
+        /**
+         * Получение данных об авторизированном
+         * пользователе.
+         * @returns {Promise<void>}
+         */
         async getUser() {
             // Если нет токена, пропускаем запрос
             if (!this.token) {
@@ -71,6 +79,10 @@ export const useUserStore = defineStore('user', {
             }
         },
 
+        /**
+         * Выход из системы
+         * @returns {Promise<void>}
+         */
         async logout() {
             try {
                 if (this.token) {
@@ -82,7 +94,9 @@ export const useUserStore = defineStore('user', {
                 this.clearAuth();
             }
         },
-
+        /**
+         * Очистка полей
+         */
         clearAuth() {
             this.user = null;
             this.token = null;

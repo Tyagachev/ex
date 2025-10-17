@@ -1,12 +1,13 @@
 import {defineStore} from "pinia";
+import {usePostsStore} from "@/stores/posts.js";
+import axios from "axios";
 
 export const useCommentsStore = defineStore('comment', {
     state: () => ({
-        commentsList: {},
+        commentsList: [],
         editArea: false,
         editText: '',
         responseCommentText: '',
-        showCommentText: false,
         showReply: false,
         commentText: '',
         replyText: ''
@@ -22,38 +23,87 @@ export const useCommentsStore = defineStore('comment', {
          * @param comments
          */
         getComments(comments) {
-            this.commentsList = {};
+            this.commentsList = [];
             this.commentsList = comments;
         },
 
         /**
-         *
+         * Отправка коммнета на пост
          * @param post
          * @returns {Promise<void>}
          */
         async submitComment(post) {
-            console.log(post)
-            const res = await axios.post('/api/comments', {
-                text: this.commentText,
-                postId: post.id
-            })
-            this.commentText = '';
+            try {
+                const res = await axios.post('/api/comments', {
+                    text: this.commentText,
+                    postId: post.id
+                })
+                await this.refresh(post.id)
+
+                const newCommentId = res.data.commentId;
+                this.getIdComment(newCommentId);
+
+            } finally {
+                this.commentText = '';
+            }
         },
 
         /**
-         *
+         * Отправка ответа на коммент
          * @param comment
          * @returns {Promise<void>}
          */
         async sendReplyComment(comment) {
             if (!this.replyText.trim()) return;
-            const res = axios.post('/api/comments', {
-                postId: comment.postId,
-                parentId: comment.id,
-                text: this.replyText,
-                replyId: comment.user?.id || null,
-            })
 
+            try {
+                const res = await axios.post('/api/comments', {
+                    postId: comment.postId,
+                    parentId: comment.id,
+                    text: this.replyText,
+                    replyId: comment.user?.id || null,
+                });
+                const id = res.data.post.id
+                await this.refresh(id)
+                const newCommentId = res.data.commentId;
+                this.getIdComment(newCommentId);
+            } finally {
+                this.replyText = '';
+
+            }
+        },
+
+        /**
+         * Обновление списка комментариев
+         * @param id
+         * @returns {Promise<void>}
+         */
+        async refresh(id) {
+            const res = await axios.get(`/api/posts/show/${id}`);
+            this.commentsList = res.data.comments;
+        },
+
+        /**
+         * Получение id созданного
+         * коммента
+         * @param newCommentId
+         */
+        getIdComment(newCommentId) {
+            const element = document.getElementById(newCommentId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'auto', block: 'end' });
+                //Вспышка нового комментария
+                this.fastHighlight(element);
+            }
+        },
+
+        /**
+         * Вспышка комментария
+         * @param element
+         */
+        fastHighlight(element) {
+            element.classList.add('fast-highlight');
+            setTimeout(() => element.classList.remove('fast-highlight'), 800);
         },
 
         /**
@@ -81,23 +131,6 @@ export const useCommentsStore = defineStore('comment', {
                     this.commentsList.splice(index, 1);
                 }
             }
-        },
-
-        /**
-         *
-         * @param userId
-         * @param replyUserId
-         * @param parent
-         * @returns {Promise<void>}
-         */
-        async getCommentText(userId, replyUserId, parent) {
-            const res = await axios.post('/api/comments/text', {
-                userId: userId.id,
-                replyUserId: replyUserId?.id || null,
-                parentId: parent || null
-            })
-            this.responseCommentText = res.data.text;
-            this.showCommentText = !this.showCommentText;
         },
     }
 });

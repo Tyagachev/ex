@@ -4,8 +4,6 @@ import router from "../router/router.js";
 import NProgress from "nprogress";
 import {useCommentsStore} from "@/stores/comments.js";
 
-
-
 export const usePostsStore = defineStore('posts', {
         state: () => ({
             posts: [],
@@ -24,7 +22,6 @@ export const usePostsStore = defineStore('posts', {
 
             /**
              * Получение постов
-             *
              * @returns {Promise<void>}
              */
             async getPosts() {
@@ -48,7 +45,7 @@ export const usePostsStore = defineStore('posts', {
                 }
             },
             /**
-             *
+             * Получение одного поста
              * @param post
              * @returns {Promise<void>}
              */
@@ -61,7 +58,7 @@ export const usePostsStore = defineStore('posts', {
                     const res = await axios.get(`/api/posts/show/${post}`);
                     this.postShow = res.data;
                     const commentStore = useCommentsStore();
-                    commentStore.getComments(this.postShow.comments);
+                    await commentStore.getComments(this.postShow.comments);
                     NProgress.done()
                 } finally {
                     this.loading = false;
@@ -70,7 +67,6 @@ export const usePostsStore = defineStore('posts', {
 
             /**
              * Отправка в БД
-             *
              * @param title
              * @param from
              * @param blocks
@@ -115,12 +111,17 @@ export const usePostsStore = defineStore('posts', {
                 }
             },
 
+            /**
+             * Очистка данных хранилища
+             * @returns {Promise<void>}
+             */
             async clearPostsField() {
                 this.page = 1;
                 this.posts = [];
                 this.loading = false;
                 this.scrollPosition = 0;
             },
+
             /**
              * Удаление поста
              * @param post
