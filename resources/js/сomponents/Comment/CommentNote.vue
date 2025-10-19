@@ -5,9 +5,9 @@
         </div>
     </transition>
     <!--<div :class="['relative', depth > 0 ? 'ml-2 pl-2 border-l border-slate-700' : '']">-->
-    <div :class="['relative', depth > 0 ? 'ml-2 pl-2 border-l border-slate-700' : '']">
+    <div class="relative pt-3 ">
         <div :id="comment.id" class="flex items-start gap-2">
-            <div v-if="depth > 0" class="absolute -left-1.5 top-2 w-3 h-3 rounded-full bg-slate-500 border border-slate-700"></div>
+            <div v-if="depth > 0"></div>
             <div
                 class="w-8 h-8 rounded-full flex-shrink-0 grid place-items-center text-slate-900 font-bold"
                 :style="{ background: avatarStore.avatarColor(comment.user?.name) }"
@@ -109,8 +109,11 @@
                         </div>
                     </div>
                     <div v-if="!commentStore.editArea" >
-                        <p class="text-sm hover:underline cursor-pointer text-blue-400 inline-block">{{comment.reply_user?.name ? `@${comment.reply_user.name}` : null}}</p>
-                        <p class="comment_text inline-block ml-1">{{comment.text }}</p>
+                        <div>
+                            <p class="text-sm hover:underline cursor-pointer text-blue-400">{{comment.reply_user?.name ? `@${comment.reply_user.name}` : null}}</p>
+                            <p class="comment_text inline-block">{{comment.text }}</p>
+                        </div>
+
                     </div>
 
                     <!-- Текстовое поле для редактирования -->
@@ -221,7 +224,7 @@
                     </div>
                 </div>
                 <!-- Поле ответа на комментарий -->
-                <div v-if="showReply" class="mt-2">
+                <div v-if="showReplyArea" class="mt-2">
                     <textarea
                         ref="textarea"
                         :placeholder="setPlaceholder(comment)"
@@ -255,15 +258,46 @@
             </div>
         </div>
         <!-- рекурсивный вывод дочерних комментариев -->
-        <div class="mt-2 space-y-2">
-            <CommentNote
-                v-for="child in comment.replies"
-                :key="child.id"
-                :comment="child"
-                :depth="depth + 1"
-                :active-comment-menu="activeCommentMenu"
-                @update:active-comment-menu="updateActiveCommentMenu"
-            />
+        <div class="space-y-2 pl-3">
+            <!-- Кнопка раскрытия ветки -->
+            <div v-if="comment.replies && comment.replies.length" class="mt-2 pl-9">
+                <button
+                    class="text-sm text-slate-400 hover:text-slate-200 flex items-center gap-1"
+                    @click="toggleReplies"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        class="transition-transform duration-200"
+                        :class="{ 'rotate-90': showReplies }"
+                    >
+                        <path
+                            fill="currentColor"
+                            d="M9 18l6-6-6-6"
+                        />
+                    </svg>
+                    <span>{{ showReplies ? 'Скрыть ответы' : `Показать ответы (${comment.replies.length})` }}</span>
+                </button>
+            </div>
+
+            <!-- Ветка дочерних комментариев -->
+            <transition name="fade">
+                <div
+                    v-if="showReplies"
+                    class="space-y-2 pl-3 ml-2 mt-2"
+                >
+                    <CommentNote
+                        v-for="child in comment.replies"
+                        :key="child.id"
+                        :comment="child"
+                        :depth="depth + 1"
+                        :active-comment-menu="activeCommentMenu"
+                        @update:active-comment-menu="updateActiveCommentMenu"
+                    />
+                </div>
+            </transition>
         </div>
     </div>
 
@@ -309,11 +343,18 @@ let showCommentText = ref(false);
 let responseCommentText = ref('');
 const showNotification = ref(false);
 const activeMenu = ref(null);
-const showReply = ref(false);
+const showReplyArea = ref(false);
 const textarea = ref(null);
 const commentMenu = ref(null);
+const showReplies = ref(false);
+
+
+
 const emits = defineEmits(['shownotificationmessage']);
 
+const toggleReplies = () => {
+    showReplies.value = !showReplies.value;
+};
 /**
  *
  * @param commentId
@@ -362,7 +403,7 @@ const setPlaceholder = (comment) => {
 }
 
 /**
- *
+ * Изменение высоты текстового поля комментария
  */
 const autoResize = () => {
 
@@ -375,7 +416,7 @@ const autoResize = () => {
 }
 
 /**
- *
+ * Закрытие текстового поля
  */
 const cancelEdit = () => {
     commentStore.editArea = false;
@@ -387,7 +428,7 @@ const cancelEdit = () => {
 const clearText = () => {
     commentStore.replyText = '';
     autoResize();
-    showReply.value = false;
+    showReplyArea.value = false;
 }
 /**
  *
@@ -422,13 +463,14 @@ const handleDocumentClick = (event) => {
  */
 const submitReply = async (comment) => {
     await commentStore.sendReplyComment(comment);
-    showReply.value = false;
+    showReplyArea.value = false;
+    showReplies.value = true;
 }
 /**
  *
  */
 const toggleReply = () => {
-    showReply.value = !showReply.value;
+    showReplyArea.value = !showReplyArea.value;
     commentStore.replyText.length ? commentStore.replyText = '' : commentStore.replyText
 }
 
@@ -455,5 +497,16 @@ const toggleReply = () => {
 .footer-icon {
     margin-right: 6px;
     font-size: 16px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: all 0.25s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+    transform: translateY(-4px);
 }
 </style>

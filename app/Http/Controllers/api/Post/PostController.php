@@ -118,7 +118,7 @@ class PostController extends Controller
             }
         }
 
-        //Comment::where('post_id', $post->id)->delete();
+        Comment::where('post_id', $post->id)->delete();
 
         $post->delete();
 

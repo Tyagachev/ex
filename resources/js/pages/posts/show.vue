@@ -69,7 +69,7 @@
                                         <button class="menu-item">
                                             <span class="text-white">Скрыть</span>
                                         </button>
-                                        <button @click="postStore.destroyPost(post)" class="menu-item">
+                                        <button @click="postStore.destroyPostFromShowPost(post)" class="menu-item">
                                             <span class="text-white">Удалить</span>
                                         </button>
                                     </div>
