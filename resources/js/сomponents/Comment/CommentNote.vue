@@ -110,10 +110,10 @@
                     </div>
                     <div v-if="!showEditArea" >
                         <div>
-                            <p class="text-sm hover:underline cursor-pointer text-blue-400">{{comment.reply_user?.name ? `@${comment.reply_user.name}` : null}}</p>
-                            <p class="comment_text inline-block">{{comment.text }}</p>
+                            <p class="comment_text inline-block">
+                                <span class="text-sm hover:underline cursor-pointer text-blue-400">{{comment.reply_user?.name ? `@${comment.reply_user.name}` : null}}</span> {{comment.text }}
+                            </p>
                         </div>
-
                     </div>
                     <!-- Текстовое поле для редактирования -->
                     <div v-show="showEditArea" class="mt-2">
