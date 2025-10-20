@@ -109,7 +109,7 @@
                         </div>
                     </div>
                     <div v-if="!showEditArea" >
-                        <div>
+                        <div class="pr-5">
                             <p class="comment_text inline-block">
                                 <span class="text-sm hover:underline cursor-pointer text-blue-400">{{comment.reply_user?.name ? `@${comment.reply_user.name}` : null}}</span> {{comment.text }}
                             </p>
