@@ -17,7 +17,7 @@ class CommentService
         try {
             return Comment::query()->create([
                 'text' => $request['text'],
-                'post_id' => $post->id,
+                'post_id' => $request['postId'],
                 'user_id' => Auth::id(),
                 'parent_id' => $request['parentId'],
                 'reply_user_id' => $request['replyId']
@@ -44,7 +44,7 @@ class CommentService
      * @param object $request
      * @return mixed
      */
-    public function updateComment(object $comment, object $request)
+    public function updateComment(object $comment, object $request): mixed
     {
          return $comment->update([
              'text' => $request->input('text')

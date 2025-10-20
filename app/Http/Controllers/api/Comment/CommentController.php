@@ -24,7 +24,7 @@ class CommentController extends Controller
     {
         $request->validated();
 
-        $post = Post::findOrFail($request['postId']);
+        $post = Post::query()->findOrFail($request['postId']);
 
         $comment = $service->storeComment($post, $request);
 
@@ -35,7 +35,6 @@ class CommentController extends Controller
                     ->with(['user', 'replyUser', 'replies']);
             },
         ]);
-
         return response()->json([
             'post' => $post,
             'commentId' => $comment->id,
@@ -69,17 +68,24 @@ class CommentController extends Controller
      */
     public function update(Comment $comment, CommentService $service, Request $request): JsonResponse
     {
-        $service->updateComment($comment, $request);
-
-        return response()->json([
-            'message' => 'Обновлено',
-            'status' => 200
-        ]);
+        $updateComment = $service->updateComment($comment, $request);
+        if ($updateComment) {
+            return response()->json([
+                'message' => 'Обновлено',
+                'status' => 200,
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Не удалось обновить',
+                'status' => 500
+            ], 500);
+        }
     }
 
     /**
      * Удаление коммента
      *
+     * @param Post $post
      * @param Comment $comment
      * @return JsonResponse
      */

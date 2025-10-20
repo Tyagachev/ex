@@ -102,7 +102,6 @@ const links = [
 const u = computed(() => userStore.u)
 
 const toggleSidebar = () => {
-    console.log(user);
     isSidebarOpen.value = !isSidebarOpen.value;
 }
 
@@ -137,7 +136,7 @@ const toggleSidebar = () => {
 
 /* Стили для кастомного скроллбара */
 .custom-scrollbar {
-    //scrollbar-width: none;
+    scrollbar-width: none;
     scrollbar-color: #2d3748 transparent;
 }
 

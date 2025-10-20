@@ -1,12 +1,10 @@
 import {defineStore} from "pinia";
-import {usePostsStore} from "@/stores/posts.js";
 import axios from "axios";
 
 export const useCommentsStore = defineStore('comment', {
     state: () => ({
         commentsList: [],
-        editArea: false,
-        editText: '',
+        activeMenu: null,
         responseCommentText: '',
         showReply: false,
         commentText: '',
@@ -18,6 +16,7 @@ export const useCommentsStore = defineStore('comment', {
     },
 
     actions: {
+
         /**
          * Получение комментариев
          * @param comments
@@ -38,14 +37,21 @@ export const useCommentsStore = defineStore('comment', {
                     text: this.commentText,
                     postId: post.id
                 })
-                await this.refresh(post.id)
 
+                await this.refresh(post.id)
                 const newCommentId = res.data.commentId;
                 this.getIdComment(newCommentId);
-
             } finally {
                 this.commentText = '';
             }
+        },
+
+        /**
+         * Меню редактирования комментария
+         * @param commentId
+         */
+        setActiveMenu(commentId) {
+            this.activeMenu = this.activeMenu === commentId ? null : commentId;
         },
 
         /**
@@ -65,11 +71,11 @@ export const useCommentsStore = defineStore('comment', {
                 });
                 const id = res.data.post.id
                 await this.refresh(id)
+                /*не уверен что это будет удобно
                 const newCommentId = res.data.commentId;
-                this.getIdComment(newCommentId);
+                this.getIdComment(newCommentId);*/
             } finally {
                 this.replyText = '';
-
             }
         },
 
@@ -104,18 +110,6 @@ export const useCommentsStore = defineStore('comment', {
         fastHighlight(element) {
             element.classList.add('fast-highlight');
             setTimeout(() => element.classList.remove('fast-highlight'), 800);
-        },
-
-        /**
-         * Просмотр комментария
-         * @param comment
-         * @returns {Promise<void>}
-         */
-        async showEdit(comment) {
-            if (this.editArea) {
-                const res = await axios.get(`/api/comments/${comment.id}/edit`);
-                this.editText = res.data.text || res.data;
-            }
         },
 
         /**

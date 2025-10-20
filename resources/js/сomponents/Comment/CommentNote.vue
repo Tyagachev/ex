@@ -24,7 +24,7 @@
                     <span class="time_comment">{{ comment.createdAtHuman }}</span>
                     <!-- Кнопка троеточия для меню -->
                     <div class="ml-auto relative">
-                        <button class="rotate-90 p-2 rounded-full hover:bg-slate-700" @click.stop="toggleCommentMenu(comment.id)">
+                        <button class="rotate-90 p-2 rounded-full hover:bg-slate-700 cursor-pointer" @click.stop="toggleCommentMenu(comment.id)">
                             <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="16" height="16" viewBox="0 0 100 20">
                                 <g>
                                     <circle cx="10" cy="10" r="10" fill="white"/>
@@ -34,27 +34,27 @@
                             </svg>
                         </button>
                         <!-- Выпадающее меню -->
-                        <div v-if="activeCommentMenu === comment.id"
+                        <div v-if="activeMenuComment.activeMenu === comment.id"
                              class="absolute right-0 top-full bg-slate-800 border border-slate-700 rounded shadow-lg z-10"
                              ref="commentMenu">
                             <div v-if="user?.id === comment.user.id">
                                 <div class="flex text-center">
                                     <button
-                                        class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700"
-                                        @click="commentStore.showEdit(comment)"
+                                        class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700 cursor-pointer"
+                                        @click="showEdit(comment)"
                                     >
                                         <div class="mr-1" ><i class="fa fa-pencil" aria-hidden="true"></i></div>
-                                        <div>Редактировать</div>
+                                        <span>Редактировать</span>
                                     </button>
 
                                 </div>
 
                                 <button
-                                    class="flex block w-full text-left px-2 py-2 text-sm hover:bg-slate-700 text-red-400"
+                                    class="flex block w-full text-left px-2 py-2 text-sm hover:bg-slate-700 text-red-400 cursor-pointer"
                                     @click="commentStore.deleteComment(comment)"
                                 >
-                                    <div class="mr-1" ><i class="fa fa-trash" aria-hidden="true"></i></div>
-                                    <div>Удалить</div>
+                                    <div class="mr-1 " ><i class="fa fa-trash" aria-hidden="true"></i></div>
+                                    <span>Удалить</span>
                                 </button>
                             </div>
                             <div v-else>
@@ -62,13 +62,13 @@
                                     class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700"
                                 >
                                     <div class="mr-1" ><i class="fa fa-bell" aria-hidden="true"></i></div>
-                                    <div>Подписаться</div>
+                                    <span>Подписаться</span>
                                 </button>
                                 <button
                                     class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700"
                                 >
                                     <div class="mr-1"><i class="fa fa-flag" aria-hidden="true"></i></div>
-                                    <div>Пожаловаться</div>
+                                    <span>Пожаловаться</span>
                                 </button>
                                 <button
                                     class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700"
@@ -82,7 +82,7 @@
                                         </svg>
                                     </span>
                                     </div>
-                                    <div>Сохранить</div>
+                                    <span>Сохранить</span>
                                 </button>
                             </div>
                         </div>
@@ -108,28 +108,26 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="!commentStore.editArea" >
+                    <div v-if="!showEditArea" >
                         <div>
                             <p class="text-sm hover:underline cursor-pointer text-blue-400">{{comment.reply_user?.name ? `@${comment.reply_user.name}` : null}}</p>
                             <p class="comment_text inline-block">{{comment.text }}</p>
                         </div>
 
                     </div>
-
                     <!-- Текстовое поле для редактирования -->
-                    <div v-if="commentStore.editArea" class="mt-2">
+                    <div v-show="showEditArea" class="mt-2">
                         <textarea
                             ref="textarea"
-                            :placeholder="setPlaceholder(comment)"
-                            :value="commentStore.editText"
+                            @input="handleEditInput"
+                            :value="editText"
                             class="comment-textarea w-full"
-                            @input="autoResize"
                             rows="1"
                         ></textarea>
                         <!-- Счетчик символов для редактирования -->
                         <div class="flex justify-between items-center mt-2">
                             <div class="text-xs text-slate-400" :class="{ 'text-red-500': editText.length > 3000 }">
-                                {{ commentStore.editText.length }}/3000
+                                {{ editText.length }}/3000
                             </div>
                             <div class="flex justify-end gap-2">
                                 <button
@@ -140,8 +138,8 @@
                                 </button>
                                 <button
                                     class="text-sm submit-button"
-                                    @click="edit(comment)"
-                                    :disabled="!commentStore.editText || commentStore.editText.length > 3000"
+                                    @click="updateComment(comment)"
+                                    :disabled="!editText || editText.length > 3000"
                                 >
                                     Обновить
                                 </button>
@@ -262,23 +260,12 @@
             <!-- Кнопка раскрытия ветки -->
             <div v-if="comment.replies && comment.replies.length" class="mt-2 pl-9">
                 <button
-                    class="text-sm text-slate-400 hover:text-slate-200 flex items-center gap-1"
+                    class="cursor-pointer text-blue-400 text-sm hover:text-slate-200 flex items-center gap-1"
                     @click="toggleReplies"
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        class="transition-transform duration-200"
-                        :class="{ 'rotate-90': showReplies }"
-                    >
-                        <path
-                            fill="currentColor"
-                            d="M9 18l6-6-6-6"
-                        />
-                    </svg>
                     <span>{{ showReplies ? 'Скрыть ответы' : `Показать ответы (${comment.replies.length})` }}</span>
+                    <i :class="[showReplies ? 'fa rotate-180 fa-caret-down' : 'fa fa-caret-down']"></i>
+
                 </button>
             </div>
 
@@ -293,8 +280,6 @@
                         :key="child.id"
                         :comment="child"
                         :depth="depth + 1"
-                        :active-comment-menu="activeCommentMenu"
-                        @update:active-comment-menu="updateActiveCommentMenu"
                     />
                 </div>
             </transition>
@@ -306,12 +291,13 @@
 <script setup>
 
 import {useUserStore} from "@/stores/users.js";
-import {computed, ref} from "vue";
+import {computed, nextTick, ref} from "vue";
 import {useAvatarStore} from "@/stores/avatars.js";
 import {useCommentsStore} from "@/stores/comments.js";
 import {useVotesStore} from "@/stores/votes.js";
 import {useCountsStore} from "@/stores/counts.js";
 import CommentNote from "@/сomponents/Comment/CommentNote.vue";
+import axios from "axios";
 
 defineOptions({
     name: "CommentNote",
@@ -325,10 +311,6 @@ defineProps({
     depth: {
         type: Number,
         default: 0
-    },
-    activeCommentMenu: {
-        type: Number,
-        default: null
     }
 })
 
@@ -337,31 +319,37 @@ const countStore = useCountsStore();
 const voteStore = useVotesStore();
 const commentStore = useCommentsStore();
 const userStore = useUserStore();
+let activeMenuComment = useCommentsStore();
+
 const user = computed(() => userStore.u);
 
 let showCommentText = ref(false);
 let responseCommentText = ref('');
+
+const showEditArea = ref(false);
+const editText = ref('');
 const showNotification = ref(false);
-const activeMenu = ref(null);
 const showReplyArea = ref(false);
 const textarea = ref(null);
 const commentMenu = ref(null);
 const showReplies = ref(false);
 
-
-
 const emits = defineEmits(['shownotificationmessage']);
 
+/**
+ * Открытие или закрытие дочерних комментов
+ */
 const toggleReplies = () => {
     showReplies.value = !showReplies.value;
 };
+
 /**
- *
+ * Открытия меню действия с комментом
  * @param commentId
  */
 const toggleCommentMenu = (commentId) => {
-    activeMenu.value = activeMenu.value === commentId ? null : commentId;
-    if (activeMenu.value === commentId) {
+    activeMenuComment.setActiveMenu(commentId)
+    if (activeMenuComment.activeMenu === commentId) {
         document.addEventListener('click', closeMenuOnClickOutside);
     } else {
         document.removeEventListener('click', closeMenuOnClickOutside);
@@ -369,15 +357,16 @@ const toggleCommentMenu = (commentId) => {
 }
 
 /**
- *
+ * Закрытия меню действия с комментом
+ * (клик в любом месте экрана)
  */
 const closeMenuOnClickOutside = () => {
-    activeMenu.value = null;
+    activeMenuComment.activeMenu = null;
     document.removeEventListener('click', closeMenuOnClickOutside);
 }
 
 /**
- *
+ * Получения текста комментария для цитаты
  * @param userId
  * @param replyUserId
  * @param parent
@@ -394,7 +383,60 @@ const getCommentText = async (userId, replyUserId, parent) => {
 }
 
 /**
- *
+ * Просмотр комментария
+ * @param comment
+ * @returns {Promise<void>}
+ */
+const showEdit = async (comment) => {
+    if (!showEditArea.value) {
+        const res = await axios.get(`/api/comments/${comment.id}/edit`);
+        showEditArea.value = true;
+        editText.value = res.data.text || res.data;
+        await nextTick();
+        autoResize()
+    }
+}
+
+/**
+ * Обновление комментария
+ * @param comment
+ * @returns {Promise<void>}
+ */
+const updateComment = async (comment) => {
+    const res = await axios.patch(`/api/comments/${comment.id}`, {
+        text: editText.value
+    })
+
+    if (res.data.status === 200) {
+        editText.value = "";
+        showEditArea.value = false;
+    }
+    await commentStore.refresh(comment.postId);
+}
+
+/**
+ * Отслеживание ввода текста
+ * для изменения размера поля ввода
+ * @param event
+ */
+const handleEditInput = (event) => {
+    editText.value = event.target.value;
+    autoResize();
+}
+
+/**
+ * Изменение высоты текстового поля комментария
+ */
+const autoResize = () => {
+    if (!textarea.value) return;
+    textarea.value.style.height = 'auto';
+    const newHeight = Math.min(textarea.value.scrollHeight, 200);
+    textarea.value.style.height = newHeight + 'px';
+    textarea.value.style.overflowY = textarea.value.scrollHeight > 200 ? 'auto' : 'hidden';
+}
+
+/**
+ * Placeholder ответа на коммент
  * @param comment
  * @returns {string}
  */
@@ -403,49 +445,31 @@ const setPlaceholder = (comment) => {
 }
 
 /**
- * Изменение высоты текстового поля комментария
- */
-const autoResize = () => {
-
-    if (!textarea.value) return;
-
-    textarea.value.style.height = 'auto';
-    const newHeight = Math.min(textarea.value.scrollHeight, 200);
-    textarea.value.style.height = newHeight + 'px';
-    textarea.value.style.overflowY = textarea.value.scrollHeight > 200 ? 'auto' : 'hidden';
-}
-
-/**
  * Закрытие текстового поля
  */
 const cancelEdit = () => {
-    commentStore.editArea = false;
+    showEditArea.value = false;
     closeCommentMenu();
 }
+
 /**
- *
+ * Очистка поля ответа на комментарий
  */
 const clearText = () => {
     commentStore.replyText = '';
     autoResize();
     showReplyArea.value = false;
 }
+
 /**
- *
+ * Закрытие меню управления комментарием
  */
 const closeCommentMenu = () => {
-    updateActiveCommentMenu(null);
     document.removeEventListener('click', handleDocumentClick);
 }
+
 /**
- *
- * @param commentId
- */
-const  updateActiveCommentMenu = (commentId) => {
-    //$emit('update:active-comment-menu', commentId);
-}
-/**
- *
+ * Открытие или закрытие меню коммента
  * @param event
  */
 const handleDocumentClick = (event) => {
@@ -458,7 +482,7 @@ const handleDocumentClick = (event) => {
 }
 
 /**
- *
+ * Отправка ответа на комментарий
  * @param comment
  */
 const submitReply = async (comment) => {
@@ -466,17 +490,20 @@ const submitReply = async (comment) => {
     showReplyArea.value = false;
     showReplies.value = true;
 }
+
 /**
- *
+ * Открытие или скрытие поля ввода комментария
  */
 const toggleReply = () => {
     showReplyArea.value = !showReplyArea.value;
     commentStore.replyText.length ? commentStore.replyText = '' : commentStore.replyText
 }
 
+
 </script>
 
 <style scoped>
+
 .footer-btn {
     display: flex;
     align-items: center;

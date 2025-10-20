@@ -60,8 +60,6 @@ export const useUserStore = defineStore('user', {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
 
                 const response = await axios.get('/user');
-                console.log('User data loaded:', response.data);
-
                 this.user = response.data;
                 this.isInitialized = true;
             } catch (error) {

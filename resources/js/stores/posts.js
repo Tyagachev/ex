@@ -44,6 +44,7 @@ export const usePostsStore = defineStore('posts', {
                     this.loading = false;
                 }
             },
+
             /**
              * Получение одного поста
              * @param post
@@ -142,6 +143,12 @@ export const usePostsStore = defineStore('posts', {
                     }
                 }
             },
+
+            /**
+             * Удаление поста со страницы post/show/{id}
+             * @param post
+             * @returns {Promise<void>}
+             */
             async destroyPostFromShowPost(post) {
                 const res = await axios.delete(`/api/posts/${post.id}`);
                 if (res.status === 200) {

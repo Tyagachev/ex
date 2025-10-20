@@ -192,7 +192,10 @@ const textarea = ref(null);
 const goBack = () => {
     router.back();
 }
-
+/**
+ * Открытия меню действия с постом
+ * @param postId
+ */
 const toggleMenu = (postId) => {
     activeMenu.value = activeMenu.value === postId ? null : postId;
     if (activeMenu.value === postId) {
@@ -202,6 +205,9 @@ const toggleMenu = (postId) => {
     }
 }
 
+/**
+ * Сообщение о копировании ссылки
+ */
 const showNotificationMessage = () => {
     if (notificationTimeout) {
         clearTimeout(notificationTimeout);
@@ -214,16 +220,26 @@ const showNotificationMessage = () => {
     }, 2000);
 }
 
+/**
+ * Закрытия меню действия с постом
+ * (клик в любом месте экрана)
+ */
 const closeMenuOnClickOutside = () => {
     activeMenu.value = null;
     document.removeEventListener('click', closeMenuOnClickOutside);
 }
 
+/**
+ * Очистка поля текста комментария
+ */
 const clearText = () => {
     textarea.value.style.height = 'auto';
     commentStore.commentText = '';
 }
 
+/**
+ * Изменения размера textarea
+ */
 const autoResize = () => {
     if (!textarea.value) return;
 
@@ -232,7 +248,7 @@ const autoResize = () => {
     textarea.value.style.height = newHeight + 'px';
     textarea.value.style.overflowY = textarea.value.scrollHeight > 200 ? 'auto' : 'hidden';
 }
-//
+
 </script>
 
 <style scoped>
