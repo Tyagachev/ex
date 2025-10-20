@@ -21,12 +21,12 @@
                             </router-link>
                             <span class="text-white text-sm hidden md:inline">{{ u.name }}</span>
                             <button type='button' @click="userStore.logout()"
-                                    class='py-2.5 px-4 text-sm bg-indigo-500 text-white rounded-full font-semibold transition hover:bg-indigo-700'>
+                                    class='py-2.5 px-4 cursor-pointer text-sm bg-indigo-500 text-white rounded-full font-semibold transition hover:bg-indigo-700'>
                                 Выход
                             </button>
                         </nav>
                         <nav v-else>
-                            <router-link class='py-2.5 px-4 text-sm bg-indigo-500 text-white rounded-full font-semibold transition hover:bg-indigo-700'
+                            <router-link class='py-2.5 px-4 cursor-pointer text-sm bg-indigo-500 text-white rounded-full font-semibold transition hover:bg-indigo-700'
                                   :to="{name: 'login.page'}">
                                 Вход
                             </router-link>
