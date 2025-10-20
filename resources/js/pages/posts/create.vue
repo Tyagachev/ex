@@ -1,10 +1,11 @@
 <template>
     <div class="container">
-        <router-link :to="{name: 'main'}">
-            <button class="mb-2 py-2.5 px-4 bg-orange-600 hover:bg-gray-500 text-sm text-white rounded-full">
-                Назад
-            </button>
-        </router-link>
+        <button
+            @click="goBack"
+            class="mb-2 py-2.5 px-4 bg-orange-600 hover:bg-gray-500 text-sm text-white rounded-full cursor-pointer"
+        >
+            Назад
+        </button>
         <div class="relative">
             <TextInput
                 v-model="limitedTitle"
@@ -19,7 +20,6 @@
                 {{ limitedTitle.length }}/255
             </div>
         </div>
-
 
         <!-- Блоки -->
         <div v-for="(block, index) in blocks" :key="index" class="my-4">
@@ -105,12 +105,13 @@ import {computed, ref} from "vue";
 import QuillEditor from "@/сomponents/Quill/QuillEditor.vue";
 import BlueButton from "@/UI/Buttons/BlueButton.vue";
 import {usePostsStore} from "@/stores/posts.js";
+import {useRouter} from "vue-router";
 
 
 defineOptions({
     name: "Create"
 })
-
+const router = useRouter();
 const postStore = usePostsStore();
 
 const title = ref("");
@@ -118,6 +119,10 @@ const alertBlocks = ref("");
 const blocks = ref([]);
 const showMenu = ref(false);
 const from = "post";
+
+const goBack = () => {
+    router.back();
+}
 
 const limitedTitle = computed({
     get: () => title.value,
