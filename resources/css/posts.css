@@ -131,7 +131,6 @@
     opacity: 0;
 }
 
-
 .notification {
     position: fixed;
     top: 50%;
@@ -146,30 +145,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Простой курсор pointer без увеличения при наведении */
 .cursor-pointer {
     cursor: pointer;
-}
-
-.footer-btn {
-    display: flex;
-    align-items: center;
-    padding: 10px 10px;
-    background: none;
-    border: none;
-    border-radius: 18px;
-    cursor: pointer;
-    margin-right: 6px;
-    color: #b0b0b0;
-    background: #2a2a2a;
-}
-
-.footer-btn:hover {
-    background: #383737;
-}
-
-.footer-icon {
-    margin-right: 6px;
-    font-size: 16px;
 }
 

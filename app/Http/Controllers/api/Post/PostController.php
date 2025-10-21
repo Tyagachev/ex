@@ -47,6 +47,7 @@ class PostController extends Controller
         $this->authorize('create', Post::class);
         $data = $request->validated();
         $imageCount = collect($data['blocks'])->where('type', 'image')->count();
+
         if ($imageCount > 10) {
             return response()->json(['error' => 'Максимум 10 изображений']);
         }
@@ -54,7 +55,7 @@ class PostController extends Controller
         try {
             $service->storePost($data, $request);
         } catch (Exception $e) {
-            return back()->withErrors(['error' => 'Ошибка загрузки: ' . $e->getMessage()]);
+            return response()->json(['error' => 'Ошибка загрузки: ' . $e->getMessage()]);
         }
 
         return response()->json(['status' => 200]);
@@ -79,14 +80,14 @@ class PostController extends Controller
         $imageCount = collect($data['blocks'])->where('type', 'image')->count();
 
         if ($imageCount > 10) {
-            return back()->withErrors(['blocks' => 'Максимум 10 изображений']);
+            return response()->json(['blocks' => 'Максимум 10 изображений']);
         }
 
         try {
             $service->updatePost($data, $request, $post);
             return response()->json(['status' => 200]);
         } catch (Exception $e) {
-            return back()->withErrors(['error' => 'Ошибка обновления: ' . $e->getMessage()]);
+            return response()->json(['error' => 'Ошибка обновления: ' . $e->getMessage()]);
         }
     }
 

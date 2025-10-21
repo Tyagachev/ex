@@ -90,7 +90,7 @@
         </div>
         <BlueButton
             @click="submitUpdateContent"
-            class="submit-btn my-6"
+            class="submit-btn my-6 cursor-pointer"
             :disabled="form.title.length === 0 || form.title.length > 255"
         >
             Обновить
