@@ -24,6 +24,7 @@ class UpdatePostRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'from' => 'required|string',
+            'postId' => 'required|int',
             'blocks' => 'required|array|max:50',
             'blocks.*.type' => 'required|string|in:text,image',
             'blocks.*.content' => 'nullable|string|max:5000', // для текстовых блоков

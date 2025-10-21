@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\Post;
 use App\Events\Post\PostViewCount;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\StorePostRequest;
+use App\Http\Requests\Post\UpdatePostRequest;
 use App\Http\Resources\Comments\CommentResource;
 use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\UserResource;
@@ -15,20 +16,23 @@ use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
 
-    public function index()
+    /**
+     * @return AnonymousResourceCollection
+     */
+    public function index(): AnonymousResourceCollection
     {
         $posts = Post::with('user')
             ->orderBy('created_at','desc')->paginate(10);
 
         return PostResource::collection($posts);
     }
-
 
     /**
      * Создание поста
@@ -54,7 +58,36 @@ class PostController extends Controller
         }
 
         return response()->json(['status' => 200]);
+    }
 
+    /**
+     * Обновление поста
+     *
+     * @param UpdatePostRequest $request
+     * @param PostService $service
+     * @return JsonResponse|RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function update(UpdatePostRequest $request, PostService $service): JsonResponse|RedirectResponse
+    {
+        $data = $request->validated();
+
+        $post = Post::query()->find($data['postId']);
+
+        $this->authorize('update', $post);
+
+        $imageCount = collect($data['blocks'])->where('type', 'image')->count();
+
+        if ($imageCount > 10) {
+            return back()->withErrors(['blocks' => 'Максимум 10 изображений']);
+        }
+
+        try {
+            $service->updatePost($data, $request, $post);
+            return response()->json(['status' => 200]);
+        } catch (Exception $e) {
+            return back()->withErrors(['error' => 'Ошибка обновления: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -87,15 +120,15 @@ class PostController extends Controller
                 'title' => $post->title,
                 'content' => $post->content,
                 'viewCount' => $post->view,
-                'createdAtHuman' => $post->created_at_human,
-                'updatedAtHuman' => $post->updated_at_human,
                 'user' => UserResource::make($post->user),
                 'comments' => CommentResource::collection($post->comments),
                 'commentsCount' => $commentsCount,
                 'totalVotes' => $post->totalVotes(),
                 'votes' => $post->votes,
                 'blocks' => $post->blocks,
-                'shareCount' => $post->share_count
+                'shareCount' => $post->share_count,
+                'createdAtHuman' => $post->created_at_human,
+                'updatedAtHuman' => $post->updated_at_human,
         ]);
     }
 
@@ -104,8 +137,10 @@ class PostController extends Controller
      * и связанных с ним комментов
      *
      * @param Post $post
+     * @return JsonResponse
+     * @throws AuthorizationException
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post): JsonResponse
     {
         $this->authorize('delete', $post);
 

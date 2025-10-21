@@ -163,7 +163,7 @@ defineOptions({
     name: "Show"
 })
 
-onMounted( async ()=>{
+onMounted( async () => {
      await postStore.getPost(route.params.id)
 })
 

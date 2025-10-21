@@ -57,7 +57,7 @@
                         </a>-->
 
                         <PrimaryButton
-                            class="ms-4 rounded-full bg-indigo-600  rounded-full hover:bg-indigo-700"
+                            class="ms-4 rounded-full bg-indigo-600 cursor-pointer rounded-full hover:bg-indigo-700"
                             :class="{ 'opacity-25': form.processing }"
                             :disabled="form.processing"
                         >
@@ -105,7 +105,7 @@ const form = reactive({
 const submit = async () => {
     const login = await userStore.login(form.email, form.password);
     if (login.status === 200) {
-        router.push({name: 'main'});
+        router.back();
     }
 }
 

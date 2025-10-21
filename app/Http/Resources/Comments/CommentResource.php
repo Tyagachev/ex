@@ -19,16 +19,15 @@ class CommentResource extends JsonResource
             'id' => $this->id,
             'text' => $this->text,
             'postId' => $this->post_id,
-            'createdAtHuman' => $this->created_at->diffForHumans(),
-            'updatedAtHuman' => $this->updated_at->diffForHumans(),
             'parent' => $this->parent_id,
             'user' => new UserResource($this->whenLoaded('user')),
-
             'reply_user' => $this->replyUser ? new UserResource($this->replyUser) : null,
             'replies' => CommentResource::collection($this->whenLoaded('replies')),
             'votes' => count($this->votes) ? $this->votes : [0],
             'totalVotes' => $this->totalVotes(),
-            'shareCount' => $this->share_count
+            'shareCount' => $this->share_count,
+            'createdAtHuman' => $this->created_at->diffForHumans(),
+            'updatedAtHuman' => $this->updated_at->diffForHumans(),
         ];
     }
 }

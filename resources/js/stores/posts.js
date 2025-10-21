@@ -97,18 +97,57 @@ export const usePostsStore = defineStore('posts', {
                     }
                 });
 
-                const res = await axios.post('/api/posts', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
+                const res = await axios.post('/api/posts', formData);
+                try {
+                    if (res.status === 200) {
+                        await this.clearPostsField();
+                        await router.back();
+                    }
+                } finally {
+                    NProgress.done()
+                }
+
+            },
+
+            /**
+             * Отправка в БД
+             * Обновление поста
+             * @returns {Promise<void>}
+             */
+            async storeUpdatePosts(form) {
+                NProgress.start();
+                if (form.title.length === 0 || form.title.length > 255) {
+                    NProgress.done();
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('title', form.title);
+                formData.append('from', form.from);
+                formData.append('postId', this.post.id);
+
+                form.blocks.forEach((block, index) => {
+                    formData.append(`blocks[${index}][type]`, block.type);
+
+                    if (block.type === 'text') {
+                        formData.append(`blocks[${index}][content]`, block.content);
+                    } else if (block.type === 'image') {
+                        if (block.file) {
+                            formData.append(`blocks[${index}][file]`, block.file);
+                        } else if (block.url) {
+                            formData.append(`blocks[${index}][path]`, block.url);
+                        }
                     }
                 });
 
-                if (res.status === 200) {
-                    await this.clearPostsField();
-                    NProgress.done()
-                    await router.push({
-                        name: 'main',
-                    });
+                try {
+                    const res = await axios.post('/api/posts/update', formData);
+                    if (res.status === 200) {
+                        await this.clearPostsField();
+                        await router.back();
+                    }
+                }finally {
+                    NProgress.done();
                 }
             },
 
