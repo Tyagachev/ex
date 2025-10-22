@@ -1,24 +1,27 @@
 <template>
     <div v-if="user?.id !== item.user?.id" class="vote-panel flex items-center">
-        <button @click.prevent="vote.upVote(item)" class="vote-btn">
-            <span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 127 124.848">
-                    <path
-                        :class="[vote.getUserVote(item, user) === 1 ? 'v-up' : 'vote-icon up']"
-                        stroke="currentColor" stroke-width="6"
-                        d="M4.408 73.59l31.855 0c1.105,0 2.006,0.901 2.006,2.006l0 29.189c0,11.05 9.018,20.063 20.064,20.063l10.333 0c11.047,0 20.064,-9.017 20.064,-20.063l0 -29.189c0,-1.105 0.901,-2.006 2.006,-2.006l31.909 0c0.801,0 1.487,-0.439 1.822,-1.167 0.336,-0.728 0.224,-1.535 -0.297,-2.144l-58.565 -68.511c-0.393,-0.459 -0.912,-0.7 -1.516,-0.703 -0.604,-0.003 -1.125,0.233 -1.522,0.689l-59.672 68.511c-0.528,0.607 -0.647,1.417 -0.313,2.149 0.333,0.733 1.022,1.176 1.826,1.176z"/>
-                </svg>
-            </span>
-        </button>
-        <div class="vote-count px-2">
-            <p :class="[item.totalVotes === 0 ? 'total_white' : item.totalVotes > 0 ? 'total_green' : 'total_red']">
-                {{ count.formatCount(item.totalVotes) }}</p>
+        <div class="flex">
+            <button @click.prevent="upVote(item)" class="vote-btn">
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 127 124.848">
+                        <path
+                            :class="[userVote === 1 ? 'v-up' : 'vote-icon up']"
+                            stroke="currentColor" stroke-width="6"
+                            d="M4.408 73.59l31.855 0c1.105,0 2.006,0.901 2.006,2.006l0 29.189c0,11.05 9.018,20.063 20.064,20.063l10.333 0c11.047,0 20.064,-9.017 20.064,-20.063l0 -29.189c0,-1.105 0.901,-2.006 2.006,-2.006l31.909 0c0.801,0 1.487,-0.439 1.822,-1.167 0.336,-0.728 0.224,-1.535 -0.297,-2.144l-58.565 -68.511c-0.393,-0.459 -0.912,-0.7 -1.516,-0.703 -0.604,-0.003 -1.125,0.233 -1.522,0.689l-59.672 68.511c-0.528,0.607 -0.647,1.417 -0.313,2.149 0.333,0.733 1.022,1.176 1.826,1.176z"/>
+                    </svg>
+                </span>
+            </button>
+            <div class="vote-count">
+                <p
+                    :class="[post.totalVotes === 0 ? 'total_white' : post.totalVotes > 0 ? 'total_green' : 'total_red']">
+                    {{ count.formatCount(post.totalVotes) }}</p>
+            </div>
         </div>
-        <button @click.prevent="vote.downVote(item)" class="vote-btn">
+        <button @click.prevent="downVote(item)" class="vote-btn">
             <span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 127 124.848">
                     <path
-                        :class="[vote.getUserVote(item, user) === -1 ? 'v-down' : 'vote-icon down']"
+                        :class="[userVote === -1 ? 'v-down' : 'vote-icon down']"
                         transform="translate(0,124.848) scale(1,-1)"
                         stroke="currentColor" stroke-width="6"
                         d="M4.408 73.59l31.855 0c1.105,0 2.006,0.901 2.006,2.006l0 29.189c0,11.05 9.018,20.063 20.064,20.063l10.333 0c11.047,0 20.064,-9.017 20.064,-20.063l0 -29.189c0,-1.105 0.901,-2.006 2.006,-2.006l31.909 0c0.801,0 1.487,-0.439 1.822,-1.167 0.336,-0.728 0.224,-1.535 -0.297,-2.144l-58.565 -68.511c-0.393,-0.459 -0.912,-0.7 -1.516,-0.703 -0.604,-0.003 -1.125,0.233 -1.522,0.689l-59.672 68.511c-0.528,0.607 -0.647,1.417 -0.313,2.149 0.333,0.733 1.022,1.176 1.826,1.176z"/>
@@ -36,8 +39,8 @@
             </span>
         </button>
         <div class="vote-count px-2">
-            <p :class="[item.totalVotes === 0 ? 'total_white' : item.totalVotes > 0 ? 'total_green' : 'total_red']">
-                {{ count.formatCount(item.totalVotes) }}</p>
+            <p :class="[userVote === 0 ? 'total_white' : userVote > 0 ? 'total_green' : 'total_red']">
+                {{ count.formatCount(post.totalVotes) }}</p>
         </div>
         <button class="no_vote-btn">
             <span>
@@ -60,14 +63,14 @@
         </span>
 
         <div class="comments_count">
-            {{ count.formatCount(item.commetsCount) }}
+            {{ count.formatCount(post.commetsCount) }}
         </div>
     </button>
     <div class="footer-btn">
         <span class="footer-icon">
             <i class="fa fa-eye" aria-hidden="true"></i>
         </span>
-        {{ count.formatCount(item.viewCount) }}
+        {{ count.formatCount(post.viewCount) }}
     </div>
     <button class="footer-btn" @click="copyLink(item, bodyUrl, componentType)">
         <span class="footer-icon">
@@ -96,9 +99,8 @@
 
 <script setup>
 
-import {useRouter} from "vue-router";
 import axios from "axios";
-import {useVotesStore} from "@/stores/votes.js";
+import {useRouter} from "vue-router";
 import {useCountsStore} from "@/stores/counts.js";
 import {useUserStore} from "@/stores/users.js";
 import {computed} from "vue";
@@ -107,10 +109,10 @@ defineOptions({
     name: "Panel"
 })
 
-defineProps({
+const props = defineProps({
     item: {
         type: Object,
-        default: () => {}
+        default: {}
     },
     componentType: {
         type: String
@@ -120,17 +122,62 @@ defineProps({
     }
 })
 
-const user = computed(() => userStore.u)
 const userStore = useUserStore();
-const vote = useVotesStore();
 const count = useCountsStore();
 const router = useRouter();
 
+const post = props.item;
+const user = userStore.user;
+
 const emits = defineEmits(['shownotificationmessage'])
+
+const userVote = computed(() => {
+    if (!user || !post || !Array.isArray(post.votes)) return 0;
+    const voteObject = post.votes.find(vote => vote.user_id === user.id);
+    return voteObject ? voteObject.vote : 0;
+});
+
 const postShow = (post) => {
     router.push({name: 'posts.show', params: { id: post.id }});
 }
+/**
+ * Кнопка голосования вверх
+ * @param post
+ * @returns {Promise<void>}
+ */
+const upVote = async (post) => {
+    const res = await axios.post('/api/votes', {
+        id: post.id,
+        vote: 1,
+        type: 'post'
+    });
+    post.totalVotes = res.data.totalVotes;
+    post.votes = res.data.votes;
+}
 
+/**
+ * Кнопка голосования вниз
+ * @param post
+ * @returns {Promise<void>}
+ */
+const downVote = async (post) => {
+
+    const res = await axios.post('/api/votes', {
+        id: post.id,
+        vote: -1,
+        type: 'post'
+    })
+    post.totalVotes = res.data.totalVotes;
+    post.votes = res.data.votes;
+}
+
+/**
+ * "Поделиться ссылкой"
+ * @param item
+ * @param bodyUrl
+ * @param componentType
+ * @returns {Promise<void>}
+ */
 const copyLink = async (item, bodyUrl, componentType) => {
 
     const url = window.location.origin;

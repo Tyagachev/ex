@@ -35,31 +35,17 @@ class VoteController extends Controller
      *
      * @param Request $request
      * @param VoteService $service
+     * @return JsonResponse
      */
-    public function store(Request $request, VoteService $service)
+    public function store(Request $request, VoteService $service): JsonResponse
     {
         $request = $request->all();
-        $service->voteStore($request);
-        return response()->json(['status' => 200, 'user' => Auth::user()]);
-        /*return response()->json([
+        $item = $service->voteStore($request);
+
+        return response()->json([
             'status' => 200,
-            'totalVotes' => $result->totalVotes(),
-            'obj' => !count($result->votes) ? null : $result->votes
-        ]);*/
-    }
-    public function postVote(Post $post)
-    {
-        if (!Auth::check()) {
-            return null;
-        }
-
-        $auth = Auth::user();
-
-        $type = 'Post';
-        $vote = Vote::query()->where('voteable_id', '=', $post->id)
-            ->where('user_id', '=', $auth->id)
-            ->where('voteable_type', 'LIKE', "%{$type}%")
-            ->first();
-        return $vote;
+            'totalVotes' => $item->totalVotes(),
+            'votes' => $item->votes,
+        ]);
     }
 }

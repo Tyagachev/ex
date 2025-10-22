@@ -108,10 +108,9 @@ class CommentController extends Controller
     public function getCommentText(Request $request)
     {
         $r = $request->all();
-        $text = Comment::query()
+        return Comment::query()
             ->where('id', '=', $r['parentId'])
             ->where('user_id', '=', $r['replyUserId'])
             ->first('text');
-        return $text;
     }
 }

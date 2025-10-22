@@ -31,13 +31,12 @@ class PostVote implements VoteInterface
             ->first();
 
         if (!$check) {
-
             $post->votes()->create([
                 'user_id' => $userId,
                 'vote' => $vote,
             ]);
-
             return $post;
+
         } elseif ($check && $check->vote != $vote) {
             $check->delete();
             return $post;

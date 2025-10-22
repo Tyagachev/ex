@@ -86,6 +86,7 @@ export const useCommentsStore = defineStore('comment', {
          */
         async refresh(id) {
             const res = await axios.get(`/api/posts/show/${id}`);
+            console.log(res.data);
             this.commentsList = res.data.comments;
         },
 
@@ -124,6 +125,7 @@ export const useCommentsStore = defineStore('comment', {
                 if (index !== -1) {
                     this.commentsList.splice(index, 1);
                 }
+                await this.refresh(comment.postId)
             }
         },
     }

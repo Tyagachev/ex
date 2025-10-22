@@ -7,10 +7,10 @@ import {useCommentsStore} from "@/stores/comments.js";
 export const usePostsStore = defineStore('posts', {
         state: () => ({
             posts: [],
+            postShow: {},
             page: 1,
             currentPage: null,
             hasMore: true,
-            postShow: {},
             loading: false,
             scrollPosition: 0
         }),

@@ -402,13 +402,6 @@ const autoResize = () => {
     border: 1px solid #333;
 }
 
-.post-footer {
-    display: flex;
-    color: #9a9a9a;
-    font-size: 12px;
-    font-weight: 700;
-}
-
 .footer-btn {
     display: flex;
     align-items: center;
