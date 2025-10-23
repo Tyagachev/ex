@@ -5,18 +5,18 @@
                 Ссылка скопирована
             </div>
         </transition>
-        <!--<div :class="['relative', depth > 0 ? 'ml-2 pl-2 border-l border-slate-700' : '']">-->
-        <div class="relative pt-3 ">
-            <div :id="props.comment.id" class="flex items-start gap-2">
-                <div v-if="depth > 0"></div>
+        <div :class="['relative', depth > 0 ? 'ml-2 border-l border-slate-700' : '']">
+        <!--<div class="relative pt-3">-->
+            <div :id="props.comment.id" class="flex items-start gap-2 mt-5">
+                <div v-if="depth > 0" class="absolute -left-1.5 top-3 w-3 h-1 bg-slate-500 border border-slate-700"></div>
                 <div
-                    class="w-8 h-8 rounded-full flex-shrink-0 grid place-items-center text-slate-900 font-bold"
+                    class="w-8 h-8 rounded-full flex-shrink-0 grid place-items-center text-slate-900 font-bold ml-2"
                     :style="{ background: avatarStore.avatarColor(props.comment.user?.name) }"
                     :title="props.comment.user?.name"
                 >
                     {{ props.comment.user?.name[0] }}
                 </div>
-                <div class="flex-1 mt-1 mr-1 min-w-0">
+                <div class="flex-1 mr-1 mt-0 min-w-0">
                     <div class="flex items-center gap-2 text-sm text-slate-300">
                     <span :class="[user?.id === props.comment.user?.id ? 'text-sm text-black pr-1 pl-1 bg-green-300 hover:underline cursor-pointer' : 'font-semibold text-sm truncate  hover:underline cursor-pointer' ]">
                         {{ props.comment.user?.name }}
@@ -72,16 +72,16 @@
                                         <span>Пожаловаться</span>
                                     </button>
                                     <button
-                                        class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700"
-                                    >
-                                        <div class="mr-1" >                                    <span class="footer-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="16px" height="16px" version="1.1"
-                                             viewBox="0 0 200 252.391">
-                                         <g id="Objects">
-                                          <path class="save str0" d="M10 0l180 0c5.508,0 10,4.493 10,10l0 232.354c0,3.7 -1.851,6.876 -5.07,8.7 -3.219,1.824 -6.894,1.78 -10.069,-0.121l-79.88 -47.849c-3.251,-1.948 -7.042,-1.945 -10.29,0.007l-79.54 47.804c-3.173,1.907 -6.852,1.956 -10.075,0.133 -3.223,-1.823 -5.076,-5.001 -5.076,-8.704l0 -232.324c0,-5.507 4.492,-10 10,-10z"/>
-                                         </g>
-                                        </svg>
-                                    </span>
+                                        class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700">
+                                        <div class="mr-1" >
+                                            <span class="footer-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="16px" height="16px" version="1.1"
+                                                     viewBox="0 0 200 252.391">
+                                                    <g id="Objects">
+                                                        <path class="save str0" d="M10 0l180 0c5.508,0 10,4.493 10,10l0 232.354c0,3.7 -1.851,6.876 -5.07,8.7 -3.219,1.824 -6.894,1.78 -10.069,-0.121l-79.88 -47.849c-3.251,-1.948 -7.042,-1.945 -10.29,0.007l-79.54 47.804c-3.173,1.907 -6.852,1.956 -10.075,0.133 -3.223,-1.823 -5.076,-5.001 -5.076,-8.704l0 -232.324c0,-5.507 4.492,-10 10,-10z"/>
+                                                    </g>
+                                                </svg>
+                                            </span>
                                         </div>
                                         <span>Сохранить</span>
                                     </button>
@@ -257,7 +257,7 @@
                 </div>
             </div>
             <!-- рекурсивный вывод дочерних комментариев -->
-            <div class="space-y-2 pl-3">
+            <div class="space-y-2 pl-2">
                 <!-- Кнопка раскрытия ветки -->
                 <div v-if="props.comment.replies && props.comment.replies.length" class="mt-2 pl-9">
                     <button
@@ -272,10 +272,7 @@
 
                 <!-- Ветка дочерних комментариев -->
                 <transition name="fade">
-                    <div
-                        v-if="showReplies"
-                        class="space-y-2 pl-3 ml-2 mt-2"
-                    >
+                    <div v-if="showReplies" class="space-y-2 mt-1">
                         <CommentNote
                             v-for="child in props.comment.replies"
                             :key="child.id"

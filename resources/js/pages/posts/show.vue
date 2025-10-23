@@ -93,8 +93,8 @@
                             </div>
                         </div>
                     </div>
+                    {{post.commetsCount}}
                     <div class="post-footer">
-
                         <Panel
                             :item = post
                             :componentType = componentType
@@ -176,7 +176,6 @@ const route = useRoute();
 
 const user = computed(() => userStore.u);
 const post = computed(() => postStore.post);
-
 const activeMenu = ref(null);
 
 const componentType = 'post'

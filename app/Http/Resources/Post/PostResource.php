@@ -31,7 +31,7 @@ class PostResource extends JsonResource
             'createdAtHuman' => $this->created_at->diffForHumans(),
             'updatedAtHuman' => $this->updated_at->diffForHumans(),
             'user' => $user->resolve(),
-            'commetsCount' => $commentsCount,
+            'commentsCount' => $commentsCount,
             'votes' => count($this->votes) ? $this->votes : [0],
             'totalVotes' => $this->totalVotes(),
             'blocks' => $this->blocks,

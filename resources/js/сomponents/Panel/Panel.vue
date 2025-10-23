@@ -63,7 +63,7 @@
         </span>
 
         <div class="comments_count">
-            {{ count.formatCount(post.commetsCount) }}
+            {{ count.formatCount(post.commentsCount) }}
         </div>
     </button>
     <div class="footer-btn">
@@ -84,7 +84,7 @@
                 </g>
             </svg>
         </span>
-        {{ count.formatCount(item.shareCount) }}
+        {{ count.formatCount(post.shareCount) }}
     </button>
     <button class="footer-btn">
         <span class="footer-icon">
