@@ -42,16 +42,34 @@
             <div class="flex h-full">
                 <section
                     :class="['lt custom-scrollbar border-r border-black overflow-y-auto overflow-x-hidden bg-gray-800 transition-transform duration-300 ease-in-out transform fixed lg:static z-30 h-full',
-                    isSidebarOpen ? 'translate-x-0 w-52' : '-translate-x-full lg:translate-x-0 lg:w-48']"
+                    isSidebarOpen ? 'translate-x-0 w-52' : '-translate-x-full lg:translate-x-0 lg:w-40']"
                     style="min-width: 0;">
-                    <div class="w-full py-3">
-                        <div v-for="link in links" class="p-3 hover:bg-gray-600 rounded-md mx-2">
-                            <router-link :to="{name: link.route}" class="text-white text-sm">
-                                <button class="mx-2 cursor-pointer flex items-center">
+                    <div class="w-full">
+                        <div v-for="link in links">
+                            <div v-if="link.items" class="text-white text-sm">
+                                <button @click.prevent="showItems" class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center">
                                     <div class="mr-2" v-html="link.img"></div>
                                     <p style="font-size: medium">{{link.title}}</p>
                                 </button>
-                            </router-link>
+                            </div>
+                            <div v-else>
+                                <router-link :to="{name: link.route}" class="text-white text-sm">
+                                    <button class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center">
+                                        <div class="mr-2" v-html="link.img"></div>
+                                        <p style="font-size: medium">{{link.title}}</p>
+                                    </button>
+                                </router-link>
+                            </div>
+                            <div v-if="showItemsPanel" v-for="item in link.items">
+                                <div class="border-b-1 border-gray-500">
+                                    <router-link :to="{name: item.route}" class="text-white text-sm ">
+                                        <button class="cursor-pointer hover:bg-gray-600 w-full mt-1 pt-2 pb-2 pl-4 hover:bg-gray-600 flex items-center">
+                                            <div class="mr-2" v-html="item.img"></div>
+                                            <p style="font-size: medium">{{item.title}}</p>
+                                        </button>
+                                    </router-link>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -72,37 +90,60 @@
     </div>
 </template>
 
-
 <script setup>
 import {useUserStore} from "@/stores/users.js";
 import {useRouter} from "vue-router";
 
 import {computed, onMounted, ref} from "vue";
-import useAuth from "@/mixins/auth.js";
 import Search from "@/сomponents/Search/Search.vue";
 
 defineOptions({
     name: "Sidebar"
 })
+
 const userStore = useUserStore();
 const router = useRouter();
 
 const isSidebarOpen = ref(false);
-const {user, isAuthenticated} = useAuth();
-
+const showItemsPanel = ref(false);
 
 const links = [
     {
         "title": "Welcome",
         "img": '<i class="fa fa-home" aria-hidden="true"></i>',
         route: 'main'
-    }
+    },
+    {
+        "title": "Array",
+        "img": '<i class="fa fa-home" aria-hidden="true"></i>',
+        'items': [
+            {
+                "title": "Item",
+                "img": '<i class="fa fa-home" aria-hidden="true"></i>',
+                route: 'main'
+            },
+            {
+                "title": "Item",
+                "img": '<i class="fa fa-home" aria-hidden="true"></i>',
+                route: 'main'
+            },
+            {
+                "title": "Item",
+                "img": '<i class="fa fa-home" aria-hidden="true"></i>',
+                route: 'main'
+            },
+        ]
+    },
 ];
 
 const u = computed(() => userStore.u)
 
 const toggleSidebar = () => {
     isSidebarOpen.value = !isSidebarOpen.value;
+}
+
+const showItems = () => {
+    showItemsPanel.value = !showItemsPanel.value
 }
 
 </script>
@@ -136,7 +177,7 @@ const toggleSidebar = () => {
 
 /* Стили для кастомного скроллбара */
 .custom-scrollbar {
-    scrollbar-width: none;
+    overflow: auto;
     scrollbar-color: #2d3748 transparent;
 }
 
@@ -158,18 +199,8 @@ const toggleSidebar = () => {
     background: #718096;
 }
 
-/* Скрываем скроллбар по умолчанию и показываем при наведении */
-.custom-scrollbar {
-    overflow: auto;
-    scrollbar-width: none; /* Firefox */
-}
-
 .custom-scrollbar::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Edge */
-}
-
-.custom-scrollbar:hover {
-    scrollbar-width: none; /* Firefox */
 }
 
 .custom-scrollbar:hover::-webkit-scrollbar {
