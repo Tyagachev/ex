@@ -1,5 +1,5 @@
 <template>
-    <div class="container flex-1 align-center overflow-y-auto" ref="scrollContainer">
+    <div class="container flex-1 align-center" ref="scrollContainer">
 
         <transition name="fade">
             <div v-if="showNotification" class="notification">
@@ -151,6 +151,7 @@ onMounted(async () => {
     scrollElement = scrollContainer.value;
 
     handleScroll = () => {
+        console.log(scrollElement);
         postsStore.saveScrollPosition(scrollContainer.value.scrollTop)
     };
 

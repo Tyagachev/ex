@@ -80,7 +80,7 @@
                     @click="toggleSidebar">
                 </div>
 
-                <section class="lt pt-4 pb-10 pl-4 pr-4 custom-scrollbar flex-1 min-h-0 w-full z-10">
+                <section class="lt pt-4 pb-10 pl-4 pr-4 overflow-y-auto flex-1 min-h-0 w-full z-10">
                     <aside>
                         <slot/>
                     </aside>
