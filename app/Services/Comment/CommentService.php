@@ -16,7 +16,7 @@ class CommentService
     {
         try {
             return Comment::query()->create([
-                'text' => $request['text'],
+                'text' => strip_tags(trim($request['text'])),
                 'post_id' => $request['postId'],
                 'user_id' => Auth::id(),
                 'parent_id' => $request['parentId'],
@@ -47,7 +47,7 @@ class CommentService
     public function updateComment(object $comment, object $request): mixed
     {
          return $comment->update([
-             'text' => $request->input('text')
+             'text' => strip_tags(trim($request->input('text')))
         ]);
     }
 }

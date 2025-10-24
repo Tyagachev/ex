@@ -21,22 +21,22 @@ const routes = [
     {
         path: '/posts',
         name: 'posts.page',
-        component: () => import('@/pages/posts/index.vue')
+        component: () => import('@/pages/Posts/index.vue')
     },
     {
         path: '/posts/create',
         name: 'posts.create',
-        component: () => import('@/pages/posts/create.vue')
+        component: () => import('@/pages/Posts/create.vue')
     },
     {
         path: '/posts/edit/:id',
         name: 'posts.edit',
-        component: () => import('@/pages/posts/edit.vue')
+        component: () => import('@/pages/Posts/edit.vue')
     },
     {
         path: '/posts/show/:id',
         name: 'posts.show',
-        component: () => import('@/pages/posts/show.vue')
+        component: () => import('@/pages/Posts/show.vue')
     }
 ]
 

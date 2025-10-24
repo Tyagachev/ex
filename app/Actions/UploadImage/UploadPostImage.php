@@ -4,7 +4,6 @@ namespace App\Actions\UploadImage;
 
 use App\Actions\UploadImage\Compression\CompressionImage;
 use App\Actions\UploadImage\Interfaces\UploadInterface;
-use App\Jobs\UploadImages;
 use Illuminate\Support\Facades\Storage;
 
 

@@ -38,7 +38,7 @@ class PostService
 
         return Post::query()->create([
             'user_id' => $authUserId,
-            'title' => strip_tags($data['title']),
+            'title' => strip_tags(trim($data['title'])),
             'blocks' => $blocks,
         ]);
     }

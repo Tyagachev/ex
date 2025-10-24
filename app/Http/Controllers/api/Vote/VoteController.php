@@ -26,7 +26,7 @@ class VoteController extends Controller
             ->get();
 
         return response()->json([
-            'posts' => PostResource::collection($posts)->resolve()
+            'Posts' => PostResource::collection($posts)->resolve()
         ]);
     }
 

@@ -112,7 +112,8 @@
                         <div v-if="!showEditArea" >
                             <div class="pr-5">
                                 <p class="comment_text inline-block">
-                                    <span class="text-sm hover:underline cursor-pointer text-blue-400"><router-link :to="{name:'posts.create'}">{{props.comment.reply_user?.name ? `@${props.comment.reply_user.name}` : null}}</router-link></span> {{props.comment.text }}
+                                    <span class="text-sm hover:underline cursor-pointer text-blue-400">
+                                        <router-link :to="{name:'posts.create'}">{{props.comment.reply_user?.name ? `@${props.comment.reply_user.name}` : null}}</router-link></span> {{props.comment.text }}
                                 </p>
                             </div>
                         </div>
