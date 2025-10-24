@@ -200,10 +200,10 @@
                                          viewBox="0 0 63 63">
                                      <g id="Objects">
                                       <metadata id="CorelCorpID_0Corel-Layer"/>
-                                      <circle class="share str0" cx="51.582" cy="11.418" r="11.418"/>
-                                      <circle class="share str0" cx="51.582" cy="51.583" r="11.418"/>
-                                      <circle class="share str0" cx="11.417" cy="31.5" r="11.418"/>
-                                      <path class="share str1" d="M41.368 16.525l-19.737 9.868m0 10.214l19.737 9.869"/>
+                                      <circle class="shares str0" cx="51.582" cy="11.418" r="11.418"/>
+                                      <circle class="shares str0" cx="51.582" cy="51.583" r="11.418"/>
+                                      <circle class="shares str0" cx="11.417" cy="31.5" r="11.418"/>
+                                      <path class="shares str1" d="M41.368 16.525l-19.737 9.868m0 10.214l19.737 9.869"/>
                                      </g>
                                     </svg>
                                 </span>

@@ -95,6 +95,7 @@ import {useUserStore} from "@/stores/users.js";
 import {useRouter} from "vue-router";
 
 import {computed, onMounted, ref} from "vue";
+
 import Search from "@/сomponents/Search/Search.vue";
 
 defineOptions({
@@ -177,7 +178,7 @@ const showItems = () => {
 
 /* Стили для кастомного скроллбара */
 .custom-scrollbar {
-    overflow: auto;
+    overflow: scroll;
     scrollbar-color: #2d3748 transparent;
 }
 

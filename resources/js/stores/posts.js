@@ -4,6 +4,7 @@ import router from "../router/router.js";
 import NProgress from "nprogress";
 import {useCommentsStore} from "@/stores/comments.js";
 
+
 export const usePostsStore = defineStore('posts', {
         state: () => ({
             posts: [],
@@ -12,13 +13,16 @@ export const usePostsStore = defineStore('posts', {
             currentPage: null,
             hasMore: true,
             loading: false,
-            scrollPosition: 0
+            scrollPosition: 0,
         }),
         getters: {
             allPosts: (state) => state.posts,
-            post: (state) => state.postShow
+            post: (state) => state.postShow,
         },
         actions: {
+            saveScrollPosition(position) {
+                this.scrollPosition = position;
+            },
 
             /**
              * Получение постов
@@ -34,7 +38,6 @@ export const usePostsStore = defineStore('posts', {
                     const {data} = await axios.get(`/api/posts?page=${this.page}`);
                     NProgress.done()
                     this.posts.push(...data.data);
-
                     if (data.meta.current_page < data.meta.last_page) {
                         this.page++
                     } else {

@@ -107,7 +107,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="post-footer">
+                            <div class="post-footer border-b-white">
                                 <!--Кнопки голосования-->
                                 <Panel
                                     :item = post
@@ -145,13 +145,13 @@ defineOptions({
 
 onMounted(async () => {
     await nextTick();
-
+    await postsStore.getPosts();
     let scrollElement;
 
     scrollElement = scrollContainer.value;
 
     handleScroll = () => {
-        postsStore.scrollPosition = scrollElement.scrollTop;
+        postsStore.saveScrollPosition(scrollContainer.value.scrollTop)
     };
 
     scrollElement.addEventListener('scroll', handleScroll, { passive: true });
