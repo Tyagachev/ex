@@ -21,7 +21,7 @@ const routes = [
     {
         path: '/posts',
         name: 'posts.page',
-        component: () => import('@/pages/Posts/PostPage.vue')
+        component: () => import('@/pages/Posts/Index.vue')
     },
     {
         path: '/posts/create',

@@ -1,6 +1,5 @@
 <template>
-    <div class="container flex-1 align-center" ref="scrollContainer">
-
+    <div class="container flex-1 align-center ">
         <transition name="fade">
             <div v-if="showNotification" class="notification">
                 Ссылка скопирована
@@ -96,19 +95,23 @@
                                     </div>
                                     </div>
                                 </div>
-                            <h3 class="post-title">{{ post.title }}</h3>
+                            <router-link :to="{name: 'posts.show', params: {id: post.id}}">
                             <div>
-                                <div v-for="(block, index) in post.blocks" :key="index">
-                                    <div v-if="block.type === 'text'">
-                                        <div v-html="block.content" class="post-body"></div>
-                                    </div>
-                                    <div class="mt-2 mb-2" v-else-if="block.type === 'image'">
-                                        <img class="m-auto cursor-pointer" :src="block.path" @click="openImageModal(block.path, post.title)">
+                                <h3 class="post-title">{{ post.title }}</h3>
+                                <div>
+                                    <div v-for="(block, index) in post.blocks" :key="index">
+                                        <div v-if="block.type === 'text'">
+                                            <div v-html="block.content" class="post-body"></div>
+                                        </div>
+                                        <div class="mt-2 mb-2" v-else-if="block.type === 'image'">
+                                            <img class="m-auto cursor-pointer" :src="block.path" @click="openImageModal(block.path, post.title)">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            </router-link>
+
                             <div class="post-footer border-b-white">
-                                <!--Кнопки голосования-->
                                 <Panel
                                     :item = post
                                     :componentType = componentType
@@ -118,94 +121,53 @@
                             </div>
                             </div>
                         </div>
-                    <!-- Горизонтальная линия между постами -->
-                    <div v-if="index < posts.length - 1" class="post-divider"></div>
-                    </div>
-                <div v-show="postsStore.hasMore" ref="loadTrigger" class="h-50"></div>
+                </div>
 
-                <div v-if="!postsStore.hasMore && !postsStore.loading" class="text-center py-4 text-gray-400">
-                    Больше постов нет
+                <div v-if="posts.index < posts.length - 1" class="post-divider"></div>
+                <div v-if="!posts" class="text-center">
+                    <h3 class="text-white">Нет постов для отображения</h3>
+                    <p class="text-white">Создайте первый пост, чтобы начать обсуждение</p>
                 </div>
             </div>
-        </div>
+
+            <div v-show="postsStore.hasMore" ref="loadTrigger" class="h-50"></div>
+
+            <div v-if="!postsStore.hasMore && !postsStore.loading" class="text-center py-4 text-gray-400">
+                Больше постов нет
+            </div>
+            </div>
         </div>
 </template>
 
 <script setup>
-import {computed, defineOptions, nextTick, onMounted, onUnmounted, ref} from "vue";
+import {computed, defineOptions, ref} from "vue";
 import {useRouter} from "vue-router";
 import {usePostsStore} from "@/stores/posts.js";
 import {useUserStore} from "@/stores/users.js";
 import {useAvatarStore} from "@/stores/avatars.js";
-import Panel from "@/сomponents/Panel/Panel.vue";
+import Panel from "@/components/Panel/Panel.vue";
+import { useInfiniteScroll } from '@/composables/useInfiniteScroll'
 
 defineOptions({
     name: "Index"
 })
 
-onMounted(async () => {
-    await nextTick();
-    await postsStore.getPosts();
-    let scrollElement;
-
-    scrollElement = scrollContainer.value;
-
-    handleScroll = () => {
-        console.log(scrollElement);
-        postsStore.saveScrollPosition(scrollContainer.value.scrollTop)
-    };
-
-    scrollElement.addEventListener('scroll', handleScroll, { passive: true });
-
-    scrollElement.scrollTop = postsStore.scrollPosition;
-
-    observer = new IntersectionObserver(async (entries) => {
-        const entry = entries[0];
-        if (entry.isIntersecting && postsStore.hasMore && !postsStore.loading) {
-            await postsStore.getPosts();
-        }
-    }, {
-        rootMargin: '200px'
-    })
-    if (loadTrigger.value) {
-        observer.observe(loadTrigger.value);
-    }
-});
-
-
-onUnmounted(() => {
-
-    if (scrollContainer.value) {
-        postsStore.scrollPosition = scrollContainer.value.scrollTop;
-    }
-
-    if (handleScroll && scrollContainer.value) {
-        scrollContainer.value.removeEventListener('scroll', handleScroll);
-    }
-
-    if (observer && loadTrigger.value) {
-        observer.unobserve(loadTrigger.value);
-    }
-})
-
-let observer = null;
-let handleScroll;
-
-const scrollContainer = ref(null);
-const loadTrigger = ref(null);
-
-const posts = computed(() => postsStore.allPosts);
-const user = computed(() => userStore.u)
-
-const router = useRouter();
-
-const postsStore = usePostsStore();
 const destroyPost = usePostsStore();
 const userStore = useUserStore();
 const avatar = useAvatarStore();
+const router = useRouter();
+const postsStore = usePostsStore();
 
-const componentType = 'post'
-const bodyUrl = 'posts'
+const { loadTrigger } = useInfiniteScroll(postsStore.getPosts,
+    {
+        rootMargin: '200px',
+        hasMore: () => postsStore.hasMore,
+        isLoading: () => postsStore.loading
+    }
+)
+
+const user = computed(() => userStore.u)
+const posts = computed(() => postsStore.allPosts);
 
 const activeMenu = ref(null);
 const showNotification = ref(false);
@@ -214,8 +176,12 @@ const showImageModal = ref(false);
 const currentImage = ref("")
 const currentImageAlt = ref("")
 
+const componentType = 'post'
+const bodyUrl = 'posts'
 
-
+/**
+ * Открытие модального окна изображения
+ */
 const closeImageModal = () => {
     showImageModal.value = false;
     currentImage.value = '';
@@ -223,6 +189,10 @@ const closeImageModal = () => {
     document.body.style.overflow = '';
 };
 
+/**
+ * Окно редактирования, удаление поста
+ * @param postId
+ */
 const toggleMenu = (postId) => {
     activeMenu.value = activeMenu.value === postId ? null : postId;
     if (activeMenu.value === postId) {
@@ -231,6 +201,10 @@ const toggleMenu = (postId) => {
         document.removeEventListener('click', closeMenuOnClickOutside);
     }
 }
+
+/**
+ * Сообщение о копировании ссылки
+ */
 const showNotificationMessage = () => {
     if (notificationTimeout) {
         clearTimeout(notificationTimeout);
@@ -243,6 +217,9 @@ const showNotificationMessage = () => {
     }, 2000);
 }
 
+/**
+ * Закрытие окна toggleMenu
+ */
 const closeMenuOnClickOutside = () => {
     activeMenu.value = null;
     document.removeEventListener('click', closeMenuOnClickOutside);

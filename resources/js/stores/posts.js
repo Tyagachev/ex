@@ -10,41 +10,44 @@ export const usePostsStore = defineStore('posts', {
             posts: [],
             postShow: {},
             page: 1,
-            currentPage: null,
+            currentPage: 0,
+            lastPage: 0,
             hasMore: true,
             loading: false,
-            scrollPosition: 0,
         }),
         getters: {
             allPosts: (state) => state.posts,
             post: (state) => state.postShow,
         },
         actions: {
-            saveScrollPosition(position) {
-                this.scrollPosition = position;
-            },
 
             /**
              * Получение постов
              * @returns {Promise<void>}
              */
             async getPosts() {
-                NProgress.start()
+
                 if (this.loading || !this.hasMore) return
 
+                NProgress.start()
                 this.loading = true;
 
                 try {
                     const {data} = await axios.get(`/api/posts?page=${this.page}`);
+                    this.currentPage = data.meta.current_page
+                    this.lastPage = data.meta.last_page
+
                     NProgress.done()
                     this.posts.push(...data.data);
-                    if (data.meta.current_page < data.meta.last_page) {
+
+                    if (this.currentPage < this.lastPage) {
                         this.page++
                     } else {
                         this.hasMore = false;
                     }
                 } finally {
                     this.loading = false;
+                    NProgress.done()
                 }
             },
 
@@ -63,9 +66,9 @@ export const usePostsStore = defineStore('posts', {
                     this.postShow = res.data;
                     const commentStore = useCommentsStore();
                     await commentStore.getComments(this.postShow.comments);
-                    NProgress.done()
                 } finally {
                     this.loading = false;
+                    NProgress.done()
                 }
             },
 

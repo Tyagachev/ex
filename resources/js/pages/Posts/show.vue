@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!postStore.loading" class="container overflow-y-auto">
+    <div v-if="!postStore.loading" class="container">
         <transition name="fade">
             <div v-if="showNotification" class="notification">
                 Ссылка скопирована
@@ -155,8 +155,8 @@ import {computed, onMounted, ref} from "vue";
 import {usePostsStore} from "@/stores/posts.js";
 import {useUserStore} from "@/stores/users.js";
 import {useAvatarStore} from "@/stores/avatars.js";
-import Panel from "@/сomponents/Panel/Panel.vue";
-import CommentNote from "@/сomponents/Comment/CommentNote.vue";
+import Panel from "@/components/Panel/Panel.vue";
+import CommentNote from "@/components/Comment/CommentNote.vue";
 import {useCommentsStore} from "@/stores/comments.js";
 
 defineOptions({

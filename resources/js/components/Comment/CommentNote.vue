@@ -270,9 +270,7 @@
 
                     </button>
                 </div>
-
                 <!-- Ветка дочерних комментариев -->
-                <transition name="fade">
                     <div v-if="showReplies" class="space-y-2 mt-1">
                         <CommentNote
                             v-for="child in props.comment.replies"
@@ -283,7 +281,6 @@
                             @update:active-comment-menu="activeCommentMenu = $event"
                         />
                     </div>
-                </transition>
             </div>
         </div>
     </div>
@@ -296,7 +293,7 @@ import {computed, nextTick, ref} from "vue";
 import {useAvatarStore} from "@/stores/avatars.js";
 import {useCommentsStore} from "@/stores/comments.js";
 import {useCountsStore} from "@/stores/counts.js";
-import CommentNote from "@/сomponents/Comment/CommentNote.vue";
+import CommentNote from "@/components/Comment/CommentNote.vue";
 import axios from "axios";
 
 defineOptions({

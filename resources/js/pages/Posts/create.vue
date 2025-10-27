@@ -100,9 +100,9 @@
 </template>
 
 <script setup>
-import TextInput from "@/сomponents/Inertia/TextInput.vue";
+import TextInput from "@/components/Inertia/TextInput.vue";
 import {computed, ref} from "vue";
-import QuillEditor from "@/сomponents/Quill/QuillEditor.vue";
+import QuillEditor from "@/components/Quill/QuillEditor.vue";
 import BlueButton from "@/UI/Buttons/BlueButton.vue";
 import {usePostsStore} from "@/stores/posts.js";
 import {useRouter} from "vue-router";

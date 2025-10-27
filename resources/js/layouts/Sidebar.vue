@@ -80,7 +80,7 @@
                     @click="toggleSidebar">
                 </div>
 
-                <section class="lt pt-4 pb-10 pl-4 pr-4 overflow-y-auto flex-1 min-h-0 w-full z-10">
+                <section class="lt pt-4 pb-10 pl-4 pr-4 custom-scrollbar flex-1 min-h-0 w-full z-10" ref="scrollContainer">
                     <aside>
                         <slot/>
                     </aside>
@@ -92,19 +92,73 @@
 
 <script setup>
 import {useUserStore} from "@/stores/users.js";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 
-import {computed, onMounted, ref} from "vue";
+import {computed, nextTick, onMounted, onUnmounted, ref, watch} from "vue";
 
-import Search from "@/сomponents/Search/Search.vue";
+import Search from "@/components/Search/Search.vue";
+
+import {useScrollStore} from "@/stores/scroll.js";
 
 defineOptions({
     name: "Sidebar"
 })
 
-const userStore = useUserStore();
-const router = useRouter();
+const route = useRoute()
+const scroll = useScrollStore()
 
+
+
+onMounted(() => {
+    if (scrollContainer.value) {
+        // Восстанавливаем скролл только для разрешенных маршрутов
+        if (shouldSaveScroll(route)) {
+            const savedPosition = scroll.getScrollPosition(route.path)
+            scrollContainer.value.scrollTop = savedPosition || 0
+        }
+
+        handleScroll = () => {
+            if (shouldSaveScroll(route)) {
+                scroll.saveScrollPosition(route.path, scrollContainer.value.scrollTop)
+            }
+        }
+        scrollContainer.value.addEventListener('scroll', handleScroll)
+    }
+})
+
+// При смене маршрута
+watch(() => route.path, (toPath, fromPath) => {
+    // Сохраняем скролл при уходе с разрешенного маршрута
+    if (scrollContainer.value && shouldSaveScroll(route)) {
+        scroll.saveScrollPosition(fromPath, scrollContainer.value.scrollTop)
+    }
+
+    // Восстанавливаем или сбрасываем скролл при входе
+    nextTick(() => {
+        if (scrollContainer.value) {
+            if (shouldSaveScroll(route)) {
+                const savedPosition = scroll.getScrollPosition(toPath)
+                scrollContainer.value.scrollTop = savedPosition || 0
+            } else {
+                scrollContainer.value.scrollTop = 0
+            }
+        }
+    })
+})
+
+// Функция для определения, нужно ли сохранять скролл для этого маршрута
+const shouldSaveScroll = (route) => {
+    const saveScrollRoutes = ['posts'] // базовые имена маршрутов
+    const ignoreRoutes = ['posts.show', 'posts.create'] // маршруты где скролл не нужен
+
+    // Проверяем, содержит ли имя маршрута один из базовых
+    return saveScrollRoutes.some(baseRoute =>
+        route.name && route.name.includes(baseRoute)
+    ) && !ignoreRoutes.includes(route.name)
+}
+
+let handleScroll;
+const scrollContainer = ref(null);
 const isSidebarOpen = ref(false);
 const showItemsPanel = ref(false);
 
@@ -137,6 +191,7 @@ const links = [
     },
 ];
 
+let userStore = useUserStore();
 const u = computed(() => userStore.u)
 
 const toggleSidebar = () => {

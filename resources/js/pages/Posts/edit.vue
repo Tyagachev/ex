@@ -103,8 +103,8 @@
 import {computed, onMounted, reactive, ref} from "vue";
 import {usePostsStore} from "@/stores/posts.js";
 import {useRoute, useRouter} from "vue-router";
-import TextInput from "@/сomponents/Inertia/TextInput.vue";
-import QuillEditor from "@/сomponents/Quill/QuillEditor.vue";
+import TextInput from "@/components/Inertia/TextInput.vue";
+import QuillEditor from "@/components/Quill/QuillEditor.vue";
 import BlueButton from "@/UI/Buttons/BlueButton.vue";
 
 defineOptions({

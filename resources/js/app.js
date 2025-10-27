@@ -16,10 +16,12 @@ app.use(pinia);
 app.use(router);
 // Автоматическая инициализация пользователя при старте приложения
 async function initializeApp() {
-    const userStore = useUserStore();
-    await userStore.getUser();
-    app.mount('#app');
+    try {
+        const userStore = useUserStore();
+        await userStore.getUser();
+    } finally {
+        app.mount('#app');
+    }
 }
-
 // Запускаем инициализацию
 initializeApp();

@@ -1,33 +1,49 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 
-export function useInfiniteScroll(loadMoreFn, options = { rootMargin: '200px' }) {
-    const target = ref(null)
-    const isVisible = ref(false)
+export function useInfiniteScroll(loadFn, options = {}) {
+    const {
+        rootMargin = '200px',
+        immediate = true,
+        hasMore = () => true,
+        isLoading = () => false
+    } = options
+
+    const loadTrigger = ref(null)
     let observer = null
 
-    const createObserver = () => {
-        observer = new IntersectionObserver(async entries => {
-            const entry = entries[0]
-            isVisible.value = entry.isIntersecting
-
-            if (entry.isIntersecting) {
-                await loadMoreFn()
-            }
-        }, options)
-
-        if (target.value) {
-            observer.observe(target.value)
+    const observerCallback = async (entries) => {
+        const entry = entries[0]
+        if (entry.isIntersecting && hasMore() && !isLoading()) {
+            await loadFn()
         }
     }
 
-    onMounted(() => {
-        createObserver()
+    const initObserver = () => {
+        observer = new IntersectionObserver(observerCallback, { rootMargin })
+        if (loadTrigger.value) {
+            observer.observe(loadTrigger.value)
+        }
+    }
+
+    const disconnectObserver = () => {
+        if (observer) {
+            observer.disconnect()
+            observer = null
+        }
+    }
+
+    onMounted(async () => {
+        if (immediate) {
+            await loadFn()
+        }
+        initObserver()
     })
 
     onUnmounted(() => {
-        if (observer && target.value) observer.unobserve(target.value)
-        observer = null
+        disconnectObserver()
     })
 
-    return { target, isVisible }
+    return {
+        loadTrigger
+    }
 }

@@ -79,10 +79,10 @@
 <script setup>
 import {useUserStore} from "@/stores/users.js";
 import { useRouter } from 'vue-router'
-import Checkbox from '../../../сomponents/Inertia/Checkbox.vue';
-import InputLabel from '../../../сomponents/Inertia/InputLabel.vue';
-import PrimaryButton from '../../../сomponents/Inertia/PrimaryButton.vue';
-import TextInput from '../../../сomponents/Inertia/TextInput.vue';
+import Checkbox from '../../../components/Inertia/Checkbox.vue';
+import InputLabel from '../../../components/Inertia/InputLabel.vue';
+import PrimaryButton from '../../../components/Inertia/PrimaryButton.vue';
+import TextInput from '../../../components/Inertia/TextInput.vue';
 import {reactive} from "vue";
 
 defineProps({
