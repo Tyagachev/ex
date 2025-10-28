@@ -25,9 +25,10 @@ class StorePostRequest extends FormRequest
             'title' => 'required|string|max:255',
             'from' => 'required|string',
             'blocks' => 'required|array|min:1|max:50',
+            'charCount' => 'string|max:5000',
 
             'blocks.*.type' => 'required|string|in:text,image',
-            'blocks.*.content' => 'nullable|string|max:5000',
+            'blocks.*.content' => 'nullable|string',
             'blocks.*.file' => 'nullable|file|image|max:10120' // до 5 МБ
         ];
     }

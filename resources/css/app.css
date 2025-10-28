@@ -12,6 +12,9 @@
     width: 1000px;
     margin: 0 auto;
 }
+.wrapper {
+    max-width: 85%;
+}
 
 .text-xs {
     font-size: 0.75rem;

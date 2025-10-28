@@ -24,10 +24,12 @@ class UpdatePostRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'from' => 'required|string',
+            'charCount' => 'string|max:5000',
+
             'postId' => 'required|int',
             'blocks' => 'required|array|max:50',
             'blocks.*.type' => 'required|string|in:text,image',
-            'blocks.*.content' => 'nullable|string|max:5000', // для текстовых блоков
+            'blocks.*.content' => 'nullable|string', // для текстовых блоков
             'blocks.*.file' => 'nullable|file|image|max:10120', // для новых изображений
             'blocks.*.path' => 'nullable|string', // для существующих изображений
         ];

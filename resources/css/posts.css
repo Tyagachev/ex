@@ -5,8 +5,8 @@
 }
 
 .post {
+    margin: 12px 0 auto;
     border-radius: 8px;
-    margin-bottom: 12px;
     display: flex;
     overflow: hidden;
     background-color: #8080800d;
@@ -28,9 +28,16 @@
     border: 1px solid #333;
 }
 
+
 .post:hover {
     background-color: #1f1f1f;
     cursor: pointer;
+}
+.post-show {
+    border-radius: 8px;
+    display: flex;
+    overflow: hidden;
+    background-color: #8080800d;
 }
 
 .post-footer {

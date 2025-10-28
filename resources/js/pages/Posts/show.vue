@@ -1,17 +1,20 @@
 <template>
     <div v-if="!postStore.loading" class="container">
+
         <transition name="fade">
             <div v-if="showNotification" class="notification">
                 Ссылка скопирована
             </div>
         </transition>
-        <button
-            @click="goBack"
-            class="mb-2 py-2.5 px-4 bg-orange-600 hover:bg-gray-500 text-sm text-white rounded-full cursor-pointer"
-        >
-            Назад
-        </button>
-            <div class="post">
+        <div>
+            <button
+                @click="goBack"
+                class="px-2.5 py-1.5 mb-2 bg-orange-600 hover:bg-gray-500 text-sm text-white rounded-full cursor-pointer"
+            >
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div class="wrapper">
+            <div class="post-show">
                 <div class="post-content">
                     <div>
                         <div class="post-header">
@@ -104,9 +107,10 @@
                     </div>
                 </div>
             </div>
-        <!--Textarea-->
-        <div v-if="user" class="comment-area">
-            <div class="textarea-container">
+            <div class="post-comments">
+                <!--Textarea-->
+                <div v-if="user" class="comment-area">
+                    <div class="textarea-container">
                     <textarea
                         ref="textarea"
                         class="comment-textarea"
@@ -115,35 +119,38 @@
                         @input="autoResize"
                         rows="1"
                     ></textarea>
-            </div>
-            <div class="flex justify-between items-center mt-2">
-                <div class="text-xs text-slate-400 ml-2" :class="{ 'text-red-500': commentStore.commentText.length > 3000 }">
-                    {{ commentStore.commentText.length }}/3000
+                    </div>
+                    <div class="flex justify-between items-center mt-2">
+                        <div class="text-xs text-slate-400 ml-2" :class="{ 'text-red-500': commentStore.commentText.length > 3000 }">
+                            {{ commentStore.commentText.length }}/3000
+                        </div>
+                        <div class="comment-actions">
+                            <button class="cancel-button text-sm" @click="clearText">Отмена</button>
+                            <button
+                                class="submit-button text-sm"
+                                @click.prevent="commentStore.submitComment(post)"
+                                :disabled="!commentStore.commentText || commentStore.commentText.length > 3000"
+                            >
+                                Отправить
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="comment-actions">
-                    <button class="cancel-button text-sm" @click="clearText">Отмена</button>
-                    <button
-                        class="submit-button text-sm"
-                        @click.prevent="commentStore.submitComment(post)"
-                        :disabled="!commentStore.commentText || commentStore.commentText.length > 3000"
-                    >
-                        Отправить
-                    </button>
+                <div v-else>
+                    <router-link :to="{name: 'login.page'}"><p class="text-blue-400">Авторизируйтесь чтобы оставлять комментарии :)</p></router-link>
+                </div>
+                <div class="my-5">
+                    <CommentNote
+                        v-for="comment in commentStore.comments"
+                        :key="comment.id"
+                        :comment="comment"
+                        :depth="0"
+                        :active-comment-menu="activeCommentMenu"
+                        @update:active-comment-menu="activeCommentMenu = $event"
+                    />
                 </div>
             </div>
-        </div>
-        <div v-else>
-            <router-link :to="{name: 'login.page'}"><p class="text-blue-400">Авторизируйтесь чтобы оставлять комментарии :)</p></router-link>
-        </div>
-        <div class="my-5">
-            <CommentNote
-                v-for="comment in commentStore.comments"
-                :key="comment.id"
-                :comment="comment"
-                :depth="0"
-                :active-comment-menu="activeCommentMenu"
-                @update:active-comment-menu="activeCommentMenu = $event"
-            />
+            </div>
         </div>
     </div>
 </template>

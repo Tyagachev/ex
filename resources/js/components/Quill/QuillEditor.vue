@@ -11,6 +11,7 @@ import "quill/dist/quill.snow.css";
 export default {
     name: "QuillEditor",
     props: ["modelValue"],
+    emits: ["update:modelValue", "char-count-update"],
     mounted() {
         this.quill = new Quill(this.$refs.editor, {
             theme: "snow",
@@ -31,7 +32,13 @@ export default {
         }
 
         this.quill.on("text-change", () => {
-            this.$emit("update:modelValue", this.quill.root.innerHTML);
+            const html = this.quill.root.innerHTML;
+            this.$emit("update:modelValue", html);
+
+            // Emit character count
+            const text = this.quill.getText().trim();
+            const charCount = text.replace(/\s/g, '').length;
+            this.$emit("char-count-update", charCount);
         });
 
     },

@@ -85,6 +85,7 @@
             </svg>
         </span>
         {{ count.formatCount(post.shareCount) }}
+        Поделиться
     </button>
     <button class="footer-btn">
         <span class="footer-icon">

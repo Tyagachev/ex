@@ -1,5 +1,6 @@
 <template>
-    <div class="container flex-1 align-center ">
+    <div class="container flex-1 align-center">
+        <div class="wrapper">
         <transition name="fade">
             <div v-if="showNotification" class="notification">
                 Ссылка скопирована
@@ -136,6 +137,7 @@
                 Больше постов нет
             </div>
             </div>
+        </div>
         </div>
 </template>
 

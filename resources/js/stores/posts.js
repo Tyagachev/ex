@@ -10,6 +10,7 @@ export const usePostsStore = defineStore('posts', {
             posts: [],
             postShow: {},
             page: 1,
+            totalCharCount: 0,
             currentPage: 0,
             lastPage: 0,
             hasMore: true,
@@ -91,6 +92,7 @@ export const usePostsStore = defineStore('posts', {
                 const formData = new FormData();
                 formData.append("title", title.value);
                 formData.append("from", from);
+                formData.append("charCount", this.totalCharCount);
 
                 blocks.value.forEach((block, i) => {
                     if (block.content || block.file) {
@@ -131,6 +133,7 @@ export const usePostsStore = defineStore('posts', {
                 formData.append('title', form.title);
                 formData.append('from', form.from);
                 formData.append('postId', this.post.id);
+                formData.append("charCount", this.totalCharCount);
 
                 form.blocks.forEach((block, index) => {
                     formData.append(`blocks[${index}][type]`, block.type);
@@ -150,7 +153,7 @@ export const usePostsStore = defineStore('posts', {
                     const res = await axios.post('/api/posts/update', formData);
                     if (res.status === 200) {
                         await this.clearPostsField();
-                        await router.back();
+                        await router.push({name:'main'});
                     }
                 }finally {
                     NProgress.done();
@@ -165,7 +168,6 @@ export const usePostsStore = defineStore('posts', {
                 this.page = 1;
                 this.posts = [];
                 this.loading = false;
-                this.scrollPosition = 0;
             },
 
             /**
@@ -205,6 +207,9 @@ export const usePostsStore = defineStore('posts', {
                         name: 'main',
                     });
                 }
-            }
+            },
+            updateTotalCharCount(count) {
+                this.totalCharCount = count;
+            },
         },
 })

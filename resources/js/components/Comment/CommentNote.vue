@@ -5,12 +5,15 @@
                 Ссылка скопирована
             </div>
         </transition>
-        <div :class="['relative', depth > 0 ? 'ml-2 border-l border-slate-700' : '']">
+
+        <div :class="['relative', depth > 0 ? 'ml-4 border-l border-slate-700' : '']">
+            <div class="pt-4"></div>
         <!--<div class="relative pt-3">-->
-            <div :id="props.comment.id" class="flex items-start gap-2 mt-5">
-                <div v-if="depth > 0" class="absolute -left-1.5 top-3 w-3 h-1 bg-slate-500 border border-slate-700"></div>
+            <div :id="props.comment.id" class="flex items-start gap-2 pl-2 pt-1">
+                <!--<div v-if="depth > 0" class="absolute rounded-full -left-1 top-8 w-2 h-2 bg-slate-500 border border-slate-700"></div>-->
+
                 <div
-                    class="w-8 h-8 rounded-full flex-shrink-0 grid place-items-center text-slate-900 font-bold ml-2"
+                    class="w-8 h-8 rounded-full flex-shrink-0 grid place-items-center text-slate-900 font-bold"
                     :style="{ background: avatarStore.avatarColor(props.comment.user?.name) }"
                     :title="props.comment.user?.name"
                 >
@@ -211,7 +214,7 @@
                                     <p style="font-size: 12px">{{ countStore.formatCount(comment.shareCount) }}</p>
                                 </button>
                             </div>-->
-                            <div class="">
+                            <div>
                                 <button v-if="user?.id !== props.comment.user.id && user"
                                         class="footer-btn hover:text-slate-200"
                                         @click.prevent="toggleReply">
@@ -258,20 +261,20 @@
                 </div>
             </div>
             <!-- рекурсивный вывод дочерних комментариев -->
-            <div class="space-y-2 pl-2">
+            <div class="pl-2">
                 <!-- Кнопка раскрытия ветки -->
                 <div v-if="props.comment.replies && props.comment.replies.length" class="mt-2 pl-9">
                     <button
-                        class="cursor-pointer text-blue-400 text-sm hover:text-slate-200 flex items-center gap-1"
+                        class="cursor-pointer text-blue-300 text-sm hover:text-slate-200 flex items-center gap-1"
                         @click="toggleReplies"
                     >
                         <span>{{ showReplies ? 'Скрыть ответы' : `Показать ответы (${props.comment.replies.length})` }}</span>
                         <i :class="[showReplies ? 'fa rotate-180 fa-caret-down' : 'fa fa-caret-down']"></i>
-
                     </button>
                 </div>
+                <div class="pt-2"></div>
                 <!-- Ветка дочерних комментариев -->
-                    <div v-if="showReplies" class="space-y-2 mt-1">
+                    <div v-if="showReplies" class=" mt-1">
                         <CommentNote
                             v-for="child in props.comment.replies"
                             :key="child.id"
