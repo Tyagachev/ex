@@ -17,11 +17,11 @@
                     :style="{ background: avatarStore.avatarColor(props.comment.user?.name) }"
                     :title="props.comment.user?.name"
                 >
-                    {{ props.comment.user?.name[0] }}
+                    {{ props.comment.user?.name[0].toUpperCase() }}
                 </div>
                 <div class="flex-1 mr-1 mt-0 min-w-0">
                     <div class="flex items-center gap-2 text-sm text-slate-300">
-                    <span :class="[user?.id === props.comment.user?.id ? 'text-sm text-black pr-1 pl-1 bg-green-300 hover:underline cursor-pointer' : 'font-semibold text-sm truncate  hover:underline cursor-pointer' ]">
+                    <span :class="[user?.id === props.comment.user?.id ? 'text-sm text-black pr-1 pl-1 rounded-md bg-green-300 hover:underline cursor-pointer' : 'font-semibold text-sm truncate  hover:underline cursor-pointer' ]">
                         {{ props.comment.user?.name }}
                     </span>
                         <div class="circle"></div>

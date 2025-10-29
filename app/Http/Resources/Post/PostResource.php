@@ -9,6 +9,20 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class PostResource extends JsonResource
 {
+    public function imgCount($blocks)
+    {
+        $sum = [];
+        if ($blocks) {
+            foreach ($blocks as $block) {
+                if ($block['type'] === 'image') {
+                    $sum[] = $block;
+                }
+            }
+            return count($sum);
+        }
+
+        //
+    }
     /**
      * Transform the resource into an array.
      *
@@ -35,6 +49,7 @@ class PostResource extends JsonResource
             'votes' => count($this->votes) ? $this->votes : [0],
             'totalVotes' => $this->totalVotes(),
             'blocks' => $this->blocks,
+            'imgCount' => $this->imgCount($this->blocks),
             'shareCount' => $this->share_count
         ];
     }

@@ -36,7 +36,7 @@ class Comment extends Model
     public function replies(): HasMany
     {
         return $this->hasMany(Comment::class, 'parent_id')
-            ->with(['user', 'replyUser', 'replies']);
+            ->with(['user', 'replyUser', 'replies'])->orderBy('created_at', 'desc');
     }
 
     /**

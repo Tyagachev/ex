@@ -21,14 +21,14 @@
                             <div v-if="post.user?.id === user?.id">
                                 <div class="flex items-center gap-2 ">
                                     <div
-                                        class="w-8 h-8 rounded-full flex-shrink-0 grid place-items-center text-slate-900 font-bold"
+                                        class="w-8 h-8 rounded-full  flex-shrink-0 grid place-items-center text-slate-900 font-bold"
                                         :style="{ background: avatar.avatarColor(post.user?.name) }"
                                         :title="post.user?.name"
                                     >
-                                        {{ post.user?.name[0] }}
+                                        {{ post.user?.name[0].toUpperCase() }}
                                     </div>
                                     <span class="author">
-                                    <p class="text-black pr-1 pl-1 bg-green-300">{{post.user?.name}}</p>
+                                    <p class="text-black pr-1 pl-1 rounded-md bg-green-300">{{post.user?.name}}</p>
                                 </span>
                                 </div>
                             </div>
@@ -66,14 +66,14 @@
                                     <div v-if="post.user.id === user?.id">
                                         <button class="menu-item">
                                             <router-link :to="({name: 'posts.edit', params: {id:post.id}})">
-                                                <span class="text-white">Редактировать</span>
+                                                <span class="text-white text-sm">Редактировать</span>
                                             </router-link>
                                         </button>
                                         <button class="menu-item">
-                                            <span class="text-white">Скрыть</span>
+                                            <span class="text-white text-sm">Скрыть</span>
                                         </button>
                                         <button @click="postStore.destroyPostFromShowPost(post)" class="menu-item">
-                                            <span class="text-white">Удалить</span>
+                                            <span class="text-red-500 text-sm">Удалить</span>
                                         </button>
                                     </div>
                                     <div v-else-if="post.user.id !== user?.id || !user" class="post-menu">
@@ -97,16 +97,17 @@
                         </div>
                     </div>
                     {{post.commetsCount}}
-                    <div class="post-footer">
-                        <Panel
-                            :item = post
-                            :componentType = componentType
-                            :bodyUrl = bodyUrl
-                            @shownotificationmessage="showNotificationMessage"
-                        />
-                    </div>
                 </div>
             </div>
+                <div class="post-footer">
+                    <Panel
+                        :item = post
+                        :componentType = componentType
+                        :bodyUrl = bodyUrl
+                        @shownotificationmessage="showNotificationMessage"
+                    />
+                </div>
+                <div class="post-divider"></div>
             <div class="post-comments">
                 <!--Textarea-->
                 <div v-if="user" class="comment-area">

@@ -30,7 +30,6 @@
 
 
 .post:hover {
-    background-color: #1f1f1f;
     cursor: pointer;
 }
 .post-show {
@@ -45,7 +44,6 @@
     color: #9a9a9a;
     font-size: 12px;
     font-weight: 700;
-    border-top: 1px solid gray ;
     padding: 5px 0 0 0;
 }
 
@@ -68,6 +66,13 @@
     color: #d0d0d0;
     margin-bottom: 12px;
     word-wrap: break-word;
+}
+
+.post-divider {
+    height: 2px;
+    background-color: #2d2d2d;
+    margin: 16px 0;
+    width: 100%;
 }
 
 .image-modal {
