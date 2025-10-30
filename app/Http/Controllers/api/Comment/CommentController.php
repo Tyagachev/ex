@@ -42,6 +42,11 @@ class CommentController extends Controller
         ]);
     }
 
+    public function show(Comment $comment)
+    {
+        return CommentResource::make($comment);
+    }
+
     /**
      * Редактирование комментария
      *

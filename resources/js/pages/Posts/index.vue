@@ -234,7 +234,7 @@ const { loadTrigger } = useInfiniteScroll(postsStore.getPosts,
     }
 )
 
-const user = computed(() => userStore.u)
+const user = computed(() => userStore.user)
 const posts = computed(() => postsStore.allPosts);
 
 const activeMenu = ref(null);
@@ -472,13 +472,13 @@ const closeMenuOnClickOutside = () => {
 
 .modal-close {
     position: absolute;
-    top: -50px;
-    right: 0;
-    background: rgba(255, 255, 255, 0.1);
+    top: 0;
+    right: -35px;
+    background: #E01E1EE2;
     border: none;
     color: white;
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 100%;
     cursor: pointer;
     backdrop-filter: blur(10px);
     transition: background 0.2s ease;
@@ -513,20 +513,6 @@ const closeMenuOnClickOutside = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.modal-close {
-    position: absolute;
-    top: -50px;
-    right: 0;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: white;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    backdrop-filter: blur(10px);
-    transition: background 0.2s ease;
 }
 
 .modal-close:hover {

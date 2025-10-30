@@ -14,12 +14,12 @@
                     </div>
                     <Search/>
                     <div class="flex-shrink-0">
-                        <nav v-if="u" class="flex items-center space-x-3">
+                        <nav v-if="user" class="flex items-center space-x-3">
                             <router-link class='py-2.5 px-4 border border-white text-sm bg-transparent text-white rounded-full cursor-pointer font-semibold text-center transition hover:bg-gray-600 flex items-center'
                                   :to="{name:'posts.create'}">
                                 <span class="text-sm">+</span>
                             </router-link>
-                            <span class="text-white text-sm hidden md:inline">{{ u.name }}</span>
+                            <span class="text-white text-sm hidden md:inline">{{ user.name }}</span>
                             <button type='button' @click="userStore.logout()"
                                     class='py-2.5 px-4 cursor-pointer text-sm bg-indigo-500 text-white rounded-full font-semibold transition hover:bg-indigo-700'>
                                 Выход
@@ -105,9 +105,7 @@ defineOptions({
 })
 
 const route = useRoute()
-const scroll = useScrollStore()
-
-
+const scroll = useScrollStore();
 
 onMounted(() => {
     if (scrollContainer.value) {
@@ -192,7 +190,7 @@ const links = [
 ];
 
 let userStore = useUserStore();
-const u = computed(() => userStore.u)
+const user = computed(() => userStore.user)
 
 const toggleSidebar = () => {
     isSidebarOpen.value = !isSidebarOpen.value;

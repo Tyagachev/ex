@@ -14,6 +14,11 @@ const routes = [
         component: () => import('../pages/Auth/Login/Login.vue')
     },
     {
+        path: '/test',
+        name: 'test.page',
+        component: () => import('@/pages/Test/Test.vue')
+    },
+    {
         path: '/register',
         name: 'register.page',
         component: () => import('../pages/Auth/Registration/Registration.vue')
@@ -37,6 +42,11 @@ const routes = [
         path: '/posts/show/:id',
         name: 'posts.show',
         component: () => import('@/pages/Posts/show.vue')
+    },
+    {
+        path: '/comments/show/:id',
+        name: 'comments.show',
+        component: () => import('@/pages/Comments/show.vue')
     }
 ]
 

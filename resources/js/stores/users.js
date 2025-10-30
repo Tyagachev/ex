@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 
 export const useUserStore = defineStore('user', {
     state: () => ({
-        user: null,
+        userObject: {},
         token: localStorage.getItem('token') || null,
         isLoading: false,
         isInitialized: false,
@@ -11,7 +11,7 @@ export const useUserStore = defineStore('user', {
     }),
 
     getters: {
-        u: (state) => state.user,
+        user: (state) => state.userObject,
         isAuthenticated: (state) => !!state.user && !!state.token,
     },
 
@@ -26,7 +26,7 @@ export const useUserStore = defineStore('user', {
             try {
                 const res = await axios.post('/login', { email, password });
 
-                this.user = res.data.user;
+                this.userObject = res.data.user;
                 this.token = res.data.token;
                 localStorage.setItem('token', res.data.token);
                 return res.data;
@@ -60,7 +60,8 @@ export const useUserStore = defineStore('user', {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
 
                 const response = await axios.get('/user');
-                this.user = response.data;
+                this.userObject = response.data;
+                Object.assign(this.userObject,  {auth: true})
                 this.isInitialized = true;
             } catch (error) {
                 console.error('Failed to fetch user:', error);
@@ -96,7 +97,7 @@ export const useUserStore = defineStore('user', {
          * Очистка полей
          */
         clearAuth() {
-            this.user = null;
+            this.userObject = {};
             this.token = null;
             this.isInitialized = true;
             localStorage.removeItem('token');

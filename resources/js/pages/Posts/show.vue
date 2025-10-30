@@ -9,8 +9,7 @@
         <div>
             <button
                 @click="goBack"
-                class="px-2.5 py-1.5 mb-2 bg-orange-600 hover:bg-gray-500 text-sm text-white rounded-full cursor-pointer"
-            >
+                class="px-2.5 py-1.5 mb-2 bg-orange-600  hover:bg-gray-500 text-sm text-white rounded-full cursor-pointer">
                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
             </button>
             <div class="wrapper">
@@ -182,7 +181,7 @@ const avatar = useAvatarStore();
 const router = useRouter();
 const route = useRoute();
 
-const user = computed(() => userStore.u);
+const user = computed(() => userStore.user);
 const post = computed(() => postStore.post);
 const activeMenu = ref(null);
 

@@ -12,7 +12,7 @@ class PostResource extends JsonResource
     public function imgCount($blocks)
     {
         $sum = [];
-        if ($blocks) {
+        if (is_array($blocks)) {
             foreach ($blocks as $block) {
                 if ($block['type'] === 'image') {
                     $sum[] = $block;
@@ -20,8 +20,7 @@ class PostResource extends JsonResource
             }
             return count($sum);
         }
-
-        //
+        return null;
     }
     /**
      * Transform the resource into an array.

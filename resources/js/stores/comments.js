@@ -4,9 +4,11 @@ import axios from "axios";
 export const useCommentsStore = defineStore('comment', {
     state: () => ({
         commentsList: [],
+        commentObject: {},
         activeMenu: null,
         responseCommentText: '',
         showReply: false,
+        isCommentPage: false,
         commentText: '',
         replyText: ''
     }),
@@ -24,6 +26,18 @@ export const useCommentsStore = defineStore('comment', {
         getComments(comments) {
             this.commentsList = [];
             this.commentsList = comments;
+        },
+
+        /**
+         * Получение одного коммента
+         * с ответами
+         * @param comment
+         * @returns {Promise<void>}
+         */
+        async getComment(comment) {
+            this.isCommentPage = true
+            const res = await axios.get(`/api/comments/${comment}`);
+            this.commentObject = res.data;
         },
 
         /**
@@ -63,17 +77,26 @@ export const useCommentsStore = defineStore('comment', {
             if (!this.replyText.trim()) return;
 
             try {
-                const res = await axios.post('/api/comments', {
-                    postId: comment.postId,
-                    parentId: comment.id,
-                    text: this.replyText,
-                    replyId: comment.user?.id || null,
-                });
-                const id = res.data.post.id
-                await this.refresh(id)
-                /*не уверен что это будет удобно
-                const newCommentId = res.data.commentId;
-                this.getIdComment(newCommentId);*/
+                if (this.isCommentPage) {
+                    const res = await axios.post('/api/comments', {
+                        postId: comment.postId,
+                        parentId: comment.id,
+                        text: this.replyText,
+                        replyId: comment.user?.id || null,
+                    });
+                    await this.getComment(this.commentObject.id);
+                    this.getIdComment(res.data.commentId);
+                } else {
+                    const res = await axios.post('/api/comments', {
+                        postId: comment.postId,
+                        parentId: comment.id,
+                        text: this.replyText,
+                        replyId: comment.user?.id || null,
+                    });
+                    const id = res.data.post.id
+                    await this.refresh(id)
+                    this.getIdComment(res.data.commentId);
+                }
             } finally {
                 this.replyText = '';
             }
@@ -86,7 +109,6 @@ export const useCommentsStore = defineStore('comment', {
          */
         async refresh(id) {
             const res = await axios.get(`/api/posts/show/${id}`);
-            console.log(res.data);
             this.commentsList = res.data.comments;
         },
 
@@ -98,7 +120,7 @@ export const useCommentsStore = defineStore('comment', {
         getIdComment(newCommentId) {
             const element = document.getElementById(newCommentId);
             if (element) {
-                element.scrollIntoView({ behavior: 'auto', block: 'end' });
+                element.scrollIntoView({ behavior: 'auto', block: 'center' });
                 //Вспышка нового комментария
                 this.fastHighlight(element);
             }

@@ -11,7 +11,6 @@
         <!--<div class="relative pt-3">-->
             <div :id="props.comment.id" class="flex items-start gap-2 pl-2 pt-1">
                 <!--<div v-if="depth > 0" class="absolute rounded-full -left-1 top-8 w-2 h-2 bg-slate-500 border border-slate-700"></div>-->
-
                 <div
                     class="w-8 h-8 rounded-full flex-shrink-0 grid place-items-center text-slate-900 font-bold"
                     :style="{ background: avatarStore.avatarColor(props.comment.user?.name) }"
@@ -116,7 +115,10 @@
                             <div class="pr-5">
                                 <p class="comment_text inline-block">
                                     <span class="text-sm hover:underline cursor-pointer text-blue-400">
-                                        <router-link :to="{name:'posts.create'}">{{props.comment.reply_user?.name ? `@${props.comment.reply_user.name}` : null}}</router-link></span> {{props.comment.text }}
+                                        <router-link :to="{name:'posts.create'}">
+                                            {{props.comment.reply_user?.name ? `@${props.comment.reply_user.name}` : null}}
+                                        </router-link></span>
+                                    <span style="color:#B7CAD4; padding-left: 4px">{{props.comment.text }}</span>
                                 </p>
                             </div>
                         </div>
@@ -153,7 +155,7 @@
                         </div>
                         <!-- Кнопки голосования и ответа -->
 
-                        <div class="flex">
+                        <div class="flex mt-2">
                             <div v-if="user?.id !== props.comment.user?.id" class="vote-panel vote-panel_bckg">
                                 <div class="flex">
                                     <button @click.prevent="upVote(props.comment)" class="vote-btn">
@@ -214,8 +216,8 @@
                                     <p style="font-size: 12px">{{ countStore.formatCount(comment.shareCount) }}</p>
                                 </button>
                             </div>-->
-                            <div>
-                                <button v-if="user?.id !== props.comment.user.id && user"
+                            <div >
+                                <button v-if="user?.id !== props.comment.user.id && user.auth && depth < 15"
                                         class="footer-btn hover:text-slate-200"
                                         @click.prevent="toggleReply">
                                     <p class="text-blue-400 text-sm font-semibold">
@@ -262,19 +264,25 @@
             </div>
             <!-- рекурсивный вывод дочерних комментариев -->
             <div class="pl-2">
+                <span v-if="depth >= 15" class="mt-2 inline pl-9 cursor-pointer text-orange-300 text-sm hover:text-slate-200 flex items-center gap-1">
+                    <router-link :to="{name: 'comments.show', params: {id: props.comment.id}}">Еще ответов ({{props.comment.replies.length}})</router-link>
+                </span>
                 <!-- Кнопка раскрытия ветки -->
-                <div v-if="props.comment.replies && props.comment.replies.length" class="mt-2 pl-9">
-                    <button
-                        class="cursor-pointer text-blue-300 text-sm hover:text-slate-200 flex items-center gap-1"
-                        @click="toggleReplies"
-                    >
-                        <span>{{ showReplies ? 'Скрыть ответы' : `Показать ответы (${props.comment.replies.length})` }}</span>
-                        <i :class="[showReplies ? 'fa rotate-180 fa-caret-down' : 'fa fa-caret-down']"></i>
-                    </button>
+                <div v-else>
+                    <div v-if="props.comment.replies && props.comment.replies.length" class="mt-2 pl-9">
+                        <button
+                            class="cursor-pointer text-blue-300 text-sm hover:text-slate-200 flex items-center gap-1"
+                            @click="toggleReplies"
+                        >
+                            <span>{{ showReplies ? 'Скрыть ответы' : `Показать ответы (${props.comment.replies.length})` }}</span>
+                            <i :class="[showReplies ? 'fa rotate-180 fa-caret-down' : 'fa fa-caret-down']"></i>
+                        </button>
+                    </div>
                 </div>
+
                 <div class="pt-2"></div>
                 <!-- Ветка дочерних комментариев -->
-                    <div v-if="showReplies" class=" mt-1">
+                    <div v-if="showReplies" class=" mt-1 mb-10">
                         <CommentNote
                             v-for="child in props.comment.replies"
                             :key="child.id"
@@ -323,8 +331,6 @@ let activeCommentMenu = useCommentsStore();
 let showCommentText = ref(false);
 let responseCommentText = ref('');
 
-const user = userStore.user;
-
 const showEditArea = ref(false);
 const editText = ref('');
 const showNotification = ref(false);
@@ -333,11 +339,13 @@ const textarea = ref(null);
 const commentMenu = ref(null);
 const showReplies = ref(false);
 
+const user = computed(() => userStore.user);
+
 const emits = defineEmits(['shownotificationmessage']);
 
 const userVote = computed(() => {
     if (!user || !props.comment || !Array.isArray(props.comment.votes)) return 0;
-    const voteObject = props.comment.votes.find(vote => vote.user_id === user.id);
+    const voteObject = props.comment.votes.find(vote => vote.user_id === user.value.id);
     return voteObject ? voteObject.vote : 0;
 });
 /**
@@ -437,7 +445,6 @@ const showEdit = async (comment) => {
  * @returns {Promise<void>}
  */
 const updateComment = async (comment) => {
-    console.log(comment);
     const res = await axios.patch(`/api/comments/${comment.id}`, {
         text: editText.value
     })
@@ -446,7 +453,6 @@ const updateComment = async (comment) => {
         editText.value = "";
         showEditArea.value = false;
     }
-    console.log(comment);
     await commentStore.refresh(comment.postId);
 }
 
@@ -522,9 +528,9 @@ const handleDocumentClick = (event) => {
  * @param comment
  */
 const submitReply = async (comment) => {
+    showReplies.value = true
     await commentStore.sendReplyComment(comment);
-    showReplyArea.value = false;
-    showReplies.value = true;
+    toggleReply()
 }
 
 /**
