@@ -32,7 +32,7 @@
                     </div>
 
                     <div v-for="(post, index) in posts" :key="post.id">
-                        <div class="post pb-10">
+                        <div class="post pb-3">
                             <!-- Основное содержимое поста -->
                             <div class="post-content">
                                 <div class="flex justify-between">
@@ -168,7 +168,7 @@
                                                 @click.stop="expandPost(post.id)"
                                                 class="expand-btn"
                                             >
-                                                <span>Свернуть пост</span>
+                                                <span>Свернуть</span>
                                                 <svg class="expand-icon rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                                 </svg>
@@ -313,20 +313,6 @@ const checkContentHeightWithRetry = (el, postId, retries) => {
 }
 
 /**
- * Проверка высоты контента и установка флага needsExpand
- */
-const checkContentHeight = (el, postId) => {
-    if (!el) return;
-
-    const contentHeight = el.scrollHeight;
-    const state = postStates.value[postId];
-
-    if (state) {
-        state.needsExpand = contentHeight > MAX_CONTENT_HEIGHT;
-    }
-}
-
-/**
  * Развертывание поста
  */
 const expandPost = (postId) => {
@@ -424,7 +410,7 @@ const closeMenuOnClickOutside = () => {
 </script>
 
 <style scoped>
-/* Стили для увеличения изображения */
+
 .image-container {
     border-radius: 8px;
     overflow: hidden;
@@ -435,18 +421,6 @@ const closeMenuOnClickOutside = () => {
     margin: 0 auto;
 }
 
-.post-image {
-    max-height: 500px; /* Ограничиваем максимальную высоту */
-    width: auto;
-    height: auto;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-origin: center;
-    object-fit: contain; /* Сохраняем пропорции */
-}
-
-/* Улучшенное модальное окно */
 .image-modal {
     position: fixed;
     top: 0;
@@ -459,15 +433,6 @@ const closeMenuOnClickOutside = () => {
     justify-content: center;
     z-index: 1000;
     padding: 20px;
-}
-
-.modal-content {
-    position: relative;
-    max-width: 90vw;
-    max-height: 90vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .modal-close {
@@ -488,14 +453,6 @@ const closeMenuOnClickOutside = () => {
     background: rgba(255, 255, 255, 0.2);
 }
 
-.modal-image {
-    max-width: 100%;
-    max-height: 80vh;
-    border-radius: 12px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-    animation: zoomIn 0.3s ease;
-}
-
 @keyframes zoomIn {
     from {
         opacity: 0;
@@ -527,21 +484,10 @@ const closeMenuOnClickOutside = () => {
     animation: zoomIn 0.3s ease;
 }
 
-@keyframes zoomIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Остальные ваши стили остаются без изменений */
 .expand-section {
-    position: relative;
+    display: flex;
     padding-top: 20px;
+    justify-content: center;
 }
 
 .gradient-overlay {
@@ -618,16 +564,6 @@ const closeMenuOnClickOutside = () => {
     border-radius: 20px;
 }
 
-.no_vote-btn {
-    background: none;
-    border: none;
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 20px;
-}
-
 .vote-btn:hover {
     background-color: #383737;
 }
@@ -676,16 +612,17 @@ const closeMenuOnClickOutside = () => {
     align-items: center;
 }
 
-/* Новые стили для ограничения контента */
 .content-wrapper {
     max-height: 400px;
     overflow: hidden;
     position: relative;
-    transition: max-height 0.3s ease;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px;
+    padding: 8px;
 }
 
 .content-wrapper.expanded {
-    max-height: none;
+    max-height: 5000px;
 }
 
 .content-wrapper:not(.expanded)::after {
@@ -698,26 +635,15 @@ const closeMenuOnClickOutside = () => {
     pointer-events: none;
 }
 
-.expand-button-container {
-    display: flex;
-    justify-content: start;
-    margin-top: 10px;
-}
-
-.expand-button {
-    background: rgba(59, 130, 246, 0.1);
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    color: #3b82f6;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.expand-button:hover {
-    background: rgba(59, 130, 246, 0.2);
-    border-color: rgba(59, 130, 246, 0.5);
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .end-line {

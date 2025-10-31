@@ -6,17 +6,21 @@
             </div>
         </transition>
 
-        <div :class="['relative', depth > 0 ? 'ml-4 border-l border-slate-700' : '']">
+        <div :class="['relative', depth > 0 ? 'ml-5 border-l border-slate-600' : '']">
             <div class="pt-4"></div>
         <!--<div class="relative pt-3">-->
-            <div :id="props.comment.id" class="flex items-start gap-2 pl-2 pt-1">
+            <div :id="props.comment.id" class="flex items-start gap-2 pl-3 pt-1">
                 <!--<div v-if="depth > 0" class="absolute rounded-full -left-1 top-8 w-2 h-2 bg-slate-500 border border-slate-700"></div>-->
+
+                <!--Закорючка к комментарию-->
+                <div v-if="depth > 0" class="absolute rounded-l-lg -left-0 top-7 w-2 h-2 pl-3 border-b border-slate-600"></div>
                 <div
-                    class="w-8 h-8 rounded-full flex-shrink-0 grid place-items-center text-slate-900 font-bold"
+                    class="w-8 h-8 rounded-full top-20 flex-shrink-0 grid place-items-center text-slate-900 font-bold"
                     :style="{ background: avatarStore.avatarColor(props.comment.user?.name) }"
                     :title="props.comment.user?.name"
                 >
                     {{ props.comment.user?.name[0].toUpperCase() }}
+                    <div v-show="props.comment.replies.length && showReplies" class="absolute border-l left-7 top-13 border-slate-600 w-2 h-full"></div>
                 </div>
                 <div class="flex-1 mr-1 mt-0 min-w-0">
                     <div class="flex items-center gap-2 text-sm text-slate-300">
@@ -94,7 +98,7 @@
                     <div class="mt-1 whitespace-pre-line text-slate-200 leading-6">
                         <div class="mt-1 mb-1">
                             <div v-if="props.comment.reply_user != null || props.comment.parent != null">
-                                <button  @click.prevent="getCommentText(props.comment.user, props.comment.reply_user, props.comment.parent)">
+                                <button  @click.prevent="getCommentText(props.comment)">
                                     <div class="flex">
                                         <div>
                                             <a href="#" style="font-size: 0.8rem; color: #dfba8b;">{{!showCommentText ? 'Показать' : 'Скрыть' }} комментарий <i :class="[showCommentText ? 'fa rotate-180 fa-caret-down' : 'fa fa-caret-down']"></i></a>
@@ -102,9 +106,6 @@
                                     </div>
                                 </button>
                             </div>
-                            <!--<div v-else>
-                                <p  style="font-size: 0.8rem; color: #dfba8b;">Ответ на пост</p>
-                            </div>-->
                             <div v-if="showCommentText">
                                 <div class="quote-block border border-gray-100">
                                     <p class="comment_text pl-2">{{responseCommentText}}</p>
@@ -118,7 +119,7 @@
                                         <router-link :to="{name:'posts.create'}">
                                             {{props.comment.reply_user?.name ? `@${props.comment.reply_user.name}` : null}}
                                         </router-link></span>
-                                    <span style="color:#B7CAD4; padding-left: 4px">{{props.comment.text }}</span>
+                                    <span :class="props.comment.reply_user?.name ? 'pl-2' : ''" style="color:#B7CAD4;">{{props.comment.text }}</span>
                                 </p>
                             </div>
                         </div>
@@ -155,7 +156,7 @@
                         </div>
                         <!-- Кнопки голосования и ответа -->
 
-                        <div class="flex mt-2">
+                        <div class="flex mt-2 items-center">
                             <div v-if="user?.id !== props.comment.user?.id" class="vote-panel vote-panel_bckg">
                                 <div class="flex">
                                     <button @click.prevent="upVote(props.comment)" class="vote-btn">
@@ -199,23 +200,23 @@
                                     </button>
                                 </div>
                             </div>
-                            <!--<div>
-                                <button class="footer-btn" @click="copyLink(comment.id)">
+                            <div>
+                                <button class="footer-btn" @click="copyLink(comment)">
                                 <span class="footer-icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14px" height="14px" version="1.1"
                                          viewBox="0 0 63 63">
                                      <g id="Objects">
                                       <metadata id="CorelCorpID_0Corel-Layer"/>
-                                      <circle class="shares str0" cx="51.582" cy="11.418" r="11.418"/>
-                                      <circle class="shares str0" cx="51.582" cy="51.583" r="11.418"/>
-                                      <circle class="shares str0" cx="11.417" cy="31.5" r="11.418"/>
-                                      <path class="shares str1" d="M41.368 16.525l-19.737 9.868m0 10.214l19.737 9.869"/>
+                                      <circle class="dot_color str0" cx="51.582" cy="11.418" r="11.418"/>
+                                      <circle class="dot_color str0" cx="51.582" cy="51.583" r="11.418"/>
+                                      <circle class="dot_color str0" cx="11.417" cy="31.5" r="11.418"/>
+                                      <path class="dot_color str1" d="M41.368 16.525l-19.737 9.868m0 10.214l19.737 9.869"/>
                                      </g>
                                     </svg>
                                 </span>
                                     <p style="font-size: 12px">{{ countStore.formatCount(comment.shareCount) }}</p>
                                 </button>
-                            </div>-->
+                            </div>
                             <div >
                                 <button v-if="user?.id !== props.comment.user.id && user.auth && depth < 15"
                                         class="footer-btn hover:text-slate-200"
@@ -264,7 +265,7 @@
             </div>
             <!-- рекурсивный вывод дочерних комментариев -->
             <div class="pl-2">
-                <span v-if="depth >= 15" class="mt-2 inline pl-9 cursor-pointer text-orange-300 text-sm hover:text-slate-200 flex items-center gap-1">
+                <span v-if="depth >= 15 && props.comment.replies.length" class="mt-2 pl-9 cursor-pointer text-orange-300 text-sm hover:text-slate-200 flex items-center gap-1">
                     <router-link :to="{name: 'comments.show', params: {id: props.comment.id}}">Еще ответов ({{props.comment.replies.length}})</router-link>
                 </span>
                 <!-- Кнопка раскрытия ветки -->
@@ -274,7 +275,7 @@
                             class="cursor-pointer text-blue-300 text-sm hover:text-slate-200 flex items-center gap-1"
                             @click="toggleReplies"
                         >
-                            <span>{{ showReplies ? 'Скрыть ответы' : `Показать ответы (${props.comment.replies.length})` }}</span>
+                            <span>{{ showReplies ? 'Скрыть ответы' : `Ещё (${props.comment.replies.length})` }}</span>
                             <i :class="[showReplies ? 'fa rotate-180 fa-caret-down' : 'fa fa-caret-down']"></i>
                         </button>
                     </div>
@@ -409,17 +410,10 @@ const closeMenuOnClickOutside = () => {
 
 /**
  * Получения текста комментария для цитаты
- * @param userId
- * @param replyUserId
- * @param parent
  * @returns {Promise<void>}
  */
-const getCommentText = async (userId, replyUserId, parent) => {
-    const res = await axios.post('/api/comments/text', {
-        userId: userId.id,
-        replyUserId: replyUserId?.id || null,
-        parentId: parent || null
-    })
+const getCommentText = async (comment) => {
+    const res = await axios.get(`/api/comments/text/${comment.id}`)
     responseCommentText.value = res.data.text;
     showCommentText.value = !showCommentText.value;
 }
@@ -445,15 +439,9 @@ const showEdit = async (comment) => {
  * @returns {Promise<void>}
  */
 const updateComment = async (comment) => {
-    const res = await axios.patch(`/api/comments/${comment.id}`, {
-        text: editText.value
-    })
-
-    if (res.data.status === 200) {
-        editText.value = "";
-        showEditArea.value = false;
-    }
-    await commentStore.refresh(comment.postId);
+    await commentStore.updateComment(comment, editText.value)
+    editText.value = "";
+    showEditArea.value = false;
 }
 
 /**
@@ -540,12 +528,35 @@ const toggleReply = () => {
     showReplyArea.value = !showReplyArea.value;
     commentStore.replyText.length ? commentStore.replyText = '' : commentStore.replyText
 }
+/**
+ * Получение ссылки на комментарий
+ * @param item
+ * @param bodyUrl
+ * @param componentType
+ * @returns {Promise<void>}
+ */
+const copyLink = async (item, bodyUrl = 'comments', componentType = 'comment') => {
+    const url = window.location.origin;
+    const link = `${url}/${bodyUrl}/${item.id}`;
 
+    navigator.clipboard.writeText(link);
+    item.shareCount++;
+
+    emits('shownotificationmessage');
+
+    await axios.post('/api/shares', {
+        id: item.id,
+        type: componentType
+    })
+}
 
 </script>
 
 <style scoped>
-
+.dot_color {
+    fill: #bebbbb;
+    stroke: #bebbbb;
+}
 .footer-btn {
     display: flex;
     align-items: center;
@@ -568,14 +579,4 @@ const toggleReply = () => {
     font-size: 16px;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-    transition: all 0.25s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
-    transform: translateY(-4px);
-}
 </style>

@@ -274,7 +274,7 @@ const submitContent = () => {
 </script>
 
 <style scoped>
-/* Существующие стили без изменений */
+
 input[type="text"] {
     background: #1f2937;
     border: 1px solid #374151;
@@ -325,7 +325,6 @@ button.submit-btn:disabled {
     cursor: not-allowed;
 }
 
-/* Новые стили для кнопки удаления */
 .group:hover .group-hover\:opacity-100 {
     opacity: 1;
 }

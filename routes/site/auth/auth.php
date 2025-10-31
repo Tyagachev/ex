@@ -6,5 +6,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api_token')->get('/user', [UserController::class, 'me']);
 
-Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logout']);
+Route::post('login', [LoginController::class, 'login']);
+Route::post('logout', [LoginController::class, 'logout']);

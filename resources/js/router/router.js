@@ -44,7 +44,7 @@ const routes = [
         component: () => import('@/pages/Posts/show.vue')
     },
     {
-        path: '/comments/show/:id',
+        path: '/comments/:id',
         name: 'comments.show',
         component: () => import('@/pages/Comments/show.vue')
     }

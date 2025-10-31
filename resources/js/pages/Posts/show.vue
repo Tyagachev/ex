@@ -7,12 +7,12 @@
             </div>
         </transition>
         <div>
-            <button
-                @click="goBack"
-                class="px-2.5 py-1.5 mb-2 bg-orange-600  hover:bg-gray-500 text-sm text-white rounded-full cursor-pointer">
-                <i class="fa fa-arrow-left" aria-hidden="true"></i>
-            </button>
             <div class="wrapper">
+                <button
+                    @click="goBack"
+                    class="px-2.5 ml-3 py-1.5 mb-2 bg-orange-600  hover:bg-gray-500 text-sm text-white rounded-full cursor-pointer">
+                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </button>
             <div class="post-show">
                 <div class="post-content">
                     <div>
@@ -348,17 +348,6 @@ const autoResize = () => {
 
 }
 
-.post {
-//background: #1a1a1a;
-    border-radius: 8px;
-//border: 1px solid #2d2d2d;
-    margin-bottom: 12px;
-    display: flex;
-    overflow: hidden;
-//max-width: 800px;
-///min-width: 425px;
-}
-
 .post-content {
     padding: 12px;
     flex: 1;
@@ -375,21 +364,6 @@ const autoResize = () => {
     hyphens: auto;
 }
 
-.share_img {
-    fill: none;
-    stroke-width: 5;
-    stroke: #9ca3af;
-}
-
-.comments_count {
-    padding: 0 0 0 5px;
-}
-
-.subreddit {
-    font-weight: 700;
-    color: #d7dadc;
-}
-
 .post-title {
     font-size: 18px;
     font-weight: 500;
@@ -398,36 +372,6 @@ const autoResize = () => {
     overflow-wrap: break-word;
     word-break: break-word;
     hyphens: auto;
-}
-
-.post-image {
-    max-width: 100%;
-    max-height: 500px;
-    border-radius: 6px;
-    margin-bottom: 12px;
-    border: 1px solid #333;
-}
-
-.footer-btn {
-    display: flex;
-    align-items: center;
-    padding: 10px 10px;
-    background: none;
-    border: none;
-    border-radius: 18px;
-    cursor: pointer;
-    margin-right: 6px;
-    color: #b0b0b0;
-    background: #2a2a2a;
-}
-
-.footer-btn:hover {
-    background: #383737;
-}
-
-.footer-icon {
-    margin-right: 6px;
-    font-size: 16px;
 }
 
 .post-menu-container {

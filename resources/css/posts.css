@@ -9,7 +9,6 @@
     border-radius: 8px;
     display: flex;
     overflow: hidden;
-    background-color: #8080800d;
 }
 
 .post-title {
@@ -21,22 +20,24 @@
 }
 
 .post-image {
-    max-width: 100%;
-    max-height: 500px;
-    border-radius: 6px;
-    margin-bottom: 12px;
-    border: 1px solid #333;
+    max-height: 800px;
+    width: auto;
+    height: auto;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+    object-fit: contain;
 }
-
 
 .post:hover {
     cursor: pointer;
+    background-color: #8080800d;
 }
 .post-show {
     border-radius: 8px;
     display: flex;
     overflow: hidden;
-    background-color: #8080800d;
 }
 
 .post-footer {

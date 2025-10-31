@@ -5,5 +5,5 @@ use Illuminate\Support\Facades\Route;
 
 //COMMENTS
 Route::resource('comments', CommentController::class)->middleware('auth:api_token');
-Route::delete('/posts/{post}/comments/{comment}', [CommentController::class, 'destroy'])->middleware('auth:api_token');
-Route::post('/comments/text', [CommentController::class, 'getCommentText']);
+Route::get('comments/{comment}', [CommentController::class, 'show']);
+Route::get('comments/text/{comment}', [CommentController::class, 'getCommentText']);

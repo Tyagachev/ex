@@ -14,7 +14,7 @@
                     </div>
                     <Search/>
                     <div class="flex-shrink-0">
-                        <nav v-if="user" class="flex items-center space-x-3">
+                        <nav v-if="user.id" class="flex items-center space-x-3">
                             <router-link class='py-2.5 px-4 border border-white text-sm bg-transparent text-white rounded-full cursor-pointer font-semibold text-center transition hover:bg-gray-600 flex items-center'
                                   :to="{name:'posts.create'}">
                                 <span class="text-sm">+</span>
@@ -106,6 +106,19 @@ defineOptions({
 
 const route = useRoute()
 const scroll = useScrollStore();
+const userStore = useUserStore();
+const scrollContainer = ref(null);
+const isSidebarOpen = ref(false);
+const showItemsPanel = ref(false);
+const user = computed(() => userStore.user)
+let handleScroll;
+const toggleSidebar = () => {
+    isSidebarOpen.value = !isSidebarOpen.value;
+}
+
+const showItems = () => {
+    showItemsPanel.value = !showItemsPanel.value
+}
 
 onMounted(() => {
     if (scrollContainer.value) {
@@ -155,10 +168,6 @@ const shouldSaveScroll = (route) => {
     ) && !ignoreRoutes.includes(route.name)
 }
 
-let handleScroll;
-const scrollContainer = ref(null);
-const isSidebarOpen = ref(false);
-const showItemsPanel = ref(false);
 
 const links = [
     {
@@ -189,16 +198,7 @@ const links = [
     },
 ];
 
-let userStore = useUserStore();
-const user = computed(() => userStore.user)
 
-const toggleSidebar = () => {
-    isSidebarOpen.value = !isSidebarOpen.value;
-}
-
-const showItems = () => {
-    showItemsPanel.value = !showItemsPanel.value
-}
 
 </script>
 

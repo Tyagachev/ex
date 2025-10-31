@@ -12,7 +12,7 @@ export const useUserStore = defineStore('user', {
 
     getters: {
         user: (state) => state.userObject,
-        isAuthenticated: (state) => !!state.user && !!state.token,
+        isAuthenticated: (state) => !!state.userObject && !!state.token,
     },
 
     actions: {

@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import axios from "axios";
+import router from "@/router/router.js";
 
 export const useCommentsStore = defineStore('comment', {
     state: () => ({
@@ -136,18 +137,44 @@ export const useCommentsStore = defineStore('comment', {
         },
 
         /**
+         * Обновление комментария
+         * @param comment
+         * @param text
+         * @returns {Promise<*>}
+         */
+        async updateComment(comment, text) {
+            const res = await axios.patch(`/api/comments/${comment.id}`, {
+                text: text
+            })
+            if (res.data.status === 200) {
+                if (this.isCommentPage) {
+                    await this.getComment(this.commentObject.id);
+                    return res.data.status;
+                } else {
+                    await this.refresh(comment.postId);
+                }
+            }
+        },
+
+        /**
          * Удалить коммент
          * @param comment
          * @returns {Promise<void>}
          */
         async deleteComment(comment) {
-            const res = await axios.delete(`/api/posts/${comment.postId}/comments/${comment.id}`);
-            if (res.status === 200) {
+            await axios.delete(`/api/comments/${comment.id}`);
+
+            if (comment.id === this.commentObject.id && this.isCommentPage) {
+                await this.refresh(comment.postId);
+                router.back()
+            } else if (comment.id !== this.commentObject.id && this.isCommentPage) {
+                await this.getComment(this.commentObject.id);
+            } else {
                 const index = this.commentsList.findIndex(c => c.id === comment.id);
                 if (index !== -1) {
                     this.commentsList.splice(index, 1);
                 }
-                await this.refresh(comment.postId)
+                await this.refresh(comment.postId);
             }
         },
     }

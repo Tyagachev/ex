@@ -90,11 +90,10 @@ class CommentController extends Controller
     /**
      * Удаление коммента
      *
-     * @param Post $post
      * @param Comment $comment
      * @return JsonResponse
      */
-    public function destroy(Post $post, Comment $comment): JsonResponse
+    public function destroy(Comment $comment): JsonResponse
     {
         $comment->delete();
 
@@ -107,15 +106,12 @@ class CommentController extends Controller
      * Получение текста коммента
      * на который ответил пользователь
      *
-     * @param Request $request
-     * @return null
      */
-    public function getCommentText(Request $request)
+    public function getCommentText(Comment $comment)
     {
-        $r = $request->all();
         return Comment::query()
-            ->where('id', '=', $r['parentId'])
-            ->where('user_id', '=', $r['replyUserId'])
+            ->where('id', '=', $comment['parent_id'])
+            ->where('user_id', '=', $comment['reply_user_id'])
             ->first('text');
     }
 }
