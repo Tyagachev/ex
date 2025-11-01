@@ -1,16 +1,11 @@
 <template>
-        <div class="example-component">
-            <Sidebar>
-                <router-view></router-view>
-            </Sidebar>
-        </div>
+    <div>
+        <router-view></router-view>
+    </div>
 </template>
 
 <script setup>
-
-import Sidebar from "@/layouts/Sidebar.vue";
+defineOptions({
+    name: "App"
+})
 </script>
-
-<style scoped>
-
-</style>

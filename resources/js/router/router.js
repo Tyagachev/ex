@@ -6,7 +6,52 @@ const routes = [
         path: '/',
         name: 'main',
         redirect: '/posts',
-        component: () => import('../pages/App.vue')
+        component: () => import('@/layouts/MainLayout.vue'),
+        children: [
+            {
+                path: '/posts',
+                name: 'posts.page',
+                component: () => import('@/pages/Posts/Index.vue')
+            },
+            {
+                path: '/answers',
+                name: 'answers.page',
+                component: () => import('@/layouts/AnswersLayout.vue'),
+                children: [
+                    {
+                        path: '', // Пустой путь для /comments
+                        name: 'answers.reply',
+                        component: () => import('@/pages/Answers/Reply/index.vue'),
+                    },
+                    {
+                        path: '', // Пустой путь для /comments
+                        name: 'answers.posts',
+                        component: () => import('@/pages/Answers/Post/index.vue'),
+                    }
+                ]
+            },
+            {
+                path: '/posts/create',
+                name: 'posts.create',
+                component: () => import('@/pages/Posts/create.vue')
+            },
+            {
+                path: '/posts/edit/:id',
+                name: 'posts.edit',
+                component: () => import('@/pages/Posts/edit.vue')
+            },
+            {
+                path: '/posts/show/:id',
+                name: 'posts.show',
+                component: () => import('@/pages/Posts/show.vue')
+            }
+        ]
+    },
+    // ЭТИ МАРШРУТЫ ДОЛЖНЫ БЫТЬ ВНЕ children
+    {
+        path: '/comments/:id', // Перенесите сюда
+        name: 'comments.show',
+        component: () => import('@/pages/Comments/show.vue')
     },
     {
         path: '/login',
@@ -22,31 +67,6 @@ const routes = [
         path: '/register',
         name: 'register.page',
         component: () => import('../pages/Auth/Registration/Registration.vue')
-    },
-    {
-        path: '/posts',
-        name: 'posts.page',
-        component: () => import('@/pages/Posts/Index.vue')
-    },
-    {
-        path: '/posts/create',
-        name: 'posts.create',
-        component: () => import('@/pages/Posts/create.vue')
-    },
-    {
-        path: '/posts/edit/:id',
-        name: 'posts.edit',
-        component: () => import('@/pages/Posts/edit.vue')
-    },
-    {
-        path: '/posts/show/:id',
-        name: 'posts.show',
-        component: () => import('@/pages/Posts/show.vue')
-    },
-    {
-        path: '/comments/:id',
-        name: 'comments.show',
-        component: () => import('@/pages/Comments/show.vue')
     }
 ]
 
@@ -54,12 +74,5 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 });
-/*router.beforeResolve((to, from) => {
-    NProgress.start()
-})
-router.afterEach((to, from) => {
-    NProgress.done()
-})*/
 
 export default router
-

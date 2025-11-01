@@ -5,7 +5,7 @@
                 Ссылка скопирована
             </div>
         </transition>
-
+        <div v-if="props.comment?.post.title"><h1>{{props.comment.post.title}}</h1></div>
         <div :class="['relative', depth > 0 ? 'ml-5 border-l border-slate-600' : '']">
             <div class="pt-4"></div>
         <!--<div class="relative pt-3">-->

@@ -5,14 +5,21 @@ namespace App\Http\Controllers\api\Comment;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Comment\StoreCommentRequest;
 use App\Http\Resources\Comments\CommentResource;
-use App\Models\Comment;
+use App\Http\Resources\Comments\CommentUserResource;use App\Models\Comment;
 use App\Models\Post;
 use App\Services\Comment\CommentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
+    public function index()
+    {
+        $user = Auth::user();
+
+        return CommentUserResource::collection($user->comments);
+    }
     /**
      * Сохранение комментария
      *

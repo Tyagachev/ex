@@ -44,18 +44,35 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * @return BelongsToMany
+     */
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
     }
 
+    /**
+     * @return bool
+     */
     public function getIsAdminAttribute(): bool
     {
         return $this->roles->contains('role', RoleEnum::ADMIN->value);
     }
 
+    /**
+     * @return HasMany
+     */
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, 'user_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
     }
 }
