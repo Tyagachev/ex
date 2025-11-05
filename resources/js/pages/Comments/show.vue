@@ -16,10 +16,10 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
+import {onMounted} from "vue";
+import { useRoute } from "vue-router";
 import {useCommentsStore} from "@/stores/comments.js";
 import CommentNote from "@/components/Comment/CommentNote.vue";
-import {onMounted} from "vue";
 import router from "@/router/router.js";
 
 defineOptions({

@@ -5,7 +5,7 @@
                 Ссылка скопирована
             </div>
         </transition>
-        <div v-if="props.comment?.post.title"><h1>{{props.comment.post.title}}</h1></div>
+        <div v-if="props.comment?.title"><h1>{{props.comment?.title}}</h1></div>
         <div :class="['relative', depth > 0 ? 'ml-5 border-l border-slate-600' : '']">
             <div class="pt-4"></div>
         <!--<div class="relative pt-3">-->
@@ -20,7 +20,7 @@
                     :title="props.comment.user?.name"
                 >
                     {{ props.comment.user?.name[0].toUpperCase() }}
-                    <div v-show="props.comment.replies.length && showReplies" class="absolute border-l left-7 top-13 border-slate-600 w-2 h-full"></div>
+                    <div v-show="props.comment.replies?.length && showReplies" class="absolute border-l left-7 top-13 border-slate-600 w-2 h-full"></div>
                 </div>
                 <div class="flex-1 mr-1 mt-0 min-w-0">
                     <div class="flex items-center gap-2 text-sm text-slate-300">
@@ -44,25 +44,37 @@
                             <div v-if="activeCommentMenu.activeMenu === props.comment.id"
                                  class="absolute right-0 top-full bg-slate-800 border border-slate-700 rounded shadow-lg z-10"
                                  ref="commentMenu">
-                                <div v-if="user?.id === props.comment.user.id">
-                                    <div class="flex text-center">
+                                <div v-if="user?.id === props.comment.user?.id">
+                                    <div v-if="noCommentPage">
+                                        <div class="flex text-center">
+                                            <router-link :to="{name: 'comments.show', params: {id: props.comment.id}}">
+                                            <button
+                                                class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700 cursor-pointer">
+                                                <div class="mr-1" ><i class="fa fa-pencil" aria-hidden="true"></i></div>
+                                                <span>Перейти</span>
+                                            </button>
+                                            </router-link>
+                                        </div>
+                                    </div>
+                                    <div v-else >
+                                        <div class="flex text-center">
+                                            <button
+                                                class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700 cursor-pointer"
+                                                @click="showEdit(props.comment)"
+                                            >
+                                                <div class="mr-1" ><i class="fa fa-pencil" aria-hidden="true"></i></div>
+                                                <span>Редактировать</span>
+                                            </button>
+                                        </div>
                                         <button
-                                            class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700 cursor-pointer"
-                                            @click="showEdit(props.comment)"
+                                            class="flex block w-full text-left px-2 py-2 text-sm hover:bg-slate-700 text-red-400 cursor-pointer"
+                                            @click="commentStore.deleteComment(props.comment)"
                                         >
-                                            <div class="mr-1" ><i class="fa fa-pencil" aria-hidden="true"></i></div>
-                                            <span>Редактировать</span>
+                                            <div class="mr-1 " ><i class="fa fa-trash" aria-hidden="true"></i></div>
+                                            <span>Удалить</span>
                                         </button>
-
                                     </div>
 
-                                    <button
-                                        class="flex block w-full text-left px-2 py-2 text-sm hover:bg-slate-700 text-red-400 cursor-pointer"
-                                        @click="commentStore.deleteComment(props.comment)"
-                                    >
-                                        <div class="mr-1 " ><i class="fa fa-trash" aria-hidden="true"></i></div>
-                                        <span>Удалить</span>
-                                    </button>
                                 </div>
                                 <div v-else>
                                     <button
@@ -218,7 +230,7 @@
                                 </button>
                             </div>
                             <div >
-                                <button v-if="user?.id !== props.comment.user.id && user.auth && depth < 15"
+                                <button v-if="user?.id !== props.comment.user?.id && user.auth && depth < 15"
                                         class="footer-btn hover:text-slate-200"
                                         @click.prevent="toggleReply">
                                     <p class="text-blue-400 text-sm font-semibold">
@@ -316,6 +328,10 @@ const props = defineProps({
     comment: {
         type: Object,
         required: true
+    },
+    noCommentPage: {
+        type: Boolean,
+        default: false
     },
     depth: {
         type: Number,

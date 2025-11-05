@@ -19,11 +19,6 @@ export const useCommentsStore = defineStore('comment', {
     },
 
     actions: {
-        async getUserComments() {
-            const res = await axios.get(`/api/comments`);
-            console.log(res.data);
-            await this.getComments(res.data)
-        },
         /**
          * Получение комментариев
          * @param comments

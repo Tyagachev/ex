@@ -46,19 +46,29 @@
                     style="min-width: 0;">
                     <div class="w-full">
                         <div v-for="link in links">
-                            <div v-if="link.items" class="text-white text-sm">
+                            <div v-if="!link.items">
+                                <div v-if="link.auth && user.auth">
+                                    <router-link :to="{name: link.route}" class="text-white text-sm">
+                                        <button class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center">
+                                            <div class="mr-2" v-html="link.img"></div>
+                                            <p style="font-size: medium">{{link.title}}</p>
+                                        </button>
+                                    </router-link>
+                                </div>
+                                <div v-else-if="!link.auth">
+                                    <router-link :to="{name: link.route}" class="text-white text-sm">
+                                        <button class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center">
+                                            <div class="mr-2" v-html="link.img"></div>
+                                            <p style="font-size: medium">{{link.title}}</p>
+                                        </button>
+                                    </router-link>
+                                </div>
+                            </div>
+                            <div v-else-if="link.items" class="text-white text-sm">
                                 <button @click.prevent="showItems" class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center">
                                     <div class="mr-2" v-html="link.img"></div>
                                     <p style="font-size: medium">{{link.title}}</p>
                                 </button>
-                            </div>
-                            <div v-else>
-                                <router-link :to="{name: link.route}" class="text-white text-sm">
-                                    <button class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center">
-                                        <div class="mr-2" v-html="link.img"></div>
-                                        <p style="font-size: medium">{{link.title}}</p>
-                                    </button>
-                                </router-link>
                             </div>
                             <div v-if="showItemsPanel" v-for="item in link.items">
                                 <div class="border-b-1 border-gray-500">
@@ -70,6 +80,7 @@
                                     </router-link>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </section>
@@ -173,11 +184,13 @@ const links = [
     {
         "title": "Welcome",
         "img": '<i class="fa fa-home" aria-hidden="true"></i>',
+        "auth": false,
         route: 'main'
     },
     {
         "title": "Ответы",
         "img": '<i class="fa fa-home" aria-hidden="true"></i>',
+        "auth": true,
         route: 'answers.reply'
     },
     {
