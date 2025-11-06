@@ -4,7 +4,7 @@
             v-for="comment in comments"
             :key="comment.id"
             :comment="comment"
-            :noCommentPage = isAnswerPage
+            :noCommentPage = answersStore.isAnswerPage
         />
         <div v-show="answersStore.hasMore" ref="loadTrigger" class="h-50"></div>
         <div v-if="!answersStore.hasMore && !answersStore.loading" class="end-of-feed">
@@ -20,20 +20,28 @@ import CommentNote from "@/components/Comment/CommentNote.vue";
 import {computed, onMounted} from "vue";
 import {useAnswersStore} from "@/stores/answers.js";
 import {useInfiniteScroll} from "@/composables/useInfiniteScroll";
+import {useRoute} from "vue-router";
 
 defineOptions({
     name: "index"
 })
 
+const route = useRoute().path
 const answersStore = useAnswersStore()
-const comments = computed(() => useAnswersStore().allAnswers)
-const isAnswerPage = true;
+const comments = computed(() => answersStore.allAnswers)
 
 onMounted(() => {
-     if (comments.value.length) {
+    answersStore.setRoutePath(route);
+
+    if (answersStore.answers.length) {
          answersStore.refresh()
      }
+    getData();
 })
+
+const getData = () => {
+    answersStore.getAnswers();
+}
 const { loadTrigger } = useInfiniteScroll(answersStore.getAnswers,
     {
         hasMore: () => answersStore.hasMore,

@@ -41,13 +41,13 @@
         <main>
             <div class="flex h-full">
                 <section
-                    :class="['lt custom-scrollbar border-r border-black overflow-y-auto overflow-x-hidden bg-gray-800 transition-transform duration-300 ease-in-out transform fixed lg:static z-30 h-full',
+                    :class="['lt hide-scrollbar border-r border-black overflow-y-auto overflow-x-hidden bg-gray-800 transition-transform duration-300 ease-in-out transform fixed lg:static z-30 h-full',
                     isSidebarOpen ? 'translate-x-0 w-52' : '-translate-x-full lg:translate-x-0 lg:w-40']"
                     style="min-width: 0;">
                     <div class="w-full">
                         <div v-for="link in links">
                             <div v-if="!link.items">
-                                <div v-if="link.auth && user.auth">
+                                <div v-if="link.auth && user.id">
                                     <router-link :to="{name: link.route}" class="text-white text-sm">
                                         <button class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center">
                                             <div class="mr-2" v-html="link.img"></div>
@@ -182,17 +182,18 @@ const shouldSaveScroll = (route) => {
 
 const links = [
     {
-        "title": "Welcome",
+        "title": "Главная",
         "img": '<i class="fa fa-home" aria-hidden="true"></i>',
         "auth": false,
         route: 'main'
     },
     {
         "title": "Ответы",
-        "img": '<i class="fa fa-home" aria-hidden="true"></i>',
+        "img": '<i class="fa fa-comment" aria-hidden="true"></i>',
         "auth": true,
         route: 'answers.reply'
     },
+
     {
         "title": "Array",
         "img": '<i class="fa fa-home" aria-hidden="true"></i>',
@@ -235,13 +236,8 @@ const links = [
 }
 
 .hide-scrollbar {
-    -ms-overflow-style: none;
-//scrollbar-width: none;
+    scrollbar-width: none;
 }
-.hide-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-
 .lt {
     transition: all 0.3s ease-in-out;
     height: calc(100vh - 50px);
@@ -251,6 +247,7 @@ const links = [
 .custom-scrollbar {
     overflow: scroll;
     scrollbar-color: #2d3748 transparent;
+    //scrollbar-width: none;
 }
 
 .custom-scrollbar::-webkit-scrollbar {

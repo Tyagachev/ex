@@ -5,6 +5,11 @@
                 Ссылка скопирована
             </div>
         </transition>
+        <div class="pt-5" v-if="noCommentPage && !comment.parent">
+            <router-link :to="{name: 'posts.show', params: {id: comment.postId}}">
+                <h3 class="post-title">{{comment.postTitle}}</h3>
+            </router-link>
+        </div>
         <div v-if="props.comment?.title"><h1>{{props.comment?.title}}</h1></div>
         <div :class="['relative', depth > 0 ? 'ml-5 border-l border-slate-600' : '']">
             <div class="pt-4"></div>

@@ -19,12 +19,12 @@ const routes = [
                 component: () => import('@/layouts/AnswersLayout.vue'),
                 children: [
                     {
-                        path: '', // Пустой путь для /comments
+                        path: 'replies', // Пустой путь для /comments
                         name: 'answers.reply',
                         component: () => import('@/pages/Answers/Reply/index.vue'),
                     },
                     {
-                        path: '', // Пустой путь для /comments
+                        path: 'posts', // Пустой путь для /comments
                         name: 'answers.posts',
                         component: () => import('@/pages/Answers/Post/index.vue'),
                     }

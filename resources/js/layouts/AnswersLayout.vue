@@ -1,12 +1,12 @@
 <template>
     <div class="container comments-layout">
         <!-- Навигация внутри комментариев -->
-        <nav class="mb-6 flex space-x-4 border-b pb-2">
+        <nav class="mb-6 flex space-x-4 border-b border-gray-600 pb-2">
             <router-link
                 :to="{ name: 'answers.reply' }"
-                class="px-4 py-2 rounded-t-lg transition-colors uppercase"
+                class="px-4 py-2 transition-colors"
                 :class="{
-                    'bg-blue-500 text-white': $route.name === 'answers.reply',
+                    'bg-gray-600 text-white': $route.name === 'answers.reply',
                     'text-gray-600 hover:bg-gray-100': $route.name !== 'answers.reply'
                 }"
             >
@@ -14,9 +14,9 @@
             </router-link>
             <router-link
                 :to="{ name: 'answers.posts' }"
-                class="px-4 py-2 rounded-t-lg transition-colors uppercase"
+                class="px-4 py-2 transition-colors"
                 :class="{
-                    'bg-blue-500 text-white': $route.name === 'answers.posts',
+                    'bg-gray-600 text-white': $route.name === 'answers.posts',
                     'text-gray-600 hover:bg-gray-100': $route.name !== 'answers.posts'
                 }"
             >
@@ -24,7 +24,6 @@
             </router-link>
         </nav>
 
-        <!-- Контент комментариев -->
         <div class="comments-content">
             <router-view></router-view>
         </div>
