@@ -1,5 +1,4 @@
 import {createRouter, createWebHistory} from "vue-router";
-import NProgress from "nprogress";
 
 const routes = [
     {
@@ -9,53 +8,70 @@ const routes = [
         component: () => import('@/layouts/MainLayout.vue'),
         children: [
             {
-                path: '/posts',
+                path: 'posts',
                 name: 'posts.page',
                 component: () => import('@/pages/Posts/Index.vue')
             },
             {
-                path: '/answers',
+                path: 'answers',
                 name: 'answers.page',
-                component: () => import('@/layouts/AnswersLayout.vue'),
+                component: () => import('@/pages/Answers/index.vue'),
                 children: [
                     {
-                        path: 'replies', // Пустой путь для /comments
-                        name: 'answers.reply',
-                        component: () => import('@/pages/Answers/Reply/index.vue'),
-                    },
-                    {
-                        path: 'posts', // Пустой путь для /comments
+                        path: 'posts',
                         name: 'answers.posts',
                         component: () => import('@/pages/Answers/Post/index.vue'),
+                    },
+                    {
+                        path: 'replies',
+                        name: 'answers.replies',
+                        component: () => import('@/pages/Answers/Reply/index.vue'),
                     }
                 ]
             },
             {
-                path: '/posts/create',
+                path: 'posts/create',
                 name: 'posts.create',
                 component: () => import('@/pages/Posts/create.vue')
             },
             {
-                path: '/posts/edit/:id',
+                path: 'posts/edit/:id',
                 name: 'posts.edit',
                 component: () => import('@/pages/Posts/edit.vue')
             },
             {
-                path: '/posts/show/:id',
+                path: 'posts/show/:id',
                 name: 'posts.show',
                 component: () => import('@/pages/Posts/show.vue')
             },
             {
-                path: '/visited',
+                path: 'visited',
                 name: 'visited.page',
                 component: () => import('@/pages/Visited/Index.vue')
             },
+            {
+                path: 'saved',
+                name: 'saved.page',
+                component: () => import('@/pages/Saved/index.vue'),
+                children: [
+                    {
+                        path: 'posts',
+                        name: 'saved.posts',
+                        component: () => import('@/pages/Saved/Posts/index.vue'),
+                    },
+                    {
+                        path: 'comments',
+                        name: 'saved.comments',
+                        component: () => import('@/pages/Saved/Comments/index.vue'),
+                    },
+                ]
+            },
+            {
+                path: 'comments/:id',
+                name: 'comments.show',
+                component: () => import('@/pages/Comments/show.vue')
+            },
         ]
-    },
-    {
-        path: '/comments/:id', // Перенесите сюда
-        name: 'comments.show',
-        component: () => import('@/pages/Comments/show.vue')
     },
     {
         path: '/login',

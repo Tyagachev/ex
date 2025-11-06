@@ -15,7 +15,7 @@ class PostViewCount
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $post;
+    public object $post;
     /**
      * Create a new event instance.
      */

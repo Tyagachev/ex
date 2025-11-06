@@ -5,19 +5,19 @@
 <script setup>
 import TabbedLayout from "@/layouts/TabbedLayout.vue";
 defineOptions({
-    name: "AnswersLayout"
+    name: "index"
 })
 
 const tabs = [
     {
-        to: { name: 'answers.reply' },
-        name: 'answers.reply',
-        title: 'Ответы на комментарии'
-    },
-    {
         to: { name: 'answers.posts' },
         name: 'answers.posts',
         title: 'Ответы на посты'
+    },
+    {
+        to: { name: 'answers.replies' },
+        name: 'answers.replies',
+        title: 'Ответы на комментарии'
     }
 ]
 </script>

@@ -49,7 +49,11 @@
                             <div v-if="!link.items">
                                 <div v-if="link.auth && user.id">
                                     <router-link :to="{name: link.route}" class="text-white text-sm">
-                                        <button class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center">
+                                        <button
+                                            class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center"
+                                            :class="{
+                                            'bg-gray-600 text-white': $route.name === link.route
+                                            }">
                                             <div class="mr-2" v-html="link.img"></div>
                                             <p style="font-size: medium">{{link.title}}</p>
                                         </button>
@@ -57,7 +61,10 @@
                                 </div>
                                 <div v-else-if="!link.auth">
                                     <router-link :to="{name: link.route}" class="text-white text-sm">
-                                        <button class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center">
+                                        <button class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center"
+                                                :class="{
+                                            'bg-gray-600 text-white': $route.name === link.route
+                                            }">
                                             <div class="mr-2" v-html="link.img"></div>
                                             <p style="font-size: medium">{{link.title}}</p>
                                         </button>
@@ -73,7 +80,10 @@
                             <div v-if="showItemsPanel" v-for="item in link.items">
                                 <div class="border-b-1 border-gray-500">
                                     <router-link :to="{name: item.route}" class="text-white text-sm ">
-                                        <button class="cursor-pointer hover:bg-gray-600 w-full mt-1 pt-2 pb-2 pl-4 hover:bg-gray-600 flex items-center">
+                                        <button class="cursor-pointer hover:bg-gray-600 w-full mt-1 pt-2 pb-2 pl-4 hover:bg-gray-600 flex items-center"
+                                                :class="{
+                                            'bg-gray-600 text-white': $route.name === link.route
+                                            }">
                                             <div class="mr-2" v-html="item.img"></div>
                                             <p style="font-size: medium">{{item.title}}</p>
                                         </button>
@@ -104,6 +114,7 @@
 <script setup>
 import {useUserStore} from "@/stores/users.js";
 import {useRoute} from "vue-router";
+
 
 import {computed, nextTick, onMounted, ref, watch} from "vue";
 
@@ -185,13 +196,22 @@ const links = [
         "title": "Главная",
         "img": '<i class="fa fa-home" aria-hidden="true"></i>',
         "auth": false,
-        route: 'main'
+        route: 'posts.page'
     },
     {
         "title": "Ответы",
         "img": '<i class="fa fa-comment" aria-hidden="true"></i>',
         "auth": true,
-        route: 'answers.reply'
+        route: 'answers.posts'
+    },
+    {
+        "title": "Сохраненные",
+        "img": '<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="16px" height="16px" version="1.1" viewBox="0 0 200 252.391"><g id="Objects">\n' +
+            '                <path fill="#fff" stroke="#bebbbb" d="M10 0l180 0c5.508,0 10,4.493 10,10l0 232.354c0,3.7 -1.851,6.876 -5.07,8.7 -3.219,1.824 -6.894,1.78 -10.069,-0.121l-79.88 -47.849c-3.251,-1.948 -7.042,-1.945 -10.29,0.007l-79.54 47.804c-3.173,1.907 -6.852,1.956 -10.075,0.133 -3.223,-1.823 -5.076,-5.001 -5.076,-8.704l0 -232.324c0,-5.507 4.492,-10 10,-10z"/>\n' +
+            '            </g>\n' +
+            '            </svg>\n',
+        "auth": true,
+        route: 'saved.posts'
     },
     {
         "title": "Посмотренное",
@@ -199,7 +219,7 @@ const links = [
         "auth": true,
         route: 'visited.page'
     },
-    {
+    /*{
         "title": "Array",
         "img": '<i class="fa fa-home" aria-hidden="true"></i>',
         'items': [
@@ -219,7 +239,7 @@ const links = [
                 route: 'main'
             },
         ]
-    },
+    },*/
 ];
 
 
@@ -281,4 +301,9 @@ const links = [
     display: block; /* Chrome, Safari, Edge */
 }
 
-</style>-->
+.dot_color {
+    fill: #bebbbb;
+    stroke: #bebbbb;
+}
+
+</style>
