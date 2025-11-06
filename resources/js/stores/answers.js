@@ -19,7 +19,6 @@ export const useAnswersStore = defineStore('answers',{
     actions: {
         setRoutePath(route) {
             this.path = route;
-            console.log(route);
         },
         async getAnswers() {
             if (this.loading || !this.hasMore) return
@@ -28,7 +27,6 @@ export const useAnswersStore = defineStore('answers',{
 
             try {
                 const {data} = await axios.get(`/api${this.path}?page=${this.page}`);
-                console.log(data);
                 this.currentPage = data.meta.current_page
                 this.lastPage = data.meta.last_page
 

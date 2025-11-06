@@ -44,10 +44,14 @@ const routes = [
                 path: '/posts/show/:id',
                 name: 'posts.show',
                 component: () => import('@/pages/Posts/show.vue')
-            }
+            },
+            {
+                path: '/visited',
+                name: 'visited.page',
+                component: () => import('@/pages/Visited/Index.vue')
+            },
         ]
     },
-    // ЭТИ МАРШРУТЫ ДОЛЖНЫ БЫТЬ ВНЕ children
     {
         path: '/comments/:id', // Перенесите сюда
         name: 'comments.show',

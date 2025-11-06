@@ -42,7 +42,7 @@
             <div class="flex h-full">
                 <section
                     :class="['lt hide-scrollbar border-r border-black overflow-y-auto overflow-x-hidden bg-gray-800 transition-transform duration-300 ease-in-out transform fixed lg:static z-30 h-full',
-                    isSidebarOpen ? 'translate-x-0 w-52' : '-translate-x-full lg:translate-x-0 lg:w-40']"
+                    isSidebarOpen ? 'translate-x-0 w-52' : '-translate-x-full lg:translate-x-0 lg:w-50']"
                     style="min-width: 0;">
                     <div class="w-full">
                         <div v-for="link in links">
@@ -103,9 +103,9 @@
 
 <script setup>
 import {useUserStore} from "@/stores/users.js";
-import {useRoute, useRouter} from "vue-router";
+import {useRoute} from "vue-router";
 
-import {computed, nextTick, onMounted, onUnmounted, ref, watch} from "vue";
+import {computed, nextTick, onMounted, ref, watch} from "vue";
 
 import Search from "@/components/Search/Search.vue";
 
@@ -193,7 +193,12 @@ const links = [
         "auth": true,
         route: 'answers.reply'
     },
-
+    {
+        "title": "Посмотренное",
+        "img": '<i class="fa fa-history" aria-hidden="true"></i>',
+        "auth": true,
+        route: 'visited.page'
+    },
     {
         "title": "Array",
         "img": '<i class="fa fa-home" aria-hidden="true"></i>',
