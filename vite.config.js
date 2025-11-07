@@ -13,6 +13,13 @@ export default defineConfig({
         tailwindcss(),
         vuePlugin(),
     ],
+    server: {
+        host: '0.0.0.0',
+        port: 5173,
+        hmr: {
+            host: '127.0.0.1',
+        },
+    },
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'resources/js'),
