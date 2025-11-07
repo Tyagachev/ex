@@ -10,7 +10,7 @@ const routes = [
             {
                 path: 'posts',
                 name: 'posts.page',
-                component: () => import('@/pages/Posts/Index.vue')
+                component: () => import('@/pages/Posts/index.vue')
             },
             {
                 path: 'answers',
@@ -47,7 +47,7 @@ const routes = [
             {
                 path: 'visited',
                 name: 'visited.page',
-                component: () => import('@/pages/Visited/Index.vue')
+                component: () => import('@/pages/Visited/index.vue')
             },
             {
                 path: 'saved',

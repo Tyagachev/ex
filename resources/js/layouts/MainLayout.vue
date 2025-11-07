@@ -181,13 +181,20 @@ watch(() => route.path, (toPath, fromPath) => {
 
 // Функция для определения, нужно ли сохранять скролл для этого маршрута
 const shouldSaveScroll = (route) => {
-    const saveScrollRoutes = ['posts'] // базовые имена маршрутов
-    const ignoreRoutes = ['posts.show', 'posts.create'] // маршруты где скролл не нужен
+    const saveScrollRoutes = ['posts', 'answers', 'saved'] // базовые имена маршрутов
+    const ignoreRoutes = ['posts.create', 'posts.edit'] // маршруты где скролл не нужен
 
     // Проверяем, содержит ли имя маршрута один из базовых
-    return saveScrollRoutes.some(baseRoute =>
+    const isSaveScrollRoute = saveScrollRoutes.some(baseRoute =>
         route.name && route.name.includes(baseRoute)
-    ) && !ignoreRoutes.includes(route.name)
+    )
+
+    // Проверяем, не входит ли маршрут в игнорируемые (проверяем, что имя маршрута не включает ни один из ignoreRoutes)
+    const isIgnoredRoute = ignoreRoutes.some(ignoreRoute =>
+        route.name && route.name.includes(ignoreRoute)
+    )
+
+    return isSaveScrollRoute && !isIgnoredRoute
 }
 
 
