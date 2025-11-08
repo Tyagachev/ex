@@ -13,7 +13,7 @@ class Post extends Model
     use HumanDates;
     use Voteable;
 
-    protected $table = 'Posts';
+    protected $table = 'posts';
 
     protected $fillable = ['title', 'user_id', 'blocks', 'share_count'];
     protected $casts = [

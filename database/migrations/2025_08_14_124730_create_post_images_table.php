@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('post_id');
             $table->foreign('post_id')
                 ->references('id')
-                ->on('Posts');
+                ->on('posts');
 
             $table->string('url');
             $table->string('path');

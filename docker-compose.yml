@@ -17,7 +17,7 @@ services:
 
     # Nginx сервис
     webserver:
-        image: nginx:alpine
+        image: nginx:1.29.3-alpine
         container_name: nginx_server
         restart: unless-stopped
         ports:
