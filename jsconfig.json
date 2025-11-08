@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./resources/js/*"]
+        },
+        "moduleResolution": "node",
+        "target": "esnext",
+        "module": "esnext",
+        "allowSyntheticDefaultImports": true
+    },
+    "include": [
+        "resources/js/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "vendor"
+    ]
+}

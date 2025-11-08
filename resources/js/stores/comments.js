@@ -108,7 +108,7 @@ export const useCommentsStore = defineStore('comment', {
          * @returns {Promise<void>}
          */
         async refresh(id) {
-            const res = await axios.get(`/api/posts/show/${id}`);
+            const res = await axios.get(`/api/posts/${id}`);
             this.commentsList = res.data.comments;
         },
 

@@ -40,7 +40,7 @@ const routes = [
                 component: () => import('@/pages/Posts/edit.vue')
             },
             {
-                path: 'posts/show/:id',
+                path: 'posts/:id',
                 name: 'posts.show',
                 component: () => import('@/pages/Posts/show.vue')
             },

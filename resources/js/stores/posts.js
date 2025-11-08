@@ -63,7 +63,7 @@ export const usePostsStore = defineStore('posts', {
 
                 try {
                     NProgress.start()
-                    const res = await axios.get(`/api/posts/show/${post}`);
+                    const res = await axios.get(`/api/posts/${post}`);
                     this.postShow = res.data;
                     const commentStore = useCommentsStore();
                     await commentStore.getComments(this.postShow.comments);
