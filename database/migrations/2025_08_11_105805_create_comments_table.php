@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->mediumText('text');
+            $table->mediumText('text')->fulltext();
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->unsignedBigInteger('parent_id')->nullable()->index();
             $table->unsignedBigInteger('reply_user_id')->nullable();
             $table->bigInteger('share_count')->default(0);
 
