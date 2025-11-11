@@ -2,9 +2,9 @@ import {defineStore} from "pinia";
 
 export const useAvatarStore = defineStore('avatars', {
 
-    state:() => {
-
-    },
+    state:() => ({
+        cache: {}
+    }),
     getters: {
 
     },

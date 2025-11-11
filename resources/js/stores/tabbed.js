@@ -1,37 +1,46 @@
 import axios from "axios";
 import {defineStore} from "pinia";
 import NProgress from "nprogress";
+import {useRoute} from "vue-router";
 
-export const useAnswersStore = defineStore('answers',{
+export const useTabbedStore = defineStore('tabbed',{
     state: () => ({
-        answers:[],
-        page: 0,
+        data: [],
+        page: 1,
         currentPage: 0,
         lastPage: 0,
         hasMore: true,
         loading: false,
-        isAnswerPage: true,
-        path: null
+        isTabbedPage: true,
+        path: ''
     }),
     getters: {
-        allAnswers: (state) => state.answers,
+        tabbedData: (state) => state.data,
     },
     actions: {
         setRoutePath(route) {
-            this.path = route;
+            if (this.path !== route) {
+                this.page = 1
+            }
+            this.path = route
         },
-        async getAnswers() {
+
+        /**
+         *
+         * @returns {Promise<void>}
+         */
+        async getTabbedData() {
             if (this.loading || !this.hasMore) return
             NProgress.start()
+
             this.loading = true;
 
             try {
                 const {data} = await axios.get(`/api${this.path}?page=${this.page}`);
                 this.currentPage = data.meta.current_page
                 this.lastPage = data.meta.last_page
-
                 NProgress.done()
-                this.answers.push(...data.data);
+                this.data.push(...data.data);
 
                 if (this.currentPage < this.lastPage) {
                     this.page++
@@ -43,11 +52,15 @@ export const useAnswersStore = defineStore('answers',{
                 NProgress.done()
             }
         },
-        async refresh() {
-            this.page = null;
-            this.answers = [];
-            const {data} = await axios.get(`/api${this.path}?page=${this.page}`);
-            this.answers.push(...data.data);
-        },
+        /**
+         *
+         * @returns {Promise<void>}
+         */
+        async resetLoadedStatusAndRefresh() {
+            this.data = []
+            this.loading = false;
+            this.hasMore = true;
+            await this.getTabbedData();
+        }
     }
 })

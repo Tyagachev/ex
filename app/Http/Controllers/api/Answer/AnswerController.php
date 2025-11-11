@@ -21,6 +21,7 @@ class AnswerController extends Controller
         $comments = Comment::query()
             ->where('user_id', '=', $user->id)
             ->whereNotNull('parent_id')
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
         return CommentResource::collection($comments);
     }
@@ -29,12 +30,13 @@ class AnswerController extends Controller
      * Получение собственных ответов на посты
      * @return AnonymousResourceCollection
      */
-    public function posts(User $user): AnonymousResourceCollection
+    public function posts(): AnonymousResourceCollection
     {
         $user = Auth::user();
         $comments = Comment::query()
             ->where('user_id', '=', $user->id)
             ->whereNull('parent_id')
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
         return CommentResource::collection($comments);
     }

@@ -109,7 +109,7 @@ export const usePostsStore = defineStore('posts', {
                 try {
                     if (res.status === 200) {
                         await this.clearPostsField();
-                        await router.back();
+                        await router.push('/');
                     }
                 } finally {
                     NProgress.done()
