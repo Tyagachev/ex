@@ -7,6 +7,7 @@ require_once('site/posts/posts.php');
 require_once('site/comments/comments.php');
 require_once('site/answers/answers.php');
 require_once('site/votes/votes.php');
+require_once ('site/saves/saves.php');
 require_once('site/shares/share.php');
 
 Route::resource('tests', TestController::class);

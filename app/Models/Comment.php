@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\HumanDates;
+use App\Models\Traits\Saveable;
 use App\Models\Traits\Voteable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,7 @@ class Comment extends Model
     use HasFactory;
     use HumanDates;
     use Voteable;
+    use Saveable;
 
     protected $table = 'comments';
     protected $guarded = [];

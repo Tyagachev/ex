@@ -11,17 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('votes', function (Blueprint $table) {
+        Schema::create('saves', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('voteable_id');
-            $table->string('voteable_type');
-            $table->index(['voteable_id', 'voteable_type']);
+            $table->unsignedBigInteger('saveable_id');
+            $table->string('saveable_type');
+            $table->index(['saveable_id', 'saveable_type']);
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users');
-
-            $table->integer('vote');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->unique(['user_id', 'saveable_id', 'saveable_type'], 'unique_save');
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('votes');
+        Schema::dropIfExists('saves');
     }
 };
