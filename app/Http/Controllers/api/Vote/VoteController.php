@@ -5,11 +5,9 @@ namespace App\Http\Controllers\api\Vote;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Post\PostResource;
 use App\Models\Post;
-use App\Models\Vote;
 use App\Services\Vote\VoteService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class VoteController extends Controller
 {

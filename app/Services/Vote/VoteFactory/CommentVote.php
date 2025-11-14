@@ -9,26 +9,20 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentVote implements VoteInterface
 {
+
     /**
      * Проверка
      * запись или удаление
      *
      * @param int $id
      * @param int $vote
-     * @param string $type
+     * @param object|null $check
+     * @param int $userId
      * @return mixed
      */
-    public function vote(int $id, int $vote, string $type): mixed
+    public function vote(int $id, int $vote, object|null $check, int $userId): mixed
     {
         $comment = Comment::query()->find($id);
-
-        $userId = Auth::id();
-
-        $check = Vote::query()
-            ->where('voteable_id', '=', $id)
-            ->where('user_id', '=', $userId)
-            ->where('voteable_type', 'LIKE', "%{$type}%")
-            ->first();
 
         if (!$check) {
             $comment->votes()->create([
@@ -37,7 +31,7 @@ class CommentVote implements VoteInterface
             ]);
 
             return $comment;
-        } elseif ($check && $check->vote != $vote) {
+        } elseif (gettype($check) === 'object'&& $check->vote != $vote) {
             $check->delete();
             return $comment;
         }

@@ -2,16 +2,12 @@
     <div>
         <button class="bg-blue-300 p-2" @click="test">Кликай</button>
     </div>
-    <div>
-        <CommentNote v-if="t.user"
-
-         :comment="t"/>
-    </div>
 </template>
 
 <script setup>
 import CommentNote from "@/components/Comment/CommentNote.vue";
 import {onMounted, reactive, ref} from "vue";
+import axios from "axios";
 
 defineOptions({
         name: "Test"
@@ -24,10 +20,12 @@ onMounted(async () => {
 let t = ref({})
 
 const test = async () => {
-    const res = await axios.get(`/api/comments/${1}`);
+    const {data} = await axios.get(`/api/saves/posts`);
+    console.log(data);
+    /*const res = await axios.get(`/api/comments/${1}`);
     console.log(res.data);
     t.value = res.data;
-    console.log(t.value);
+    console.log(t.value);*/
 }
 </script>
 

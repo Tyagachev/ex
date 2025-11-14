@@ -15,11 +15,11 @@
         </nav>
         <div class="comments-content">
             <router-view></router-view>
-            <div v-show="tabbedStore.hasMore" ref="loadTrigger" class="h-50"></div>
-            <div v-if="!tabbedStore.hasMore && !tabbedStore.loading" class="end-of-feed">
+            <!--<div v-show="tabbedStore.hasMore" ref="loadTrigger" class="h-50"></div>-->
+            <!--<div v-if="!tabbedStore.hasMore && !tabbedStore.loading" class="end-of-feed">
                 <div class="end-line"></div>
                 <div class="end-text">Вы просмотрели все ответы</div>
-            </div>
+            </div>-->
         </div>
     </div>
 </template>
@@ -27,7 +27,7 @@
 <script setup>
 import {useTabbedStore} from "@/stores/tabbed.js";
 import {useRoute} from "vue-router";
-import {onBeforeMount, onBeforeUnmount, onUpdated, ref} from "vue";
+import {onBeforeMount, onBeforeUnmount, onUpdated} from "vue";
 import {useInfiniteScroll} from "@/composables/useInfiniteScroll";
 
 defineOptions({
@@ -56,13 +56,13 @@ onBeforeUnmount(() => {
     tabbedStore.path = ''
 })
 
-const { loadTrigger } = useInfiniteScroll(tabbedStore.getTabbedData,
+/*const { loadTrigger } = useInfiniteScroll(tabbedStore.getTabbedData,
     {
         hasMore: () => tabbedStore.hasMore,
         isLoading: () => tabbedStore.loading,
         immediate: false // автоматический запуск при монтировании
     }
-)
+)*/
 
 </script>
 

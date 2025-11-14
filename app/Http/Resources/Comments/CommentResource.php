@@ -25,6 +25,7 @@ class CommentResource extends JsonResource
             'reply_user' => $this->replyUser ? new UserResource($this->replyUser) : null,
             'replies' => CommentResource::collection($this->replies),
             'votes' => count($this->votes) ? $this->votes : [0],
+            'saves' => $this->saves,
             'totalVotes' => $this->totalVotes(),
             'shareCount' => $this->share_count,
             'createdAtHuman' => $this->created_at->diffForHumans(),

@@ -5,9 +5,9 @@
                 Ссылка скопирована
             </div>
         </transition>
-        <div class="pt-5" v-if="noCommentPage && !comment.parent">
-            <router-link :to="{name: 'posts.show', params: {id: comment.postId}}">
-                <h3 class="post-title">{{comment.postTitle}}</h3>
+        <div class="pt-5" v-if="noCommentPage && !comment.parent && comment.postId">
+            <router-link :to="{name: 'posts.show', params: {id: props.comment.postId}}">
+                <h3 class="post-title">{{props.comment.postTitle}}</h3>
             </router-link>
         </div>
         <div v-if="props.comment?.title"><h1>{{props.comment?.title}}</h1></div>
@@ -83,19 +83,33 @@
                                 </div>
                                 <div v-else>
                                     <button
-                                        class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700"
+                                        class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700 cursor-pointer"
                                     >
                                         <div class="mr-1" ><i class="fa fa-bell" aria-hidden="true"></i></div>
                                         <span>Подписаться</span>
                                     </button>
                                     <button
-                                        class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700"
+                                        class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700 cursor-pointer"
                                     >
                                         <div class="mr-1"><i class="fa fa-flag" aria-hidden="true"></i></div>
                                         <span>Пожаловаться</span>
                                     </button>
-                                    <button
-                                        class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700">
+                                    <button v-if="user" @click="savePost(props.comment, componentType)"
+                                        class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700 cursor-pointer">
+                                        <div class="mr-1" >
+                                            <span class="footer-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="16px" height="16px" version="1.1"
+                                                     viewBox="0 0 200 252.391">
+                                                    <g id="Objects">
+                                                        <path :class="[!userSaves ? 'save str0' : 'save_red']" d="M10 0l180 0c5.508,0 10,4.493 10,10l0 232.354c0,3.7 -1.851,6.876 -5.07,8.7 -3.219,1.824 -6.894,1.78 -10.069,-0.121l-79.88 -47.849c-3.251,-1.948 -7.042,-1.945 -10.29,0.007l-79.54 47.804c-3.173,1.907 -6.852,1.956 -10.075,0.133 -3.223,-1.823 -5.076,-5.001 -5.076,-8.704l0 -232.324c0,-5.507 4.492,-10 10,-10z"/>
+                                                    </g>
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <span>Сохранить</span>
+                                    </button>
+                                    <button v-else
+                                            class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700">
                                         <div class="mr-1" >
                                             <span class="footer-icon">
                                                 <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="16px" height="16px" version="1.1"
@@ -241,7 +255,6 @@
                                     <p class="text-blue-400 text-sm font-semibold">
                                         Ответить
                                     </p>
-
                                 </button>
                             </div>
                         </div>
@@ -287,14 +300,16 @@
                 </span>
                 <!-- Кнопка раскрытия ветки -->
                 <div v-else>
-                    <div v-if="props.comment.replies && props.comment.replies.length" class="mt-2 pl-9">
-                        <button
-                            class="cursor-pointer text-blue-300 text-sm hover:text-slate-200 flex items-center gap-1"
-                            @click="toggleReplies"
-                        >
-                            <span>{{ showReplies ? 'Скрыть ответы' : `Ещё (${props.comment.replies.length})` }}</span>
-                            <i :class="[showReplies ? 'fa rotate-180 fa-caret-down' : 'fa fa-caret-down']"></i>
-                        </button>
+                    <div v-if="!noCommentPage">
+                        <div v-if="props.comment.replies && props.comment.replies.length" class="mt-2 pl-9">
+                            <button
+                                class="cursor-pointer text-blue-300 text-sm hover:text-slate-200 flex items-center gap-1"
+                                @click="toggleReplies"
+                            >
+                                <span>{{ showReplies ? 'Скрыть ответы' : `Ещё (${props.comment.replies.length})` }}</span>
+                                <i :class="[showReplies ? 'fa rotate-180 fa-caret-down' : 'fa fa-caret-down']"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -324,6 +339,7 @@ import {useCommentsStore} from "@/stores/comments.js";
 import {useCountsStore} from "@/stores/counts.js";
 import CommentNote from "@/components/Comment/CommentNote.vue";
 import axios from "axios";
+
 
 defineOptions({
     name: "CommentNote",
@@ -360,16 +376,46 @@ const showReplyArea = ref(false);
 const textarea = ref(null);
 const commentMenu = ref(null);
 const showReplies = ref(false);
-
-const user = computed(() => userStore.user);
+const componentType = 'comment';
 
 const emits = defineEmits(['shownotificationmessage']);
 
+const user = computed(() => userStore.user);
+
+/**
+ * Красим кноку голосования
+ * @type {ComputedRef<unknown>}
+ */
 const userVote = computed(() => {
     if (!user || !props.comment || !Array.isArray(props.comment.votes)) return 0;
     const voteObject = props.comment.votes.find(vote => vote.user_id === user.value.id);
     return voteObject ? voteObject.vote : 0;
 });
+
+/**
+ * Красим флажок сохранения
+ * @type {ComputedRef<unknown>}
+ */
+const userSaves = computed(() => {
+    if (!user || !props.comment || !Array.isArray(props.comment.saves)) return false;
+    const save = props.comment.saves.find(save => save.user_id === user.value.id);
+    return !!save;
+})
+
+/**
+ * Кнопка сохранения поста
+ * @param post
+ * @param componentType
+ * @returns {Promise<void>}
+ */
+const savePost = async (post, componentType) => {
+    const res = await axios.post('/api/saves', {
+        id: post.id,
+        type: componentType,
+    })
+    post.saves = res.data.saved;
+}
+
 /**
  * Кнопка голосования вверх
  * @param comment
@@ -384,6 +430,7 @@ const upVote = async (comment) => {
     comment.totalVotes = res.data.totalVotes;
     comment.votes = res.data.votes;
 }
+
 /**
  * Кнопка голосования вниз
  * @param comment
@@ -549,6 +596,7 @@ const toggleReply = () => {
     showReplyArea.value = !showReplyArea.value;
     commentStore.replyText.length ? commentStore.replyText = '' : commentStore.replyText
 }
+
 /**
  * Получение ссылки на комментарий
  * @param item
@@ -599,5 +647,17 @@ const copyLink = async (item, bodyUrl = 'comments', componentType = 'comment') =
     margin-right: 6px;
     font-size: 16px;
 }
+
+.save {
+    fill: transparent;
+    stroke: #bebbbb;
+    stroke-width: 21px;
+}
+.save_red {
+    fill: red;
+    stroke: red;
+    stroke-width: 21px;
+}
+
 
 </style>

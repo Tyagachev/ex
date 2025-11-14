@@ -41,7 +41,7 @@ export const usePostsStore = defineStore('posts', {
                     NProgress.done()
                     this.posts.push(...data.data);
 
-                    if (this.currentPage < this.lastPage) {
+                    if (this.currentPage <= this.lastPage) {
                         this.page++
                     } else {
                         this.hasMore = false;

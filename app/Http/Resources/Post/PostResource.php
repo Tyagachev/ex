@@ -46,6 +46,7 @@ class PostResource extends JsonResource
             'user' => $user->resolve(),
             'commentsCount' => $commentsCount,
             'votes' => count($this->votes) ? $this->votes : [0],
+            'saves' => $this->saves,
             'totalVotes' => $this->totalVotes(),
             'blocks' => $this->blocks,
             'imgCount' => $this->imgCount($this->blocks),

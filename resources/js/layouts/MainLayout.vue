@@ -200,7 +200,7 @@ const shouldSaveScroll = (route) => {
 
 const links = [
     {
-        "title": "Главная",
+        "title": "Посты",
         "img": '<i class="fa fa-home" aria-hidden="true"></i>',
         "auth": false,
         route: 'posts.page'
@@ -218,13 +218,19 @@ const links = [
             '            </g>\n' +
             '            </svg>\n',
         "auth": true,
-        route: 'saved.posts'
+        route: 'saves.posts'
     },
     {
         "title": "Посмотренное",
         "img": '<i class="fa fa-history" aria-hidden="true"></i>',
         "auth": true,
         route: 'visited.page'
+    },
+    {
+        "title": "Для тестов",
+        "img": '<i class="fa fa-history" aria-hidden="true"></i>',
+        "auth": true,
+        route: 'test.page'
     },
     /*{
         "title": "Array",

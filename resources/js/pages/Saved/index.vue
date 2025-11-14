@@ -12,13 +12,13 @@ defineOptions({
 
 const tabs = [
     {
-        to: { name: 'saved.posts' },
-        name: 'saved.posts',
+        to: { name: 'saves.posts' },
+        name: 'saves.posts',
         title: 'Посты'
     },
     {
-        to: { name: 'saved.comments' },
-        name: 'saved.comments',
+        to: { name: 'saves.comments' },
+        name: 'saves.comments',
         title: 'Комментарии'
     }
 ]

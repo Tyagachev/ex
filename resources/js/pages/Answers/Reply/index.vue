@@ -6,6 +6,7 @@
             :comment="comment"
             :noCommentPage = tabbedStore.isTabbedPage
         />
+        <div v-show="tabbedStore.hasMore" ref="loadTrigger" class="h-50"></div>
     </div>
 </template>
 
@@ -14,6 +15,7 @@
 import CommentNote from "@/components/Comment/CommentNote.vue";
 import {computed, onMounted} from "vue";
 import {useTabbedStore} from "@/stores/tabbed.js";
+import {useInfiniteScroll} from "@/composables/useInfiniteScroll.js";
 
 defineOptions({
     name: "index"
@@ -28,6 +30,16 @@ onMounted(() => {
     }
     tabbedStore.getTabbedData();
 })
+
+const { loadTrigger } = useInfiniteScroll(tabbedStore.getTabbedData,
+    {
+        rootMargin: '200px',
+        hasMore: () => tabbedStore.hasMore,
+        isLoading: () => tabbedStore.loading,
+        immediate: false
+    }
+)
+
 
 </script>
 

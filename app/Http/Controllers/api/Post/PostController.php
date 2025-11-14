@@ -126,6 +126,7 @@ class PostController extends Controller
                 'commentsCount' => $commentsCount,
                 'totalVotes' => $post->totalVotes(),
                 'votes' => $post->votes,
+                'saves' => $post->saves,
                 'blocks' => $post->blocks,
                 'shareCount' => $post->share_count,
                 'createdAtHuman' => $post->created_at_human,

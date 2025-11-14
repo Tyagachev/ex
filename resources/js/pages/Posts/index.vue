@@ -31,7 +31,7 @@
                         <p class="text-white">Создайте первый пост, чтобы начать обсуждение</p>
                     </div>
 
-                    <div v-for="(post, index) in posts" :key="post.id">
+                    <div v-for="post in posts" :key="post.id">
                         <div class="post pb-3">
                             <!-- Основное содержимое поста -->
                             <div class="post-content">
@@ -195,7 +195,7 @@
                     </div>
                 </div>
 
-                <div v-show="postsStore.hasMore" ref="loadTrigger" class="h-50"></div>
+                <div v-show="postsStore.hasMore" ref="loadTriggerRef" class="h-50"></div>
 
                 <!-- Конец ленты -->
                 <div v-if="!postsStore.hasMore && !postsStore.loading" class="end-of-feed">
@@ -208,35 +208,30 @@
 </template>
 
 <script setup>
-import { computed, defineOptions, ref, onUpdated, onMounted, nextTick } from "vue";
+import Panel from "@/components/Panel/Panel.vue";
+import {computed, defineOptions, ref, onUpdated, onMounted, nextTick} from "vue";
 import { useRouter } from "vue-router";
 import { usePostsStore } from "@/stores/posts.js";
 import { useUserStore } from "@/stores/users.js";
 import { useAvatarStore } from "@/stores/avatars.js";
-import Panel from "@/components/Panel/Panel.vue";
 import { useInfiniteScroll } from '@/composables/useInfiniteScroll'
-
+import {useTabbedStore} from "@/stores/tabbed.js";
 defineOptions({
     name: "Index"
 })
-
+const props = defineProps({
+    isTabbedPage: {
+        type: Boolean
+    }
+})
+const tabbedStore = useTabbedStore();
 const destroyPost = usePostsStore();
 const userStore = useUserStore();
 const avatar = useAvatarStore();
-const router = useRouter();
 const postsStore = usePostsStore();
+const router = useRouter();
 
-const { loadTrigger } = useInfiniteScroll(postsStore.getPosts,
-    {
-        rootMargin: '200px',
-        hasMore: () => postsStore.hasMore,
-        isLoading: () => postsStore.loading
-    }
-)
-
-const user = computed(() => userStore.user)
-const posts = computed(() => postsStore.allPosts);
-
+let loadTriggerRef = null;
 const activeMenu = ref(null);
 const showNotification = ref(false);
 const notificationTimeout = ref(null);
@@ -252,6 +247,48 @@ const bodyUrl = 'posts'
 
 // Максимальная высота контента до обрезки
 const MAX_CONTENT_HEIGHT = 350;
+
+
+if (!props.isTabbedPage) {
+    const { loadTrigger } = useInfiniteScroll(postsStore.getPosts,
+        {
+            rootMargin: '200px',
+            hasMore: () => postsStore.hasMore,
+            isLoading: () => postsStore.loading,
+            immediate: false
+        }
+    )
+    loadTriggerRef = loadTrigger
+} else {
+    const { loadTrigger } = useInfiniteScroll(tabbedStore.getTabbedData,
+        {
+            rootMargin: '200px',
+            hasMore: () => tabbedStore.hasMore,
+            isLoading: () => tabbedStore.loading,
+            immediate: false
+        }
+    )
+    loadTriggerRef = loadTrigger
+}
+
+const user = computed(() => userStore.user)
+
+const posts = computed(() => {
+    return props.isTabbedPage ? tabbedStore.tabbedData : postsStore.allPosts;
+});
+/**
+ * Перепроверка высоты контента при обновлении компонента
+ */
+onUpdated(() => {
+    checkAllPostsHeight();
+});
+
+/**
+ * Проверка высоты при монтировании компонента
+ */
+onMounted(() => {
+    checkAllPostsHeight();
+});
 
 /**
  * Проверяет, нужно ли применять обертку для ограничения высоты
@@ -356,20 +393,6 @@ const checkAllPostsHeight = () => {
         });
     });
 }
-
-/**
- * Перепроверка высоты контента при обновлении компонента
- */
-onUpdated(() => {
-    checkAllPostsHeight();
-});
-
-/**
- * Проверка высоты при монтировании компонента
- */
-onMounted(() => {
-    checkAllPostsHeight();
-});
 
 /**
  * Слушаем изменения хранилища постов

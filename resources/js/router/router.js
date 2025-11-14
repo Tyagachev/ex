@@ -13,6 +13,11 @@ const routes = [
                 component: () => import('@/pages/Posts/index.vue')
             },
             {
+                path: 'test',
+                name: 'test.page',
+                component: () => import('@/pages/Test/Test.vue')
+            },
+            {
                 path: 'answers',
                 name: 'answers.page',
                 component: () => import('@/pages/Answers/index.vue'),
@@ -27,6 +32,23 @@ const routes = [
                         name: 'answers.replies',
                         component: () => import('@/pages/Answers/Reply/index.vue'),
                     }
+                ]
+            },
+            {
+                path: 'saves',
+                name: 'saves.page',
+                component: () => import('@/pages/Saved/index.vue'),
+                children: [
+                    {
+                        path: '',
+                        name: 'saves.posts',
+                        component: () => import('@/pages/Saved/Posts/index.vue'),
+                    },
+                    {
+                        path: 'comments',
+                        name: 'saves.comments',
+                        component: () => import('@/pages/Saved/Comments/index.vue'),
+                    },
                 ]
             },
             {
@@ -50,23 +72,6 @@ const routes = [
                 component: () => import('@/pages/Visited/index.vue')
             },
             {
-                path: 'saved',
-                name: 'saved.page',
-                component: () => import('@/pages/Saved/index.vue'),
-                children: [
-                    {
-                        path: 'posts',
-                        name: 'saved.posts',
-                        component: () => import('@/pages/Saved/Posts/index.vue'),
-                    },
-                    {
-                        path: 'comments',
-                        name: 'saved.comments',
-                        component: () => import('@/pages/Saved/Comments/index.vue'),
-                    },
-                ]
-            },
-            {
                 path: 'comments/:id',
                 name: 'comments.show',
                 component: () => import('@/pages/Comments/show.vue')
@@ -77,11 +82,6 @@ const routes = [
         path: '/login',
         name: 'login.page',
         component: () => import('../pages/Auth/Login/Login.vue')
-    },
-    {
-        path: '/test',
-        name: 'test.page',
-        component: () => import('@/pages/Test/Test.vue')
     },
     {
         path: '/register',

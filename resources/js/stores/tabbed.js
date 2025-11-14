@@ -1,7 +1,6 @@
 import axios from "axios";
 import {defineStore} from "pinia";
 import NProgress from "nprogress";
-import {useRoute} from "vue-router";
 
 export const useTabbedStore = defineStore('tabbed',{
     state: () => ({
@@ -42,7 +41,7 @@ export const useTabbedStore = defineStore('tabbed',{
                 NProgress.done()
                 this.data.push(...data.data);
 
-                if (this.currentPage < this.lastPage) {
+                if (this.currentPage <= this.lastPage) {
                     this.page++
                 } else {
                     this.hasMore = false;

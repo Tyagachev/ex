@@ -87,15 +87,28 @@
         {{ count.formatCount(post.shareCount) }}
         Поделиться
     </button>
-    <button class="footer-btn">
+    <div v-if="user">
+        <button @click="savePost(post, componentType)" class="footer-btn">
         <span class="footer-icon">
             <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="16px" height="16px" version="1.1" viewBox="0 0 200 252.391"><g id="Objects">
-                <path class="save str0" fill="transparent" d="M10 0l180 0c5.508,0 10,4.493 10,10l0 232.354c0,3.7 -1.851,6.876 -5.07,8.7 -3.219,1.824 -6.894,1.78 -10.069,-0.121l-79.88 -47.849c-3.251,-1.948 -7.042,-1.945 -10.29,0.007l-79.54 47.804c-3.173,1.907 -6.852,1.956 -10.075,0.133 -3.223,-1.823 -5.076,-5.001 -5.076,-8.704l0 -232.324c0,-5.507 4.492,-10 10,-10z"/>
+                <path :class="[!userSaves ? 'save str0' : 'save_red']" fill="transparent" d="M10 0l180 0c5.508,0 10,4.493 10,10l0 232.354c0,3.7 -1.851,6.876 -5.07,8.7 -3.219,1.824 -6.894,1.78 -10.069,-0.121l-79.88 -47.849c-3.251,-1.948 -7.042,-1.945 -10.29,0.007l-79.54 47.804c-3.173,1.907 -6.852,1.956 -10.075,0.133 -3.223,-1.823 -5.076,-5.001 -5.076,-8.704l0 -232.324c0,-5.507 4.492,-10 10,-10z"/>
             </g>
             </svg>
         </span>
-        Сохранить
-    </button>
+            {{userSaves ? 'Сохранено' : 'Сохранить'}}
+        </button>
+    </div>
+    <div v-else>
+        <button class="footer-btn">
+        <span class="footer-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="16px" height="16px" version="1.1" viewBox="0 0 200 252.391"><g id="Objects">
+                <path  class="save str0" fill="transparent" d="M10 0l180 0c5.508,0 10,4.493 10,10l0 232.354c0,3.7 -1.851,6.876 -5.07,8.7 -3.219,1.824 -6.894,1.78 -10.069,-0.121l-79.88 -47.849c-3.251,-1.948 -7.042,-1.945 -10.29,0.007l-79.54 47.804c-3.173,1.907 -6.852,1.956 -10.075,0.133 -3.223,-1.823 -5.076,-5.001 -5.076,-8.704l0 -232.324c0,-5.507 4.492,-10 10,-10z"/>
+            </g>
+            </svg>
+        </span>
+            Сохранить
+        </button>
+    </div>
 </template>
 
 <script setup>
@@ -132,15 +145,49 @@ const user = userStore.user;
 
 const emits = defineEmits(['shownotificationmessage'])
 
+/**
+ * Красим кноку голосования
+ * @type {ComputedRef<unknown>}
+ */
 const userVote = computed(() => {
     if (!user || !post || !Array.isArray(post.votes)) return 0;
     const voteObject = post.votes.find(vote => vote.user_id === user.id);
     return voteObject ? voteObject.vote : 0;
 });
 
+/**
+ * Красим флажок сохранения
+ * @type {ComputedRef<unknown>}
+ */
+const userSaves = computed(() => {
+    if (!user || !post || !Array.isArray(post.saves)) return false;
+    const save = post.saves.find(save => save.user_id === user.id);
+    return !!save;
+})
+
+/**
+ * Кнопка сохранения поста
+ * @param post
+ * @param componentType
+ * @returns {Promise<void>}
+ */
+const savePost = async (post, componentType) => {
+    const res = await axios.post('/api/saves', {
+        id: post.id,
+        type: componentType,
+    })
+    post.saves = res.data.saved;
+}
+
+/**
+ * Кнопка перехода к просмотру
+ * поста
+ * @param post
+ */
 const postShow = (post) => {
     router.push({name: 'posts.show', params: { id: post.id }});
 }
+
 /**
  * Кнопка голосования вверх
  * @param post
@@ -207,4 +254,10 @@ const copyLink = async (item, bodyUrl, componentType) => {
     stroke: #bebbbb;
     stroke-width: 30px;
 }
+.save_red {
+    fill: red;
+    stroke: red;
+    stroke-width: 30px;
+}
+
 </style>

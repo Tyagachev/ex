@@ -15,20 +15,12 @@ class PostVote implements VoteInterface
      *
      * @param int $id
      * @param int $vote
-     * @param string $type
+     * @param object|null $check
      * @return mixed
      */
-    public function vote(int $id, int $vote, string $type): mixed
+    public function vote(int $id, int $vote, object|null $check, int $userId): mixed
     {
         $post = Post::query()->find($id);
-
-        $userId = Auth::id();
-
-        $check = Vote::query()
-            ->where('voteable_id', '=', $id)
-            ->where('user_id', '=', $userId)
-            ->where('voteable_type', 'LIKE', "%{$type}%")
-            ->first();
 
         if (!$check) {
             $post->votes()->create([
@@ -37,7 +29,7 @@ class PostVote implements VoteInterface
             ]);
             return $post;
 
-        } elseif ($check && $check->vote != $vote) {
+        } elseif (gettype($check) === 'object'&& $check->vote != $vote) {
             $check->delete();
             return $post;
         }
