@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import {computed, onMounted} from "vue";
+import {onMounted} from "vue";
 import {useTabbedStore} from "@/stores/tabbed.js";
 
 import Posts from  '@/pages/Posts/index.vue'

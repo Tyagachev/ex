@@ -5,7 +5,7 @@ import NProgress from "nprogress";
 export const useTabbedStore = defineStore('tabbed',{
     state: () => ({
         data: [],
-        page: 1,
+        page: 0,
         currentPage: 0,
         lastPage: 0,
         hasMore: true,
@@ -33,9 +33,9 @@ export const useTabbedStore = defineStore('tabbed',{
             NProgress.start()
 
             this.loading = true;
-
             try {
                 const {data} = await axios.get(`/api${this.path}?page=${this.page}`);
+                console.log(data);
                 this.currentPage = data.meta.current_page
                 this.lastPage = data.meta.last_page
                 NProgress.done()

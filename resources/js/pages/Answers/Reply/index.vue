@@ -1,9 +1,9 @@
 <template>
     <div class="container">
         <CommentNote
-            v-for="comment in comments"
-            :key="comment.id"
-            :comment="comment"
+            v-for = "comment in comments"
+            :key = "comment.id"
+            :comment = "comment"
             :noCommentPage = tabbedStore.isTabbedPage
         />
         <div v-show="tabbedStore.hasMore" ref="loadTrigger" class="h-50"></div>

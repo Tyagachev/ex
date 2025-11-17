@@ -82,6 +82,17 @@
 
                                 </div>
                                 <div v-else>
+                                    <div v-if="noCommentPage">
+                                        <div>
+                                            <router-link :to="{name: 'comments.show', params: {id: props.comment.id}}">
+                                                <button
+                                                    class="flex space-between w-full text-left px-2 py-2 text-sm hover:bg-slate-700 cursor-pointer">
+                                                    <div class="mr-1" ><i class="fa fa-pencil" aria-hidden="true"></i></div>
+                                                    <span>Перейти</span>
+                                                </button>
+                                            </router-link>
+                                        </div>
+                                    </div>
                                     <button
                                         class="flex space-between block w-full text-left px-2 py-2 text-sm hover:bg-slate-700 cursor-pointer"
                                     >
@@ -249,7 +260,10 @@
                                 </button>
                             </div>
                             <div >
-                                <button v-if="user?.id !== props.comment.user?.id && user.auth && depth < 15"
+                                <button v-if="user?.id !== props.comment.user?.id
+                                && user.auth
+                                && depth < 15
+                                && !props.noCommentPage"
                                         class="footer-btn hover:text-slate-200"
                                         @click.prevent="toggleReply">
                                     <p class="text-blue-400 text-sm font-semibold">
