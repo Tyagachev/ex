@@ -40,7 +40,7 @@ class PostResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'viewCount' => $this->view,
+            'viewCount' => $this->totalViews(),
             'createdAtHuman' => $this->created_at->diffForHumans(),
             'updatedAtHuman' => $this->updated_at->diffForHumans(),
             'user' => $user->resolve(),

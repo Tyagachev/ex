@@ -22,6 +22,7 @@ defineOptions({
 
 const tabbedStore = useTabbedStore();
 const comments = computed(() => tabbedStore.tabbedData)
+
 onMounted(() => {
     if (tabbedStore.tabbedData.length) {
         tabbedStore.resetLoadedStatusAndRefresh()

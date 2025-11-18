@@ -11,6 +11,7 @@ use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\UserResource;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\User;
 use App\Services\Post\PostService;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -99,8 +100,17 @@ class PostController extends Controller
      */
     public function show(Post $post): JsonResponse
     {
+        $user = null;
+        $token = request()->bearerToken();
 
-        event(new PostViewCount($post));
+        if ($token) {
+            $user = User::query()->where('api_token', $token)->first();
+            if ($user) {
+                auth()->setUser($user);
+            }
+        }
+
+        event(new PostViewCount($post, $user));
 
         $post = $post->load([
             'user',
@@ -155,10 +165,11 @@ class PostController extends Controller
             }
         }
 
-        Comment::where('post_id', $post->id)->delete();
+        Comment::query()->where('post_id', $post->id)->delete();
 
         $post->delete();
 
         return response()->json(['status' => 200]);
     }
+
 }

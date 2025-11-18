@@ -34,11 +34,11 @@ class DatabaseSeeder extends Seeder
             'email' => $user['email']
         ], $user);
 
-        $role = Role::firstOrCreate([
+        /*$role = Role::firstOrCreate([
             'role' => RoleEnum::ADMIN->value
-        ]);
+        ]);*/
 
-        $user->roles()->sync($role->id);
+        //$user->roles()->sync($role->id);
 
         PostsTableSeeder::run();
         CommentsTableSeeder::run();

@@ -16,7 +16,6 @@ return new class extends Migration {
                 ->on('users')->onDelete('cascade');
 
             $table->string('title', 255)->index();
-            $table->bigInteger('view')->default(0);
             $table->bigInteger('share_count')->default(0);
             $table->json('blocks')->nullable();
             $table->timestamps();

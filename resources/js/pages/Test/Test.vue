@@ -20,7 +20,7 @@ onMounted(async () => {
 let t = ref({})
 
 const test = async () => {
-    const {data} = await axios.get(`/api/saves/posts`);
+    const {data} = await axios.get(`/api/views-stories`);
     console.log(data);
     /*const res = await axios.get(`/api/comments/${1}`);
     console.log(res.data);

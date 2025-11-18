@@ -52,6 +52,18 @@ const routes = [
                 ]
             },
             {
+                path: 'views-stories',
+                name: 'views.page',
+                component: () => import('@/pages/Views/index.vue'),
+                children: [
+                    {
+                        path: '',
+                        name: 'views.posts',
+                        component: () => import('@/pages/Views/Posts/index.vue'),
+                    },
+                ]
+            },
+            {
                 path: 'posts/create',
                 name: 'posts.create',
                 component: () => import('@/pages/Posts/create.vue')
@@ -66,11 +78,7 @@ const routes = [
                 name: 'posts.show',
                 component: () => import('@/pages/Posts/show.vue')
             },
-            {
-                path: 'visited',
-                name: 'visited.page',
-                component: () => import('@/pages/Visited/index.vue')
-            },
+
             {
                 path: 'comments/:id',
                 name: 'comments.show',

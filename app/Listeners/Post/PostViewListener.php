@@ -5,6 +5,7 @@ namespace App\Listeners\Post;
 use App\Events\Post\PostViewCount;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Auth;
 
 class PostViewListener
 {
@@ -21,6 +22,7 @@ class PostViewListener
      */
     public function handle(PostViewCount $event): void
     {
-        $event->post->increment('view');
+        $userId = $event->user ? $event->user->id : null;
+        $event->post->addView($userId, $event->ipAddress, $event->userAgent);
     }
 }

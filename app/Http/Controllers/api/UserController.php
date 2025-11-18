@@ -16,7 +16,6 @@ class UserController extends Controller
         }
 
         $user = User::query()->where('api_token', $token)
-            ->with('roles')
             ->first();
         if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401);

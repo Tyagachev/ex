@@ -224,7 +224,7 @@ const links = [
         "title": "Посмотренное",
         "img": '<i class="fa fa-history" aria-hidden="true"></i>',
         "auth": true,
-        route: 'visited.page'
+        route: 'views.posts'
     },
     {
         "title": "Для тестов",

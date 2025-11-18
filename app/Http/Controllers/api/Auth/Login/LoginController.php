@@ -25,7 +25,7 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        $user = User::query()->where('email', $request->email)->with('roles')->first();
+        $user = User::query()->where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
@@ -34,8 +34,8 @@ class LoginController extends Controller
         }
 
         // Генерация нового токена
-        $string = Str::random(100);
-        $user->api_token = Hash::make($string);
+        $string = Str::random(64);
+        $user->api_token = $string;
         $user->save();
 
         return response()->json([
