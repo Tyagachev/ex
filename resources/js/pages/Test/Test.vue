@@ -6,13 +6,13 @@
 
 <script setup>
 import CommentNote from "@/components/Comment/CommentNote.vue";
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, ref} from "vue";
 import axios from "axios";
-
+import {useRoute} from "vue-router";
 defineOptions({
         name: "Test"
 })
-
+const route = useRoute();
 onMounted(async () => {
     await test()
 })
@@ -20,8 +20,9 @@ onMounted(async () => {
 let t = ref({})
 
 const test = async () => {
-    const {data} = await axios.get(`/api/views-stories`);
-    console.log(data);
+    console.log(route);
+    const {data} = await axios.get(`api/posts-me?page=0`);
+    console.log(data.meta.current_page);
     /*const res = await axios.get(`/api/comments/${1}`);
     console.log(res.data);
     t.value = res.data;

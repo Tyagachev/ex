@@ -13,9 +13,9 @@ defineOptions({
 
 const tabs = [
     {
-        to: { name: 'views.page' },
-        name: 'views.page',
-        title: 'Посмотренное',
+        to: { name: 'posts.me' },
+        name: 'posts.me',
+        title: 'Мои посты',
         subtitle: true
     }
 ]

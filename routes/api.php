@@ -11,4 +11,4 @@ require_once ('site/saves/saves.php');
 require_once('site/shares/share.php');
 require_once('site/views/views.php');
 
-Route::resource('tests', TestController::class);
+Route::resource('tests', TestController::class)->middleware('auth:api_token');

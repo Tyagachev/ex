@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Comments\CommentResource;
+use App\Http\Resources\Post\PostResource;
 use App\Models\Comment;
+use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TestController extends Controller
 {
@@ -13,7 +16,14 @@ class TestController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::id();
+        $posts = Post::with('user')
+            ->where('user_id', $user)
+            ->orderBy('created_at','desc')->paginate(10);
+
+        return PostResource::collection($posts);
+        //return $posts;
+        //return $user->posts()->paginate(10);
     }
 
     /**

@@ -48,10 +48,12 @@ const tabbedStore = useTabbedStore()
 
 
 onUpdated(() => {
+    console.log(route.path);
     tabbedStore.setRoutePath(route.path);
 })
 
 onBeforeMount(() => {
+    console.log(route.path);
     tabbedStore.setRoutePath(route.path);
 })
 

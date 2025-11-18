@@ -206,6 +206,12 @@ const links = [
         route: 'posts.page'
     },
     {
+        "title": "Мои посты",
+        "img": '<i class="fa fa-list-alt" aria-hidden="true"></i>',
+        "auth": true,
+        route: 'posts.me'
+    },
+    {
         "title": "Ответы",
         "img": '<i class="fa fa-comment" aria-hidden="true"></i>',
         "auth": true,

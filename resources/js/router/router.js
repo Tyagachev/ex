@@ -13,6 +13,18 @@ const routes = [
                 component: () => import('@/pages/Posts/index.vue')
             },
             {
+                path: 'posts-me',
+                name: 'posts-me.page',
+                component: () => import('@/pages/User/index.vue'),
+                children: [
+                    {
+                        path: '',
+                        name: 'posts.me',
+                        component: () => import('@/pages/User/Posts/index.vue'),
+                    },
+                ]
+            },
+            {
                 path: 'test',
                 name: 'test.page',
                 component: () => import('@/pages/Test/Test.vue')

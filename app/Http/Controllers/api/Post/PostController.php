@@ -172,4 +172,19 @@ class PostController extends Controller
         return response()->json(['status' => 200]);
     }
 
+    /**
+     * Получение постов сделанных юзером
+     *
+     * @return AnonymousResourceCollection
+     */
+    public function getUserPosts(): AnonymousResourceCollection
+    {
+        $user = Auth::id();
+        $posts = Post::query()->with('user')
+            ->where('user_id', $user)
+            ->orderBy('created_at','desc')->paginate(10);
+
+        return PostResource::collection($posts);
+    }
+
 }

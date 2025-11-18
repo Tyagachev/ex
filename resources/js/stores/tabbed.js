@@ -35,7 +35,6 @@ export const useTabbedStore = defineStore('tabbed',{
             this.loading = true;
             try {
                 const {data} = await axios.get(`/api${this.path}?page=${this.page}`);
-                console.log(data);
                 this.currentPage = data.meta.current_page
                 this.lastPage = data.meta.last_page
                 NProgress.done()
