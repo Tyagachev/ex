@@ -25,6 +25,23 @@ const routes = [
                 ]
             },
             {
+                path: 'comments',
+                name: 'comments.page',
+                component: () => import('@/pages/Comments/index.vue'),
+                children: [
+                    {
+                        path: 'posts',
+                        name: 'comments.posts',
+                        component: () => import('@/pages/Comments/Post/index.vue'),
+                    },
+                    {
+                        path: 'replies',
+                        name: 'comments.replies',
+                        component: () => import('@/pages/Comments/Reply/index.vue'),
+                    }
+                ]
+            },
+            {
                 path: 'test',
                 name: 'test.page',
                 component: () => import('@/pages/Test/Test.vue')

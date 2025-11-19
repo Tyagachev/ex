@@ -21,7 +21,7 @@ let t = ref({})
 
 const test = async () => {
     console.log(route);
-    const {data} = await axios.get(`api/liked/up`);
+    const {data} = await axios.get(`api/comments/posts`);
     console.log(data);
     /*const res = await axios.get(`/api/comments/${1}`);
     console.log(res.data);

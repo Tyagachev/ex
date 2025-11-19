@@ -71,23 +71,28 @@
                                     </router-link>
                                 </div>
                             </div>
-                            <div v-else-if="link.items" class="text-white text-sm">
-                                <button @click.prevent="showItems" class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center">
-                                    <div class="mr-2" v-html="link.img"></div>
-                                    <p style="font-size: medium">{{link.title}}</p>
-                                </button>
-                            </div>
-                            <div v-if="showItemsPanel" v-for="item in link.items">
-                                <div class="border-b-1 border-gray-500">
-                                    <router-link :to="{name: item.route}" class="text-white text-sm ">
-                                        <button class="cursor-pointer hover:bg-gray-600 w-full mt-1 pt-2 pb-2 pl-4 hover:bg-gray-600 flex items-center"
-                                                :class="{
+                            <div v-else-if="link.items" class="border-b-2 border-gray-500">
+                                <div class="text-white text-sm">
+                                    <button @click.prevent="showItems" class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center">
+                                        <div class="mr-2" v-html="link.img"></div>
+                                        <div class="flex items-center">
+                                            <p style="font-size: medium">{{link.title}}</p>
+                                        </div>
+
+                                    </button>
+                                </div>
+                                <div v-if="showItemsPanel" v-for="item in link.items">
+                                    <div>
+                                        <router-link :to="{name: item.route}" class="text-white text-sm">
+                                            <button class="cursor-pointer hover:bg-gray-600 w-full mt-1 pt-2 pb-2 pl-4 hover:bg-gray-600 flex items-center"
+                                                    :class="{
                                             'bg-gray-600 text-white': $route.name === link.route
                                             }">
-                                            <div class="mr-2" v-html="item.img"></div>
-                                            <p style="font-size: medium">{{item.title}}</p>
-                                        </button>
-                                    </router-link>
+                                                <div class="mr-2" v-html="item.img"></div>
+                                                <p style="font-size: medium">{{item.title}}</p>
+                                            </button>
+                                        </router-link>
+                                    </div>
                                 </div>
                             </div>
 
@@ -116,7 +121,7 @@ import {useUserStore} from "@/stores/users.js";
 import {useRoute} from "vue-router";
 
 
-import {computed, nextTick, onMounted, ref, watch} from "vue";
+import {computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, ref, watch} from "vue";
 
 import Search from "@/components/Search/Search.vue";
 
@@ -158,6 +163,9 @@ onMounted(() => {
         scrollContainer.value.addEventListener('scroll', handleScroll)
     }
 })
+onBeforeUnmount(() => {
+    isSidebarOpen.value = !isSidebarOpen.value
+})
 
 // При смене маршрута
 watch(() => route.path, (toPath, fromPath) => {
@@ -177,6 +185,13 @@ watch(() => route.path, (toPath, fromPath) => {
             }
         }
     })
+})
+
+watch(() => route.path, () => {
+    // Закрываем sidebar на мобильных устройствах при смене маршрута
+    if (isSidebarOpen.value) {
+        isSidebarOpen.value = false
+    }
 })
 
 // Функция для определения, нужно ли сохранять скролл для этого маршрута
@@ -212,8 +227,14 @@ const links = [
         route: 'posts.me'
     },
     {
+        "title": "Мои комментарии",
+        "img": '<i class="fa fa-comments" aria-hidden="true"></i>',
+        "auth": true,
+        route: 'comments.posts'
+    },
+    {
         "title": "Ответы",
-        "img": '<i class="fa fa-comment" aria-hidden="true"></i>',
+        "img": '<i class="fa fa-external-link" aria-hidden="true"></i>',
         "auth": true,
         route: 'answers.posts'
     },
@@ -239,32 +260,22 @@ const links = [
         route: 'views.posts'
     },
     {
-        "title": "Для тестов",
-        "img": '<i class="fa fa-history" aria-hidden="true"></i>',
-        "auth": true,
-        route: 'test.page'
-    },
-    /*{
-        "title": "Array",
-        "img": '<i class="fa fa-home" aria-hidden="true"></i>',
+        "title": "Админка",
+        "img": '<i class="fa fa-rocket" aria-hidden="true"></i>',
         'items': [
             {
-                "title": "Item",
-                "img": '<i class="fa fa-home" aria-hidden="true"></i>',
+                "title": "Теги",
+                "img": '<i class="fa fa-tags" aria-hidden="true"></i>',
                 route: 'main'
             },
             {
-                "title": "Item",
-                "img": '<i class="fa fa-home" aria-hidden="true"></i>',
-                route: 'main'
-            },
-            {
-                "title": "Item",
-                "img": '<i class="fa fa-home" aria-hidden="true"></i>',
-                route: 'main'
+                "title": "Для тестов",
+                "img": '<i class="fa fa-bug" aria-hidden="true"></i>',
+                "auth": true,
+                route: 'test.page'
             },
         ]
-    },*/
+    },
 ];
 
 

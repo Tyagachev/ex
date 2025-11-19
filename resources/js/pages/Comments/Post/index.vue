@@ -1,12 +1,12 @@
 <template>
     <div class="container">
-        <!--<CommentNote
-            v-for = "comment in comments"
-            :key = "comment.id"
-            :comment = "comment"
+        <CommentNote
+            v-for="comment in comments"
+            :key="comment.id"
+            :comment="comment"
             :noCommentPage = tabbedStore.isTabbedPage
         />
-        <div v-show="tabbedStore.hasMore" ref="loadTrigger" class="h-50"></div>-->
+        <div v-show="tabbedStore.hasMore" ref="loadTrigger" class="h-50"></div>
     </div>
 </template>
 
@@ -22,13 +22,14 @@ defineOptions({
 })
 
 const tabbedStore = useTabbedStore()
-const comments = computed(() => tabbedStore.tabbedData)
+const comments = computed(() => tabbedStore.tabbedData);
 
 onMounted(() => {
     if (tabbedStore.tabbedData.length) {
         tabbedStore.resetLoadedStatusAndRefresh()
+    } else {
+        tabbedStore.getTabbedData();
     }
-    tabbedStore.getTabbedData();
 })
 
 const { loadTrigger } = useInfiniteScroll(tabbedStore.getTabbedData,
@@ -39,6 +40,8 @@ const { loadTrigger } = useInfiniteScroll(tabbedStore.getTabbedData,
         immediate: false
     }
 )
+
+
 
 
 </script>

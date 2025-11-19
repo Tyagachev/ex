@@ -1,12 +1,12 @@
 <template>
     <div class="container">
-        <CommentNote
+        <!--<CommentNote
             v-for="comment in comments"
             :key="comment.id"
             :comment="comment"
             :noCommentPage = tabbedStore.isTabbedPage
         />
-        <div v-show="tabbedStore.hasMore" ref="loadTrigger" class="h-50"></div>
+        <div v-show="tabbedStore.hasMore" ref="loadTrigger" class="h-50"></div>-->
     </div>
 </template>
 

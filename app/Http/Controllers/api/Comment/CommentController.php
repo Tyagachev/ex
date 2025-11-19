@@ -10,6 +10,8 @@ use App\Models\Post;
 use App\Services\Comment\CommentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -115,4 +117,35 @@ class CommentController extends Controller
             ->where('user_id', '=', $comment['reply_user_id'])
             ->first('text');
     }
+
+    /**
+     * Получение собственных ответов на комментарии
+     * @return AnonymousResourceCollection
+     */
+    public function replies(): AnonymousResourceCollection
+    {
+        $user = Auth::user();
+        $comments = Comment::query()
+            ->where('user_id', '=', $user->id)
+            ->whereNotNull('parent_id')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        return CommentResource::collection($comments);
+    }
+
+    /**
+     * Получение собственных ответов на посты
+     * @return AnonymousResourceCollection
+     */
+    public function posts(): AnonymousResourceCollection
+    {
+        $user = Auth::user();
+        $comments = Comment::query()
+            ->where('user_id', '=', $user->id)
+            ->whereNull('parent_id')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        return CommentResource::collection($comments);
+    }
+
 }

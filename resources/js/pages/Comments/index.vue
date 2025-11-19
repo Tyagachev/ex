@@ -1,27 +1,25 @@
 <template>
-        <div class="container">
-            <CommentNote
-                v-for="comment in comments"
-                :key="comment.id"
-                :comment="comment"
-            />
-        </div>
+    <TabbedLayout :tabs="tabs"/>
 </template>
 
 <script setup>
-import {computed, onMounted} from "vue";
-import {useCommentsStore} from "@/stores/comments.js";
-import CommentNote from "@/components/Comment/CommentNote.vue";
+import TabbedLayout from "@/layouts/TabbedLayout.vue";
+defineOptions({
+    name: "index"
+})
 
-    defineOptions({
-        name: "index"
-    })
-    onMounted(() => {
-        c.getUserComments()
-    })
-    const c = useCommentsStore()
-    const comments = computed(() => useCommentsStore().comments)
-
+const tabs = [
+    {
+        to: { name: 'comments.posts' },
+        name: 'comments.posts',
+        title: 'Комментарии к постам'
+    },
+    {
+        to: { name: 'comments.replies' },
+        name: 'comments.replies',
+        title: 'Ответы на комментарии'
+    }
+]
 </script>
 
 <style scoped>

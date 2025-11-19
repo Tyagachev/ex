@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('posts', [PostController::class, 'index']);
 Route::get('posts/{post}', [PostController::class, 'show']);
-Route::get('posts-me', [PostController::class, 'getUserPosts'])->middleware('auth:api_token');
 Route::post('posts', [PostController::class,'store'])->middleware('auth:api_token');
 Route::delete('posts/{post}', [PostController::class, 'destroy'])->middleware('auth:api_token');
 Route::post('posts/update', [PostController::class, 'update'])->middleware('auth:api_token');
+Route::get('posts-me', [PostController::class, 'getUserPosts'])->middleware('auth:api_token');
