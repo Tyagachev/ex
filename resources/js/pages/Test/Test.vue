@@ -21,8 +21,8 @@ let t = ref({})
 
 const test = async () => {
     console.log(route);
-    const {data} = await axios.get(`api/posts-me?page=0`);
-    console.log(data.meta.current_page);
+    const {data} = await axios.get(`api/liked/up`);
+    console.log(data);
     /*const res = await axios.get(`/api/comments/${1}`);
     console.log(res.data);
     t.value = res.data;

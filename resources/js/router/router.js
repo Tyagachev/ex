@@ -47,6 +47,23 @@ const routes = [
                 ]
             },
             {
+                path: 'liked',
+                name: 'liked.page',
+                component: () => import('@/pages/Liked/index.vue'),
+                children: [
+                    {
+                        path: 'up',
+                        name: 'up.page',
+                        component: () => import('@/pages/Liked/Upvote/index.vue'),
+                    },
+                    {
+                        path: 'down',
+                        name: 'down.page',
+                        component: () => import('@/pages/Liked/Downvote/index.vue'),
+                    }
+                ]
+            },
+            {
                 path: 'saves',
                 name: 'saves.page',
                 component: () => import('@/pages/Saved/index.vue'),
