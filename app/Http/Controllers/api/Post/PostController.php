@@ -173,7 +173,7 @@ class PostController extends Controller
     }
 
     /**
-     * Получение постов сделанных юзером
+     * Получение собственных постов
      *
      * @return AnonymousResourceCollection
      */

@@ -390,9 +390,8 @@ const showReplyArea = ref(false);
 const textarea = ref(null);
 const commentMenu = ref(null);
 const showReplies = ref(false);
+const notificationTimeout = ref(null);
 const componentType = 'comment';
-
-const emits = defineEmits(['shownotificationmessage']);
 
 const user = computed(() => userStore.user);
 
@@ -625,13 +624,29 @@ const copyLink = async (item, bodyUrl = 'comments', componentType = 'comment') =
     navigator.clipboard.writeText(link);
     item.shareCount++;
 
-    emits('shownotificationmessage');
+    showNotificationMessage();
 
     await axios.post('/api/shares', {
         id: item.id,
         type: componentType
     })
 }
+
+/**
+ * Сообщение о копировании ссылки
+ */
+const showNotificationMessage = () => {
+    if (notificationTimeout) {
+        clearTimeout(notificationTimeout);
+    }
+
+    showNotification.value = true;
+
+    notificationTimeout.value = setTimeout(() => {
+        showNotification.value = false;
+    }, 2000);
+}
+
 
 </script>
 

@@ -236,7 +236,7 @@ const copyLink = async (item, bodyUrl, componentType) => {
 
     emits('shownotificationmessage');
 
-    await axios.post('/api/share', {
+    await axios.post('/api/shares', {
         id: item.id,
         type: componentType
     })
