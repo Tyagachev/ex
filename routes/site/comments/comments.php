@@ -5,9 +5,10 @@ use Illuminate\Support\Facades\Route;
 
 //COMMENTS
 Route::get('comments', [CommentController::class, 'index']);
+
 Route::middleware('auth:api_token')->group( function () {
     Route::post('comments', [CommentController::class, 'store']);
-    Route::put('comments/{comment}', [CommentController::class, 'destroy']);
+    Route::delete('comments/{comment}', [CommentController::class, 'destroy']);
     Route::get('comments/{comment}/edit', [CommentController::class, 'edit']);
     Route::patch('comments/{comment}', [CommentController::class, 'update']);
     Route::get('comments/replies', [CommentController::class, 'replies']);

@@ -72,28 +72,31 @@
                                 </div>
                             </div>
                             <div v-else-if="link.items" class="border-b-2 border-gray-500">
-                                <div class="text-white text-sm">
-                                    <button @click.prevent="showItems" class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center">
-                                        <div class="mr-2" v-html="link.img"></div>
-                                        <div class="flex items-center">
-                                            <p style="font-size: medium">{{link.title}}</p>
-                                        </div>
+                                <div v-if="link.auth && user.id">
+                                    <div class="text-white text-sm">
+                                        <button @click.prevent="showItems" class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center">
+                                            <div class="mr-2" v-html="link.img"></div>
+                                            <div class="flex items-center">
+                                                <p style="font-size: medium">{{link.title}}</p>
+                                            </div>
 
-                                    </button>
-                                </div>
-                                <div v-if="showItemsPanel" v-for="item in link.items">
-                                    <div>
-                                        <router-link :to="{name: item.route}" class="text-white text-sm">
-                                            <button class="cursor-pointer hover:bg-gray-600 w-full mt-1 pt-2 pb-2 pl-4 hover:bg-gray-600 flex items-center"
-                                                    :class="{
+                                        </button>
+                                    </div>
+                                    <div v-if="showItemsPanel" v-for="item in link.items">
+                                        <div>
+                                            <router-link :to="{name: item.route}" class="text-white text-sm">
+                                                <button class="cursor-pointer hover:bg-gray-600 w-full mt-1 pt-2 pb-2 pl-4 hover:bg-gray-600 flex items-center"
+                                                        :class="{
                                             'bg-gray-600 text-white': $route.name === link.route
                                             }">
-                                                <div class="mr-2" v-html="item.img"></div>
-                                                <p style="font-size: medium">{{item.title}}</p>
-                                            </button>
-                                        </router-link>
+                                                    <div class="mr-2" v-html="item.img"></div>
+                                                    <p style="font-size: medium">{{item.title}}</p>
+                                                </button>
+                                            </router-link>
+                                        </div>
                                     </div>
                                 </div>
+
                             </div>
 
                         </div>
@@ -233,16 +236,16 @@ const links = [
         route: 'comments.posts'
     },
     {
-        "title": "Ответы",
-        "img": '<i class="fa fa-external-link" aria-hidden="true"></i>',
-        "auth": true,
-        route: 'answers.posts'
-    },
-    {
         "title": "Оценки",
         "img": '<i class="fa fa-exchange rotate-90" aria-hidden="true"></i>',
         "auth": true,
         route: 'up.page'
+    },
+    {
+        "title": "Ответы",
+        "img": '<i class="fa fa-external-link" aria-hidden="true"></i>',
+        "auth": true,
+        route: 'answers.posts'
     },
     {
         "title": "Сохраненные",
@@ -262,6 +265,7 @@ const links = [
     {
         "title": "Админка",
         "img": '<i class="fa fa-rocket" aria-hidden="true"></i>',
+        "auth": true,
         'items': [
             {
                 "title": "Теги",
@@ -271,7 +275,6 @@ const links = [
             {
                 "title": "Для тестов",
                 "img": '<i class="fa fa-bug" aria-hidden="true"></i>',
-                "auth": true,
                 route: 'test.page'
             },
         ]

@@ -48,7 +48,9 @@ class Post extends Model
      */
     public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class)->where('parent_id', null)->orderBy('created_at', 'desc');
+        return $this->hasMany(Comment::class)
+            ->where('parent_id', null)
+            ->orderBy('created_at', 'desc');
     }
 
     /**
@@ -59,14 +61,6 @@ class Post extends Model
     public function views(): HasMany
     {
         return $this->hasMany(View::class, 'post_id');
-    }
-
-    /**
-     * @return int
-     */
-    public function totalViews(): int
-    {
-        return $this->hasMany(View::class)->count();
     }
 
     /**

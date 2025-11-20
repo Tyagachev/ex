@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\Comments;
 
-use App\Http\Resources\UserResource;
+use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,7 +26,7 @@ class CommentResource extends JsonResource
             'replies' => CommentResource::collection($this->replies),
             'votes' => count($this->votes) ? $this->votes : [0],
             'saves' => $this->saves,
-            'totalVotes' => $this->totalVotes(),
+            'totalVotes' => count($this->votes),
             'shareCount' => $this->share_count,
             'createdAtHuman' => $this->created_at->diffForHumans(),
             'updatedAtHuman' => $this->updated_at->diffForHumans(),

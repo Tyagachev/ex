@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources\Post;
 
-use App\Http\Resources\UserResource;
-use App\Models\Comment;
+use App\Http\Resources\Comments\CommentResource;
+use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -29,28 +29,23 @@ class PostResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $user = new UserResource($this->whenLoaded('user'));
-
-        $commentsCount = Comment::query()
-            ->where('post_id', '=', $this->id)
-            ->get()
-            ->count();
-
         return [
             'id' => $this->id,
+            'userId' => $this->user_id,
             'title' => $this->title,
             'content' => $this->content,
-            'viewCount' => $this->totalViews(),
-            'createdAtHuman' => $this->created_at->diffForHumans(),
-            'updatedAtHuman' => $this->updated_at->diffForHumans(),
-            'user' => $user->resolve(),
-            'commentsCount' => $commentsCount,
+            'viewCount' => count($this->views),
+            'user' => UserResource::make($this->user),
+            'comments' => CommentResource::collection($this->comments),
+            'commentsCount' => count($this->comments),
             'votes' => count($this->votes) ? $this->votes : [0],
             'saves' => $this->saves,
-            'totalVotes' => $this->totalVotes(),
+            'totalVotes' => count($this->votes),
             'blocks' => $this->blocks,
             'imgCount' => $this->imgCount($this->blocks),
-            'shareCount' => $this->share_count
+            'shareCount' => $this->share_count,
+            'createdAtHuman' => $this->created_at->diffForHumans(),
+            'updatedAtHuman' => $this->updated_at->diffForHumans(),
         ];
     }
 }

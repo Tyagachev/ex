@@ -6,9 +6,7 @@ use App\Events\Post\PostViewCount;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
-use App\Http\Resources\Comments\CommentResource;
 use App\Http\Resources\Post\PostResource;
-use App\Http\Resources\UserResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
@@ -92,13 +90,14 @@ class PostController extends Controller
         }
     }
 
+
     /**
      * Просмотр поста
      *
      * @param Post $post
-     * @return \Illuminate\Http\JsonResponse
+     * @return PostResource
      */
-    public function show(Post $post): JsonResponse
+    public function show(Post $post): PostResource
     {
         $user = null;
         $token = request()->bearerToken();
@@ -114,34 +113,13 @@ class PostController extends Controller
 
         $post = $post->load([
             'user',
+            'views',
             'comments' => function ($query) {
                 $query->whereNull('parent_id')
                     ->with(['user', 'replyUser', 'replies']);
             },
         ]);
-
-        $commentsCount = Comment::query()
-            ->where('post_id', '=', $post->id)
-            ->get()
-            ->count();
-
-        return response()->json([
-                'id' => $post->id,
-                'userId' => $post->user_id,
-                'title' => $post->title,
-                'content' => $post->content,
-                'viewCount' => $post->view,
-                'user' => UserResource::make($post->user),
-                'comments' => CommentResource::collection($post->comments),
-                'commentsCount' => $commentsCount,
-                'totalVotes' => $post->totalVotes(),
-                'votes' => $post->votes,
-                'saves' => $post->saves,
-                'blocks' => $post->blocks,
-                'shareCount' => $post->share_count,
-                'createdAtHuman' => $post->created_at_human,
-                'updatedAtHuman' => $post->updated_at_human,
-        ]);
+        return PostResource::make($post);
     }
 
     /**
