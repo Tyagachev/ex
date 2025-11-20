@@ -32,12 +32,12 @@ const routes = [
                     {
                         path: 'posts',
                         name: 'comments.posts',
-                        component: () => import('@/pages/Comments/Post/index.vue'),
+                        component: () => import('@/partials/TabbedPartials/CommentsNode/index.vue'),
                     },
                     {
                         path: 'replies',
                         name: 'comments.replies',
-                        component: () => import('@/pages/Comments/Reply/index.vue'),
+                        component: () => import('@/partials/TabbedPartials/CommentsNode/index.vue'),
                     }
                 ]
             },
@@ -71,12 +71,12 @@ const routes = [
                     {
                         path: 'up',
                         name: 'up.page',
-                        component: () => import('@/pages/Liked/Upvote/index.vue'),
+                        component: () => import('@/partials/TabbedPartials/PostsList/index.vue'),
                     },
                     {
                         path: 'down',
                         name: 'down.page',
-                        component: () => import('@/pages/Liked/Downvote/index.vue'),
+                        component: () => import('@/partials/TabbedPartials/PostsList/index.vue'),
                     }
                 ]
             },
@@ -88,12 +88,12 @@ const routes = [
                     {
                         path: '',
                         name: 'saves.posts',
-                        component: () => import('@/pages/Saved/Posts/index.vue'),
+                        component: () => import('@/partials/TabbedPartials/PostsList/index.vue'),
                     },
                     {
                         path: 'comments',
                         name: 'saves.comments',
-                        component: () => import('@/pages/Saved/Comments/index.vue'),
+                        component: () => import('@/partials/TabbedPartials/CommentsNode/index.vue'),
                     },
                 ]
             },
@@ -105,7 +105,7 @@ const routes = [
                     {
                         path: '',
                         name: 'views.posts',
-                        component: () => import('@/pages/Views/Posts/index.vue'),
+                        component: () => import('@/partials/TabbedPartials/PostsList/index.vue'),
                     },
                 ]
             },

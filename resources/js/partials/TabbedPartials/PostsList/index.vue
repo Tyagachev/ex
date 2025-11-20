@@ -5,24 +5,31 @@
 </template>
 
 <script setup>
-import {onMounted} from "vue";
+import {onMounted, watch} from "vue";
 import {useTabbedStore} from "@/stores/tabbed.js";
 
-import Posts from  '@/pages/Posts/index.vue'
+import Posts from '@/pages/Posts/index.vue'
 
 defineOptions({
     name: "index"
 })
 
 const tabbedStore = useTabbedStore();
-
-onMounted(() => {
+const updateData = () => {
     if (tabbedStore.tabbedData.length) {
         tabbedStore.resetLoadedStatusAndRefresh()
     } else {
         tabbedStore.getTabbedData();
     }
+}
+onMounted(() => {
+    updateData()
 })
+
+watch(() => tabbedStore.path, () => {
+    updateData();
+})
+
 
 
 </script>

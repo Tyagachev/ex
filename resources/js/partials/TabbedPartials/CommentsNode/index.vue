@@ -1,9 +1,9 @@
 <template>
     <div class="container">
         <CommentNote
-            v-for = "comment in comments"
-            :key = "comment.id"
-            :comment = "comment"
+            v-for="comment in comments"
+            :key="comment.id"
+            :comment="comment"
             :noCommentPage = tabbedStore.isTabbedPage
         />
         <div v-show="tabbedStore.hasMore" ref="loadTrigger" class="h-50"></div>
@@ -11,24 +11,31 @@
 </template>
 
 <script setup>
-
-import CommentNote from "@/components/Comment/CommentNote.vue";
-import {computed, onMounted} from "vue";
+import {computed, defineOptions, onMounted, watch} from "vue";
 import {useTabbedStore} from "@/stores/tabbed.js";
+import CommentNote from "@/components/Comment/CommentNote.vue";
 import {useInfiniteScroll} from "@/composables/useInfiniteScroll.js";
 
 defineOptions({
     name: "index"
 })
 
-const tabbedStore = useTabbedStore()
+const tabbedStore = useTabbedStore();
 const comments = computed(() => tabbedStore.tabbedData)
 
-onMounted(() => {
+const updateData = () => {
     if (tabbedStore.tabbedData.length) {
         tabbedStore.resetLoadedStatusAndRefresh()
+    } else {
+        tabbedStore.getTabbedData();
     }
-    tabbedStore.getTabbedData();
+}
+onMounted(() => {
+    updateData()
+})
+
+watch(() => tabbedStore.path, () => {
+    updateData();
 })
 
 const { loadTrigger } = useInfiniteScroll(tabbedStore.getTabbedData,
@@ -39,7 +46,6 @@ const { loadTrigger } = useInfiniteScroll(tabbedStore.getTabbedData,
         immediate: false
     }
 )
-
 
 </script>
 
