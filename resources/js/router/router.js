@@ -69,15 +69,35 @@ const routes = [
                 component: () => import('@/pages/Liked/index.vue'),
                 children: [
                     {
-                        path: 'up',
+                        path: 'posts/up',
                         name: 'up.page',
                         component: () => import('@/partials/TabbedPartials/PostsList/index.vue'),
                     },
                     {
-                        path: 'down',
+                        path: 'posts/down',
                         name: 'down.page',
                         component: () => import('@/partials/TabbedPartials/PostsList/index.vue'),
-                    }
+                    },
+                    {
+                        path: 'comments/up',
+                        name: 'comments.up.page',
+                        component: () => import('@/partials/TabbedPartials/CommentsNode/index.vue'),
+                    },
+                    {
+                        path: 'comments/down',
+                        name: 'comments.down.page',
+                        component: () => import('@/partials/TabbedPartials/CommentsNode/index.vue'),
+                    },
+                    /*{
+                        path: 'comments/up',
+                        name: 'comments.up.page',
+                        component: () => import('@/partials/TabbedPartials/CommentsNode/index.vue'),
+                    },
+                    {
+                        path: 'comments/down',
+                        name: 'comments.down.page',
+                        component: () => import('@/partials/TabbedPartials/CommentsNode/index.vue'),
+                    }*/
                 ]
             },
             {

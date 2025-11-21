@@ -45,7 +45,7 @@
                     isSidebarOpen ? 'translate-x-0 w-52' : '-translate-x-full lg:translate-x-0 lg:w-50']"
                     style="min-width: 0;">
                     <div class="w-full">
-                        <div v-for="link in links">
+                        <div v-for="(link, i) in links" :key="i">
                             <div v-if="!link.items">
                                 <div v-if="link.auth && user.id">
                                     <router-link :to="{name: link.route}" class="text-white text-sm">
@@ -71,24 +71,32 @@
                                     </router-link>
                                 </div>
                             </div>
-                            <div v-else-if="link.items" class="border-b-2 border-gray-500">
+                            <div v-else-if="link.items" class="border-b-1 border-gray-500">
                                 <div v-if="link.auth && user.id">
                                     <div class="text-white text-sm">
-                                        <button @click.prevent="showItems" class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center">
+                                        <button @click.prevent="togglePanel(i)" class="cursor-pointer hover:bg-gray-600 w-full p-2 flex items-center">
                                             <div class="mr-2" v-html="link.img"></div>
                                             <div class="flex items-center">
                                                 <p style="font-size: medium">{{link.title}}</p>
                                             </div>
-
+                                            <svg
+                                                class="ml-2 w-4 h-4 transition-transform"
+                                                :class="{'rotate-180': showItemsPanels[i]}"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                            </svg>
                                         </button>
                                     </div>
-                                    <div v-if="showItemsPanel" v-for="item in link.items">
+                                    <div v-if="showItemsPanels[i]" v-for="(item, index) in link.items" :key="index">
                                         <div>
                                             <router-link :to="{name: item.route}" class="text-white text-sm">
                                                 <button class="cursor-pointer hover:bg-gray-600 w-full mt-1 pt-2 pb-2 pl-4 hover:bg-gray-600 flex items-center"
                                                         :class="{
-                                            'bg-gray-600 text-white': $route.name === link.route
+                                            'bg-gray-600 text-white': $route.name === item.route
                                             }">
+
                                                     <div class="mr-2" v-html="item.img"></div>
                                                     <p style="font-size: medium">{{item.title}}</p>
                                                 </button>
@@ -139,15 +147,15 @@ const scroll = useScrollStore();
 const userStore = useUserStore();
 const scrollContainer = ref(null);
 const isSidebarOpen = ref(false);
-const showItemsPanel = ref(false);
+const showItemsPanels = ref([]);
 const user = computed(() => userStore.user)
 let handleScroll;
 const toggleSidebar = () => {
     isSidebarOpen.value = !isSidebarOpen.value;
 }
 
-const showItems = () => {
-    showItemsPanel.value = !showItemsPanel.value
+const togglePanel = (index) => {
+    showItemsPanels.value[index] = !showItemsPanels.value[index]
 }
 
 onMounted(() => {
@@ -239,7 +247,16 @@ const links = [
         "title": "Оценки",
         "img": '<i class="fa fa-exchange rotate-90" aria-hidden="true"></i>',
         "auth": true,
-        route: 'up.page'
+        "items": [
+            {
+                "title": "Посты",
+                route: 'up.page'
+            },
+            {
+                "title": "Комментарии",
+                route: 'comments.up.page'
+            },
+        ]
     },
     {
         "title": "Ответы",
@@ -266,7 +283,7 @@ const links = [
         "title": "Админка",
         "img": '<i class="fa fa-rocket" aria-hidden="true"></i>',
         "auth": true,
-        'items': [
+        "items": [
             {
                 "title": "Теги",
                 "img": '<i class="fa fa-tags" aria-hidden="true"></i>',
