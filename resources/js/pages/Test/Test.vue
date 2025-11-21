@@ -1,36 +1,27 @@
 <template>
     <div>
-        <button class="bg-blue-300 p-2" @click="test">Кликай</button>
+        <div v-if="loading">Загрузка...</div>
+        <Post v-else-if="post" :post="post" />
     </div>
 </template>
 
 <script setup>
-import CommentNote from "@/components/Comment/CommentNote.vue";
-import {onMounted, ref} from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
-import {useRoute} from "vue-router";
-defineOptions({
-        name: "Test"
-})
-const route = useRoute();
-onMounted(async () => {
-    await test()
-})
+import { useRoute } from "vue-router";
+import Post from '@/pages/Posts/show.vue'
 
-let t = ref({})
+const route = useRoute();
+const post = ref(null); // <-- изменили на null
+const loading = ref(true);
+
+onMounted(async () => {
+    await test();
+    loading.value = false;
+});
 
 const test = async () => {
-    console.log(route);
-    const {data} = await axios.get(`api/comments/posts`);
-    console.log(data);
-    /*const res = await axios.get(`/api/comments/${1}`);
-    console.log(res.data);
-    t.value = res.data;
-    console.log(t.value);*/
+    const { data } = await axios.get(`api/comments/1`);
+    post.value = data.post;
 }
 </script>
-
-
-<style scoped>
-
-</style>

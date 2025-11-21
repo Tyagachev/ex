@@ -117,6 +117,10 @@ export const usePostsStore = defineStore('posts', {
 
             },
 
+            setPost(post) {
+              this.postShow = post
+            },
+
             /**
              * Отправка в БД
              * Обновление поста

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\Comment;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Comment\StoreCommentRequest;
+use App\Http\Resources\Comments\CommentPostResource;
 use App\Http\Resources\Comments\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
@@ -47,7 +48,10 @@ class CommentController extends Controller
 
     public function show(Comment $comment)
     {
-        return CommentResource::make($comment);
+        $c = Comment::query()->find($comment);
+        //$post = Post::query()->first($comment->post_id);
+
+        return CommentPostResource::make($comment);
     }
 
     /**

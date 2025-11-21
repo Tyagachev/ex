@@ -60,7 +60,7 @@ class Comment extends Model
      */
     public function post()
     {
-        return $this->belongsTo(Post::class, 'post_id');
+        return $this->belongsTo(Post::class, 'post_id')->with('user');
     }
 
 }

@@ -40,8 +40,8 @@
                                     >
                                         {{ post.user?.name[0] }}
                                     </div>
-                                    <span class="author">
-                                    <router-link :to="({name: 'posts.show', params: {id: post.user?.id}})" class="hover:underline cursor-pointer">
+                                    <span  class="author">
+                                    <router-link  :to="({name: 'posts.show', params: {id: post.user?.id}})" class="hover:underline cursor-pointer">
                                         {{ post.user?.name }}
                                     </router-link>
                                 </span>
@@ -63,7 +63,7 @@
                                 </button>
                                 <div v-if="activeMenu === post.id" class="post-menu">
                                     <div v-if="post.user.id === user?.id">
-                                        <button class="menu-item">
+                                        <button v-if="post.id" class="menu-item">
                                             <router-link :to="({name: 'posts.edit', params: {id:post.id}})">
                                                 <span class="text-white text-sm">Редактировать</span>
                                             </router-link>
@@ -170,8 +170,18 @@ defineOptions({
     name: "Show"
 })
 
+const props = defineProps({
+    post: {
+        type: Object
+    }
+})
 onMounted( async () => {
-     await postStore.getPost(route.params.id)
+    if (props.post) {
+        postStore.loading = true
+        await postStore.getPost(props.post.postId)
+    } else {
+        await postStore.getPost(route.params.id)
+    }
 })
 
 const postStore = usePostsStore();
