@@ -26,7 +26,7 @@ class CommentPostResource extends JsonResource
             'replies' => CommentPostResource::collection($this->replies),
             'votes' => count($this->votes) ? $this->votes : [0],
             'saves' => $this->saves,
-            'totalVotes' => count($this->votes),
+            'totalVotes' => $this->totalVotes(),
             'shareCount' => $this->share_count,
             'createdAtHuman' => $this->created_at->diffForHumans(),
             'updatedAtHuman' => $this->updated_at->diffForHumans(),
