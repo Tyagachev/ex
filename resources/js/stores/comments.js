@@ -1,6 +1,8 @@
 import {defineStore} from "pinia";
 import axios from "axios";
 import router from "@/router/router.js";
+import { useRoute } from "vue-router";
+import {usePostsStore} from "@/stores/posts.js";
 
 export const useCommentsStore = defineStore('comment', {
     state: () => ({
@@ -11,7 +13,8 @@ export const useCommentsStore = defineStore('comment', {
         showReply: false,
         isCommentPage: false,
         commentText: '',
-        replyText: ''
+        replyText: '',
+        routeName: ''
     }),
 
     getters: {
@@ -19,6 +22,7 @@ export const useCommentsStore = defineStore('comment', {
     },
 
     actions: {
+
         /**
          * Получение комментариев
          * @param comments
@@ -41,23 +45,75 @@ export const useCommentsStore = defineStore('comment', {
         },
 
         /**
+         * Получение id созданного
+         * коммента
+         * @param newCommentId
+         */
+        getIdComment(newCommentId) {
+            const element = document.getElementById(newCommentId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'auto', block: 'center' });
+                //Вспышка нового комментария
+                this.fastHighlight(element);
+            }
+        },
+
+        /**
+         * Получаем часть комментариев для поста
+         * когда переходим на страницу комментария
+         *
+         * @param id
+         * @returns {Promise<void>}
+         */
+        async getPostComments(id) {
+            const route = useRoute()
+            const post = usePostsStore();
+            this.routeName = route.name;
+            const { data } = await axios.get(`/api/comments/${id}`);
+            post.setPost(data.post, [data])
+        },
+
+        /**
          * Отправка коммнета на пост
          * @param post
          * @returns {Promise<void>}
          */
         async submitComment(post) {
+
+            if (this.routeName === 'comments.show') {
+                await this.submitCommentFromCommentsPage(post)
+            } else {
+                await this.submitCommentFromPostsPage(post)
+            }
+        },
+
+        /**
+         * Отправка комментария к посту со страницы поста
+         * @param post
+         * @returns {Promise<void>}
+         */
+        async submitCommentFromPostsPage(post) {
             try {
                 const res = await axios.post('/api/comments', {
                     text: this.commentText,
                     postId: post.id
                 })
-
                 await this.refresh(post.id)
                 const newCommentId = res.data.commentId;
                 this.getIdComment(newCommentId);
             } finally {
                 this.commentText = '';
             }
+        },
+
+        async submitCommentFromCommentsPage(post) {
+            const res = await axios.post('/api/comments', {
+                text: this.commentText,
+                postId: post.id
+            })
+            //const { data } = await axios.get(`/api/comments/${res.data.commentId}`);
+            //const p = usePostsStore();
+            //p.setPost(data.post, [data])
         },
 
         /**
@@ -112,19 +168,6 @@ export const useCommentsStore = defineStore('comment', {
             this.commentsList = res.data.comments;
         },
 
-        /**
-         * Получение id созданного
-         * коммента
-         * @param newCommentId
-         */
-        getIdComment(newCommentId) {
-            const element = document.getElementById(newCommentId);
-            if (element) {
-                element.scrollIntoView({ behavior: 'auto', block: 'center' });
-                //Вспышка нового комментария
-                this.fastHighlight(element);
-            }
-        },
 
         /**
          * Вспышка комментария

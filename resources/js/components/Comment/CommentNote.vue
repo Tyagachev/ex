@@ -262,7 +262,7 @@
                             <div >
                                 <button v-if="user?.id !== props.comment.user?.id
                                 && user.auth
-                                && depth < 15
+                                && depth <= 15
                                 && !props.noCommentPage"
                                         class="footer-btn hover:text-slate-200"
                                         @click.prevent="toggleReply">
@@ -309,7 +309,7 @@
             </div>
             <!-- рекурсивный вывод дочерних комментариев -->
             <div class="pl-2">
-                <span v-if="depth >= 15 && props.comment.replies.length" class="mt-2 pl-9 cursor-pointer text-orange-300 text-sm hover:text-slate-200 flex items-center gap-1">
+                <span v-if="depth > 15 && props.comment.replies.length" class="mt-2 pl-9 cursor-pointer text-orange-300 text-sm hover:text-slate-200 flex items-center gap-1">
                     <router-link :to="{name: 'comments.show', params: {id: props.comment.id}}">Еще ответов ({{props.comment.replies.length}})</router-link>
                 </span>
                 <!-- Кнопка раскрытия ветки -->

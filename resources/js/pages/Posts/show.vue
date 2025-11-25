@@ -40,11 +40,14 @@
                                     >
                                         {{ post.user?.name[0] }}
                                     </div>
-                                    <span  class="author">
-                                    <router-link  :to="({name: 'posts.show', params: {id: post.user?.id}})" class="hover:underline cursor-pointer">
-                                        {{ post.user?.name }}
-                                    </router-link>
-                                </span>
+                                    <div v-if="post.user">
+                                        <span  class="author">
+                                           <router-link  :to="({name: 'posts.show', params: {id: post.user?.id}})" class="hover:underline cursor-pointer">
+                                           {{ post.user?.name }}
+                                           </router-link>
+                                        </span>
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
@@ -62,7 +65,7 @@
                                     </svg>
                                 </button>
                                 <div v-if="activeMenu === post.id" class="post-menu">
-                                    <div v-if="post.user.id === user?.id">
+                                    <div v-if="post.user?.id === user?.id">
                                         <button v-if="post.id" class="menu-item">
                                             <router-link :to="({name: 'posts.edit', params: {id:post.id}})">
                                                 <span class="text-white text-sm">Редактировать</span>
@@ -158,7 +161,7 @@
 <script setup>
 import {useRoute} from "vue-router";
 import {useRouter} from "vue-router";
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {usePostsStore} from "@/stores/posts.js";
 import {useUserStore} from "@/stores/users.js";
 import {useAvatarStore} from "@/stores/avatars.js";
@@ -170,19 +173,11 @@ defineOptions({
     name: "Show"
 })
 
-const props = defineProps({
+/*const props = defineProps({
     post: {
         type: Object
     }
-})
-onMounted( async () => {
-    if (props.post) {
-        postStore.loading = true
-        await postStore.getPost(props.post.postId)
-    } else {
-        await postStore.getPost(route.params.id)
-    }
-})
+})*/
 
 const postStore = usePostsStore();
 const commentStore = useCommentsStore();
@@ -191,8 +186,23 @@ const avatar = useAvatarStore();
 const router = useRouter();
 const route = useRoute();
 
+onMounted( async () => {
+    if (isCommentPage.value) {
+        console.log('isCommentPage');
+        console.log(route.params.id);
+        await commentStore.getPostComments(route.params.id)
+    } else if (isPostPage.value) {
+        console.log('isPostPage');
+        await postStore.getPost(route.params.id)
+    }
+})
+
 const user = computed(() => userStore.user);
 const post = computed(() => postStore.post);
+const isCommentPage = computed(() => route.name === 'comments.show');
+const isPostPage = computed(() => route.name === 'posts.show');
+
+
 const activeMenu = ref(null);
 
 const componentType = 'post'

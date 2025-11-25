@@ -1,35 +1,28 @@
 <template>
     <div class="container">
         <div>
-            <button
-                @click="goBack">
+            <div>
+                <button
+                    @click="goBack">
 
-                <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                <span>Назад к основной ветке</span>
-            </button>
+                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                    <span class="text-red-500">Назад к основной ветке</span>
+                </button>
+            </div>
+            <Post />
+
         </div>
-        <CommentNote
-            v-if="commentStore.commentObject.user"
-            :comment="commentStore.commentObject"
-        />
     </div>
 </template>
 
 <script setup>
-import {onMounted} from "vue";
-import { useRoute } from "vue-router";
-import {useCommentsStore} from "@/stores/comments.js";
-import CommentNote from "@/components/Comment/CommentNote.vue";
-import router from "@/router/router.js";
 
+import { useRoute } from "vue-router";
+import router from "@/router/router.js";
+import Post from "@/pages/Posts/show.vue";
 defineOptions({
     name: "show"
 })
-
-onMounted( async () => {
-    await commentStore.getComment(route.params.id)
-})
-const commentStore = useCommentsStore();
 
 const route = useRoute();
 

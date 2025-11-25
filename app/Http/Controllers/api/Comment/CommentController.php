@@ -48,10 +48,11 @@ class CommentController extends Controller
 
     public function show(Comment $comment)
     {
-        $c = Comment::query()->find($comment);
+        $c = Comment::query()->find($comment->id);
         //$post = Post::query()->first($comment->post_id);
 
-        return CommentPostResource::make($comment);
+        return CommentPostResource::make($c);
+        //return $c;
     }
 
     /**

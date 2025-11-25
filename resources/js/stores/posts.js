@@ -117,8 +117,10 @@ export const usePostsStore = defineStore('posts', {
 
             },
 
-            setPost(post) {
+            setPost(post, comments) {
               this.postShow = post
+                const commentStore = useCommentsStore();
+                commentStore.getComments(comments);
             },
 
             /**
