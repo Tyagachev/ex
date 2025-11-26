@@ -190,7 +190,7 @@ onMounted( async () => {
     if (isCommentPage.value) {
         console.log('isCommentPage');
         console.log(route.params.id);
-        await commentStore.getPostComments(route.params.id)
+        await commentStore.getPostComments(route)
     } else if (isPostPage.value) {
         console.log('isPostPage');
         await postStore.getPost(route.params.id)

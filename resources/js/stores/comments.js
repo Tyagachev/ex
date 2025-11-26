@@ -14,7 +14,9 @@ export const useCommentsStore = defineStore('comment', {
         isCommentPage: false,
         commentText: '',
         replyText: '',
-        routeName: ''
+        route: {},
+        routeName: null,
+        routeParamsId: null
     }),
 
     getters: {
@@ -62,14 +64,15 @@ export const useCommentsStore = defineStore('comment', {
          * Получаем часть комментариев для поста
          * когда переходим на страницу комментария
          *
-         * @param id
+         * @param route
          * @returns {Promise<void>}
          */
-        async getPostComments(id) {
-            const route = useRoute()
+        async getPostComments(route) {
             const post = usePostsStore();
-            this.routeName = route.name;
-            const { data } = await axios.get(`/api/comments/${id}`);
+            this.route = route;
+            console.log(this.route);
+            const { data } = await axios.get(`/api/comments/${this.route.params.id}`);
+            console.log(data);
             post.setPost(data.post, [data])
         },
 
@@ -79,20 +82,6 @@ export const useCommentsStore = defineStore('comment', {
          * @returns {Promise<void>}
          */
         async submitComment(post) {
-
-            if (this.routeName === 'comments.show') {
-                await this.submitCommentFromCommentsPage(post)
-            } else {
-                await this.submitCommentFromPostsPage(post)
-            }
-        },
-
-        /**
-         * Отправка комментария к посту со страницы поста
-         * @param post
-         * @returns {Promise<void>}
-         */
-        async submitCommentFromPostsPage(post) {
             try {
                 const res = await axios.post('/api/comments', {
                     text: this.commentText,
@@ -106,14 +95,19 @@ export const useCommentsStore = defineStore('comment', {
             }
         },
 
-        async submitCommentFromCommentsPage(post) {
-            const res = await axios.post('/api/comments', {
-                text: this.commentText,
-                postId: post.id
+        /**
+         * Отправка ответа на комментарий
+         * @param comment
+         * @returns {Promise<void>}
+         */
+        async submitReplyCommentFromCommentsPage(comment) {
+            console.log(comment);
+            await axios.post('/api/comments', {
+                text: this.replyText,
+                postId: comment.postId,
+                parentId: comment.id,
             })
-            //const { data } = await axios.get(`/api/comments/${res.data.commentId}`);
-            //const p = usePostsStore();
-            //p.setPost(data.post, [data])
+            await this.getPostComments(this.route)
         },
 
         /**
@@ -131,31 +125,35 @@ export const useCommentsStore = defineStore('comment', {
          */
         async sendReplyComment(comment) {
             if (!this.replyText.trim()) return;
-
-            try {
-                if (this.isCommentPage) {
-                    const res = await axios.post('/api/comments', {
-                        postId: comment.postId,
-                        parentId: comment.id,
-                        text: this.replyText,
-                        replyId: comment.user?.id || null,
-                    });
-                    await this.getComment(this.commentObject.id);
-                    this.getIdComment(res.data.commentId);
-                } else {
-                    const res = await axios.post('/api/comments', {
-                        postId: comment.postId,
-                        parentId: comment.id,
-                        text: this.replyText,
-                        replyId: comment.user?.id || null,
-                    });
-                    const id = res.data.post.id
-                    await this.refresh(id)
-                    this.getIdComment(res.data.commentId);
+            if (this.route.name === 'comments.show') {
+                await this.submitReplyCommentFromCommentsPage(comment)
+            } else {
+                try {
+                    if (this.isCommentPage) {
+                        const res = await axios.post('/api/comments', {
+                            postId: comment.postId,
+                            parentId: comment.id,
+                            text: this.replyText,
+                            replyId: comment.user?.id || null,
+                        });
+                        await this.getComment(this.commentObject.id);
+                        this.getIdComment(res.data.commentId);
+                    } else {
+                        const res = await axios.post('/api/comments', {
+                            postId: comment.postId,
+                            parentId: comment.id,
+                            text: this.replyText,
+                            replyId: comment.user?.id || null,
+                        });
+                        const id = res.data.post.id
+                        await this.refresh(id)
+                        this.getIdComment(res.data.commentId);
+                    }
+                } finally {
+                    this.replyText = '';
                 }
-            } finally {
-                this.replyText = '';
             }
+
         },
 
         /**
