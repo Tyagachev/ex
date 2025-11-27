@@ -13,8 +13,8 @@
             </button>
             <div class="vote-count">
                 <p
-                    :class="[post.totalVotes === 0 ? 'total_white' : post.totalVotes > 0 ? 'total_green' : 'total_red']">
-                    {{ count.formatCount(post.totalVotes) }}</p>
+                    :class="[item.totalVotes === 0 ? 'total_white' : item.totalVotes > 0 ? 'total_green' : 'total_red']">
+                    {{ count.formatCount(item.totalVotes) }}</p>
             </div>
         </div>
         <button @click.prevent="downVote(item)" class="vote-btn">
@@ -40,7 +40,7 @@
         </button>
         <div class="vote-count px-2">
             <p :class="[userVote === 0 ? 'total_white' : userVote > 0 ? 'total_green' : 'total_red']">
-                {{ count.formatCount(post.totalVotes) }}</p>
+                {{ count.formatCount(item.totalVotes) }}</p>
         </div>
         <button class="no_vote-btn">
             <span>
@@ -63,14 +63,14 @@
         </span>
 
         <div class="comments_count">
-            {{ count.formatCount(post.commentsCount) }}
+            {{ count.formatCount(item.commentsCount) }}
         </div>
     </button>
     <div class="footer-btn">
         <span class="footer-icon">
             <i class="fa fa-eye" aria-hidden="true"></i>
         </span>
-        {{ count.formatCount(post.viewCount) }}
+        {{ count.formatCount(item.viewCount) }}
     </div>
     <button class="footer-btn" @click="copyLink(item, bodyUrl, componentType)">
         <span class="footer-icon">
@@ -84,11 +84,11 @@
                 </g>
             </svg>
         </span>
-        {{ count.formatCount(post.shareCount) }}
+        {{ count.formatCount(item.shareCount) }}
         Поделиться
     </button>
     <div v-if="user">
-        <button @click="savePost(post, componentType)" class="footer-btn">
+        <button @click="savePost(item, componentType)" class="footer-btn">
         <span class="footer-icon">
             <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="16px" height="16px" version="1.1" viewBox="0 0 200 252.391"><g id="Objects">
                 <path :class="[!userSaves ? 'save str0' : 'save_red']" fill="transparent" d="M10 0l180 0c5.508,0 10,4.493 10,10l0 232.354c0,3.7 -1.851,6.876 -5.07,8.7 -3.219,1.824 -6.894,1.78 -10.069,-0.121l-79.88 -47.849c-3.251,-1.948 -7.042,-1.945 -10.29,0.007l-79.54 47.804c-3.173,1.907 -6.852,1.956 -10.075,0.133 -3.223,-1.823 -5.076,-5.001 -5.076,-8.704l0 -232.324c0,-5.507 4.492,-10 10,-10z"/>
@@ -150,8 +150,8 @@ const emits = defineEmits(['shownotificationmessage'])
  * @type {ComputedRef<unknown>}
  */
 const userVote = computed(() => {
-    if (!user || !post || !Array.isArray(post.votes)) return 0;
-    const voteObject = post.votes.find(vote => vote.user_id === user.id);
+    if (!user || !props.item || !Array.isArray(props.item.votes)) return 0;
+    const voteObject = props.item.votes.find(vote => vote.user_id === user.id);
     return voteObject ? voteObject.vote : 0;
 });
 
@@ -160,8 +160,8 @@ const userVote = computed(() => {
  * @type {ComputedRef<unknown>}
  */
 const userSaves = computed(() => {
-    if (!user || !post || !Array.isArray(post.saves)) return false;
-    const save = post.saves.find(save => save.user_id === user.id);
+    if (!user || !props.item || !Array.isArray(props.item.saves)) return false;
+    const save = props.item.saves.find(save => save.user_id === user.id);
     return !!save;
 })
 

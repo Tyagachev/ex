@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Comments;
 
+use App\Http\Resources\Post\PostMinimalResource;
+use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -19,10 +21,10 @@ class CommentPostResource extends JsonResource
             'id' => $this->id,
             'text' => $this->text,
             'postId' => $this->post_id,
-            'post' => $this->post,
+            'post' => PostMinimalResource::make($this->post),
             'parent' => $this->parent_id,
-            'user' => new UserResource($this->user),
-            'reply_user' => $this->replyUser ? new UserResource($this->replyUser) : null,
+            'user' => UserResource::make($this->user),
+            'reply_user' => $this->replyUser ? UserResource::make($this->replyUser) : null,
             'replies' => CommentPostResource::collection($this->replies),
             'votes' => count($this->votes) ? $this->votes : [0],
             'saves' => $this->saves,

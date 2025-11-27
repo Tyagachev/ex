@@ -112,8 +112,9 @@
                 <div class="post-divider"></div>
             <div class="post-comments">
                 <!--Textarea-->
-                <div v-if="user" class="comment-area">
-                    <div class="textarea-container">
+                <div v-if="commentStore.route.name !== 'comments.show'">
+                    <div v-if="user" class="comment-area">
+                        <div class="textarea-container">
                     <textarea
                         ref="textarea"
                         class="comment-textarea"
@@ -122,26 +123,36 @@
                         @input="autoResize"
                         rows="1"
                     ></textarea>
-                    </div>
-                    <div class="flex justify-between items-center mt-2">
-                        <div class="text-xs text-slate-400 ml-2" :class="{ 'text-red-500': commentStore.commentText.length > 3000 }">
-                            {{ commentStore.commentText.length }}/3000
                         </div>
-                        <div class="comment-actions">
-                            <button class="cancel-button text-sm" @click="clearText">Отмена</button>
-                            <button
-                                class="submit-button text-sm"
-                                @click.prevent="commentStore.submitComment(post)"
-                                :disabled="!commentStore.commentText || commentStore.commentText.length > 3000"
-                            >
-                                Отправить
-                            </button>
+                        <div class="flex justify-between items-center mt-2">
+                            <div class="text-xs text-slate-400 ml-2" :class="{ 'text-red-500': commentStore.commentText.length > 3000 }">
+                                {{ commentStore.commentText.length }}/3000
+                            </div>
+                            <div class="comment-actions">
+                                <button class="cancel-button text-sm" @click="clearText">Отмена</button>
+                                <button
+                                    class="submit-button text-sm"
+                                    @click.prevent="commentStore.submitComment(post)"
+                                    :disabled="!commentStore.commentText || commentStore.commentText.length > 3000"
+                                >
+                                    Отправить
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div v-else>
+                <div v-if="commentStore.route.name === 'comments.show'">
+                    <button class="cursor-pointer"
+                        @click="goBack">
+
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        <span class="text-white"><i class="fa fa-arrow-left" aria-hidden="true"></i> Назад к основной ветке</span>
+                    </button>
+                </div>
+                <div v-if="!user.id">
                     <router-link :to="{name: 'login.page'}"><p class="text-blue-400">Авторизируйтесь чтобы оставлять комментарии :)</p></router-link>
                 </div>
+
                 <div class="my-5">
                     <CommentNote
                         v-for="comment in commentStore.comments"
@@ -173,12 +184,6 @@ defineOptions({
     name: "Show"
 })
 
-/*const props = defineProps({
-    post: {
-        type: Object
-    }
-})*/
-
 const postStore = usePostsStore();
 const commentStore = useCommentsStore();
 const userStore = useUserStore();
@@ -188,11 +193,8 @@ const route = useRoute();
 
 onMounted( async () => {
     if (isCommentPage.value) {
-        console.log('isCommentPage');
-        console.log(route.params.id);
         await commentStore.getPostComments(route)
     } else if (isPostPage.value) {
-        console.log('isPostPage');
         await postStore.getPost(route.params.id)
     }
 })

@@ -21,7 +21,7 @@ class Post extends Model
 
     protected $table = 'posts';
 
-    protected $fillable = ['title', 'user_id', 'blocks', 'share_count'];
+    protected $fillable = ['title', 'user_id', 'blocks', 'share_count as share'];
     protected $casts = [
       'blocks' => 'array'
     ];
@@ -51,6 +51,11 @@ class Post extends Model
         return $this->hasMany(Comment::class)
             ->where('parent_id', null)
             ->orderBy('created_at', 'desc');
+    }
+
+    public function totalComments()
+    {
+        return $this->hasMany(Comment::class)->count();
     }
 
     /**

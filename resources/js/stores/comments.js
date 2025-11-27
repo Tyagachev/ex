@@ -51,7 +51,7 @@ export const useCommentsStore = defineStore('comment', {
          * коммента
          * @param newCommentId
          */
-        getIdComment(newCommentId) {
+        getIdCommentForFlash(newCommentId) {
             const element = document.getElementById(newCommentId);
             if (element) {
                 element.scrollIntoView({ behavior: 'auto', block: 'center' });
@@ -63,17 +63,20 @@ export const useCommentsStore = defineStore('comment', {
         /**
          * Получаем часть комментариев для поста
          * когда переходим на страницу комментария
-         *
          * @param route
          * @returns {Promise<void>}
          */
         async getPostComments(route) {
             const post = usePostsStore();
             this.route = route;
-            console.log(this.route);
             const { data } = await axios.get(`/api/comments/${this.route.params.id}`);
-            console.log(data);
             post.setPost(data.post, [data])
+            if (data.id) {
+                setTimeout(() => {
+                    this.getIdCommentForFlash(data.id);
+                },100)
+
+            }
         },
 
         /**
@@ -89,7 +92,7 @@ export const useCommentsStore = defineStore('comment', {
                 })
                 await this.refresh(post.id)
                 const newCommentId = res.data.commentId;
-                this.getIdComment(newCommentId);
+                this.getIdCommentForFlash(newCommentId);
             } finally {
                 this.commentText = '';
             }
@@ -101,13 +104,24 @@ export const useCommentsStore = defineStore('comment', {
          * @returns {Promise<void>}
          */
         async submitReplyCommentFromCommentsPage(comment) {
-            console.log(comment);
-            await axios.post('/api/comments', {
-                text: this.replyText,
-                postId: comment.postId,
-                parentId: comment.id,
-            })
-            await this.getPostComments(this.route)
+            const post = usePostsStore();
+            try {
+                const res = await axios.post('/api/comments', {
+                    text: this.replyText,
+                    postId: comment.postId,
+                    parentId: comment.id,
+                })
+                if (res.data) {
+                    const { data } = await axios.get(`/api/comments/${this.route.params.id}`);
+                    post.setPost(data.post, [data])
+                    setTimeout(() => {
+                        this.getIdCommentForFlash(res.data.commentId);
+                    }, 100)
+
+                }
+            } finally {
+                this.replyText = '';
+            }
         },
 
         /**
@@ -137,7 +151,7 @@ export const useCommentsStore = defineStore('comment', {
                             replyId: comment.user?.id || null,
                         });
                         await this.getComment(this.commentObject.id);
-                        this.getIdComment(res.data.commentId);
+                        this.getIdCommentForFlash(res.data.commentId);
                     } else {
                         const res = await axios.post('/api/comments', {
                             postId: comment.postId,
@@ -147,13 +161,65 @@ export const useCommentsStore = defineStore('comment', {
                         });
                         const id = res.data.post.id
                         await this.refresh(id)
-                        this.getIdComment(res.data.commentId);
+                        this.getIdCommentForFlash(res.data.commentId);
                     }
                 } finally {
                     this.replyText = '';
                 }
             }
 
+        },
+
+        /**
+         * Обновление комментария
+         * @param comment
+         * @param text
+         * @returns {Promise<*>}
+         */
+        async updateComment(comment, text) {
+            const post = usePostsStore();
+            const res = await axios.patch(`/api/comments/${comment.id}`, {
+                text: text
+            })
+            if (this.route.name === 'comments.show') {
+                const { data } = await axios.get(`/api/comments/${this.route.params.id}`);
+                post.setPost(data.post, [data])
+            } else {
+                if (this.isCommentPage) {
+                    await this.getComment(this.commentObject.id);
+                    return res.data.status;
+                } else {
+                    await this.refresh(comment.postId);
+                }
+            }
+        },
+
+        /**
+         * Удалить коммент
+         * @param comment
+         * @returns {Promise<void>}
+         */
+        async deleteComment(comment) {
+            const post = usePostsStore();
+            await axios.delete(`/api/comments/${comment.id}`);
+
+            if (this.route.name === 'comments.show') {
+                const { data } = await axios.get(`/api/comments/${this.route.params.id}`);
+                post.setPost(data.post, [data])
+            } else {
+                if (comment.id === this.commentObject.id && this.isCommentPage) {
+                    await this.refresh(comment.postId);
+                    router.back()
+                } else if (comment.id !== this.commentObject.id && this.isCommentPage) {
+                    await this.getComment(this.commentObject.id);
+                } else {
+                    const index = this.commentsList.findIndex(c => c.id === comment.id);
+                    if (index !== -1) {
+                        this.commentsList.splice(index, 1);
+                    }
+                    await this.refresh(comment.postId);
+                }
+            }
         },
 
         /**
@@ -174,48 +240,6 @@ export const useCommentsStore = defineStore('comment', {
         fastHighlight(element) {
             element.classList.add('fast-highlight');
             setTimeout(() => element.classList.remove('fast-highlight'), 800);
-        },
-
-        /**
-         * Обновление комментария
-         * @param comment
-         * @param text
-         * @returns {Promise<*>}
-         */
-        async updateComment(comment, text) {
-            const res = await axios.patch(`/api/comments/${comment.id}`, {
-                text: text
-            })
-            if (res.data.status === 200) {
-                if (this.isCommentPage) {
-                    await this.getComment(this.commentObject.id);
-                    return res.data.status;
-                } else {
-                    await this.refresh(comment.postId);
-                }
-            }
-        },
-
-        /**
-         * Удалить коммент
-         * @param comment
-         * @returns {Promise<void>}
-         */
-        async deleteComment(comment) {
-            await axios.delete(`/api/comments/${comment.id}`);
-
-            if (comment.id === this.commentObject.id && this.isCommentPage) {
-                await this.refresh(comment.postId);
-                router.back()
-            } else if (comment.id !== this.commentObject.id && this.isCommentPage) {
-                await this.getComment(this.commentObject.id);
-            } else {
-                const index = this.commentsList.findIndex(c => c.id === comment.id);
-                if (index !== -1) {
-                    this.commentsList.splice(index, 1);
-                }
-                await this.refresh(comment.postId);
-            }
         },
     }
 });
