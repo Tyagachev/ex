@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\Community;
 
 use App\Http\Controllers\Controller;
+use App\Services\Community\CommunityService;
 use Illuminate\Http\Request;
 
 class CommunityController extends Controller
@@ -26,7 +27,7 @@ class CommunityController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, CommunityService $service)
     {
         //
     }
@@ -50,7 +51,7 @@ class CommunityController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, CommunityService $service)
     {
         //
     }
@@ -58,7 +59,7 @@ class CommunityController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, CommunityService $service)
     {
         //
     }

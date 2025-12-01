@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\Theme;
 
 use App\Http\Controllers\Controller;
+use App\Services\Theme\ThemeService;
 use Illuminate\Http\Request;
 
 class ThemeController extends Controller
@@ -26,7 +27,7 @@ class ThemeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, ThemeService $service)
     {
         //
     }
@@ -50,7 +51,7 @@ class ThemeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, ThemeService $service)
     {
         //
     }
@@ -58,7 +59,7 @@ class ThemeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, ThemeService $service)
     {
         //
     }
