@@ -21,7 +21,6 @@
                     <th class="border-b border-gray-200 p-4 pt-0 pb-3 pl-8 text-left font-medium text-gray-400 dark:border-gray-600 dark:text-gray-200">#</th>
                     <th class="border-b border-gray-200 p-4 pt-0 pb-3 pl-8 text-left font-medium text-gray-400 dark:border-gray-600 dark:text-gray-200">Название</th>
                     <th class="border-b border-gray-200 p-4 pt-0 pb-3 pl-8 text-left font-medium text-gray-400 dark:border-gray-600 dark:text-gray-200">Создан</th>
-                    <th class="border-b border-gray-200 p-4 pt-0 pb-3 pl-8 text-left font-medium text-gray-400 dark:border-gray-600 dark:text-gray-200">Редактировать</th>
                     <th class="border-b border-gray-200 p-4 pt-0 pb-3 pl-8 text-left font-medium text-gray-400 dark:border-gray-600 dark:text-gray-200">Удалить</th>
                 </tr>
                 </thead>
@@ -30,7 +29,6 @@
                     <td class="border-b border-gray-100 p-4 pl-8 text-gray-500 dark:border-gray-700 dark:text-gray-400">{{ topic.id }}</td>
                     <td class="border-b border-gray-100 p-4 pl-8 text-gray-500 dark:border-gray-700 dark:text-gray-400">{{ topic.title }}</td>
                     <td class="border-b border-gray-100 p-4 pl-8 text-gray-500 dark:border-gray-700 dark:text-gray-400">{{ topic.createdAtHuman }}</td>
-                    <td class="border-b border-gray-100 p-4 pl-8 dark:border-gray-700"><p class="text-blue-500 hover:text-blue-400 cursor-pointer" @click="edit(topic)">Редактировать</p></td>
                     <td class="border-b border-gray-100 p-4 pl-8 text-gray-500 dark:border-gray-700 dark:text-gray-400"><p class="text-red-500 hover:text-red-200 cursor-pointer" @click="destroy(topic)">Удалить</p></td>
                 </tr>
                 </tbody>

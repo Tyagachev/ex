@@ -292,12 +292,12 @@ const links = [
         "items": [
             {
                 "title": "Топики",
-                "img": '<i class="fa fa-bug" aria-hidden="true"></i>',
+                "img": '<i class="fa fa-book" aria-hidden="true"></i>',
                 route: 'topics.page'
             },
             {
                 "title": "Темы",
-                "img": '<i class="fa fa-bug" aria-hidden="true"></i>',
+                "img": '<i class="fa fa-pencil-square" aria-hidden="true"></i>',
                 route: 'themes.page'
             },
             {
@@ -307,7 +307,7 @@ const links = [
             },
             {
                 "title": "Для тестов",
-                "img": '<i class="fa fa-bug" aria-hidden="true"></i>',
+                "img": '<i class="fa fa-flask" aria-hidden="true"></i>',
                 route: 'test.page'
             },
         ]
