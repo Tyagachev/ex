@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Comments;
+namespace App\Http\Resources\Comment;
 
 use App\Http\Resources\Post\PostMinimalResource;
 use App\Http\Resources\Post\PostResource;

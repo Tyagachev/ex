@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Comments;
+namespace App\Http\Resources\Comment;
 
 use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;

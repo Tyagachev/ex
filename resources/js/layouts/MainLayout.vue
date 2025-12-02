@@ -232,6 +232,12 @@ const links = [
         route: 'posts.page'
     },
     {
+        "title": "Сообщества",
+        "img": '<i class="fa fa-users" aria-hidden="true"></i>',
+        "auth": true,
+        route: 'communities.page'
+    },
+    {
         "title": "Мои посты",
         "img": '<i class="fa fa-list-alt" aria-hidden="true"></i>',
         "auth": true,
@@ -284,6 +290,16 @@ const links = [
         "img": '<i class="fa fa-rocket" aria-hidden="true"></i>',
         "auth": true,
         "items": [
+            {
+                "title": "Топики",
+                "img": '<i class="fa fa-bug" aria-hidden="true"></i>',
+                route: 'topics.page'
+            },
+            {
+                "title": "Темы",
+                "img": '<i class="fa fa-bug" aria-hidden="true"></i>',
+                route: 'themes.page'
+            },
             {
                 "title": "Теги",
                 "img": '<i class="fa fa-tags" aria-hidden="true"></i>',

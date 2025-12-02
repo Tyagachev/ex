@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api\Answer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Comments\CommentResource;
+use App\Http\Resources\Comment\CommentResource;
 use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;

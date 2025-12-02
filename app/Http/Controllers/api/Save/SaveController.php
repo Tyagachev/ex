@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\api\Save;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Comments\CommentResource;
+use App\Http\Resources\Comment\CommentResource;
 use App\Http\Resources\Post\PostResource;
 use App\Models\Comment;
 use App\Models\Post;

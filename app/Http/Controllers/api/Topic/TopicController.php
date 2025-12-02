@@ -3,64 +3,45 @@
 namespace App\Http\Controllers\api\Topic;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Topic\StoreTopicRequest;
+use App\Http\Resources\Topic\TopicResourse;
+use App\Models\Topic;
 use App\Services\Topic\TopicService;
-use Illuminate\Http\Request;
 
 class TopicController extends Controller
 {
+
     /**
-     * Display a listing of the resource.
+     * Получение списка топиков
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
-        //
+        $topics = Topic::all()->sortByDesc('created_at');
+        return TopicResourse::collection($topics);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Сохрание названия топика
+     *
+     * @param StoreTopicRequest $request
+     * @param TopicService $service
+     * @return mixed
      */
-    public function create()
+    public function store(StoreTopicRequest $request, TopicService $service)
     {
-        //
+        $data = $request->validated();
+        return $service->store($data);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Удаление топика
+     *
+     * @param Topic $topic
+     * @return bool|null
      */
-    public function store(Request $request, TopicService $service)
+    public function destroy(Topic $topic)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, TopicService $service)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id, TopicService $service)
-    {
-        //
+        return $topic->delete();
     }
 }

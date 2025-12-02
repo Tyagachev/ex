@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HumanDates;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Topic extends Model
 {
+    use HumanDates;
+
     protected $table = 'topics';
     protected $fillable = ['title'];
 

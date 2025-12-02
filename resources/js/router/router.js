@@ -13,6 +13,21 @@ const routes = [
                 component: () => import('@/pages/Posts/index.vue')
             },
             {
+                path: 'posts/create',
+                name: 'posts.create',
+                component: () => import('@/pages/Posts/create.vue')
+            },
+            {
+                path: 'posts/edit/:id',
+                name: 'posts.edit',
+                component: () => import('@/pages/Posts/edit.vue')
+            },
+            {
+                path: 'posts/:id',
+                name: 'posts.show',
+                component: () => import('@/pages/Posts/show.vue')
+            },
+            {
                 path: 'posts-me',
                 name: 'posts-me.page',
                 component: () => import('@/pages/User/index.vue'),
@@ -23,6 +38,11 @@ const routes = [
                         component: () => import('@/pages/User/Posts/index.vue'),
                     },
                 ]
+            },
+            {
+                path: 'comments/:id',
+                name: 'comments.show',
+                component: () => import('@/pages/Comments/show.vue')
             },
             {
                 path: 'comments',
@@ -42,9 +62,9 @@ const routes = [
                 ]
             },
             {
-                path: 'test',
-                name: 'test.page',
-                component: () => import('@/pages/Test/Test.vue')
+                path: 'communities',
+                name: 'communities.page',
+                component: () => import('@/pages/Communities/index.vue'),
             },
             {
                 path: 'answers',
@@ -88,16 +108,6 @@ const routes = [
                         name: 'comments.down.page',
                         component: () => import('@/partials/TabbedPartials/CommentsNode/index.vue'),
                     },
-                    /*{
-                        path: 'comments/up',
-                        name: 'comments.up.page',
-                        component: () => import('@/partials/TabbedPartials/CommentsNode/index.vue'),
-                    },
-                    {
-                        path: 'comments/down',
-                        name: 'comments.down.page',
-                        component: () => import('@/partials/TabbedPartials/CommentsNode/index.vue'),
-                    }*/
                 ]
             },
             {
@@ -118,6 +128,27 @@ const routes = [
                 ]
             },
             {
+                path: 'admin',
+                name: 'admin.page',
+                children: [
+                    {
+                        path: 'themes',
+                        name: 'themes.page',
+                        component: () => import('@/pages/Admin/Themes/index.vue')
+                    },
+                    {
+                        path: 'topics',
+                        name: 'topics.page',
+                        component: () => import('@/pages/Admin/Topics/index.vue')
+                    },
+                    {
+                        path: 'test',
+                        name: 'test.page',
+                        component: () => import('@/pages/Admin/Test/Test.vue')
+                    },
+                ]
+            },
+            {
                 path: 'views-stories',
                 name: 'views.page',
                 component: () => import('@/pages/Views/index.vue'),
@@ -128,27 +159,6 @@ const routes = [
                         component: () => import('@/partials/TabbedPartials/PostsList/index.vue'),
                     },
                 ]
-            },
-            {
-                path: 'posts/create',
-                name: 'posts.create',
-                component: () => import('@/pages/Posts/create.vue')
-            },
-            {
-                path: 'posts/edit/:id',
-                name: 'posts.edit',
-                component: () => import('@/pages/Posts/edit.vue')
-            },
-            {
-                path: 'posts/:id',
-                name: 'posts.show',
-                component: () => import('@/pages/Posts/show.vue')
-            },
-
-            {
-                path: 'comments/:id',
-                name: 'comments.show',
-                component: () => import('@/pages/Comments/show.vue')
             },
         ]
     },

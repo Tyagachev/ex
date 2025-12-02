@@ -4,8 +4,8 @@ namespace App\Http\Controllers\api\Comment;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Comment\StoreCommentRequest;
-use App\Http\Resources\Comments\CommentPostResource;
-use App\Http\Resources\Comments\CommentResource;
+use App\Http\Resources\Comment\CommentPostResource;
+use App\Http\Resources\Comment\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Services\Comment\CommentService;
@@ -46,13 +46,16 @@ class CommentController extends Controller
         ]);
     }
 
+    /**
+     * Получения комментария по id
+     *
+     * @param Comment $comment
+     * @return CommentPostResource
+     */
     public function show(Comment $comment)
     {
         $c = Comment::query()->find($comment->id);
-        //$post = Post::query()->first($comment->post_id);
-
         return CommentPostResource::make($c);
-        //return $c;
     }
 
     /**
@@ -125,6 +128,7 @@ class CommentController extends Controller
 
     /**
      * Получение собственных ответов на комментарии
+     *
      * @return AnonymousResourceCollection
      */
     public function replies(): AnonymousResourceCollection
@@ -140,6 +144,7 @@ class CommentController extends Controller
 
     /**
      * Получение собственных ответов на посты
+     *
      * @return AnonymousResourceCollection
      */
     public function posts(): AnonymousResourceCollection
