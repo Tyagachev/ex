@@ -1,5 +1,7 @@
 <?php
 
+use App\Console\Commands\GoCommand;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,6 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(prepend: [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         ]);
+    })
+    ->withSchedule(function (Schedule $schedule) {
+        $schedule->command('app:go')->everyMinute();
+        $schedule->command('emails:process')->everyFiveMinutes();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

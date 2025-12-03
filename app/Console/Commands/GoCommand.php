@@ -28,7 +28,7 @@ class GoCommand extends Command
     public static function handle()
     {
         //dd(ParamFilterTypeEnum::map());
-        return Log::info('Scheduler is working!');
+       Log::info('Scheduler is working!');
 
     }
 }

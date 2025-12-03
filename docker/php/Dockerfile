@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install -y \
     libwebp-dev \
     libfreetype6-dev \
     libssl-dev \
-    ca-certificates
+    ca-certificates \
+    cron
 
 # Очистка кеша
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

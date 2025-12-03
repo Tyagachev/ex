@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Jobs\ProcessEmailsJob;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 
 class ProcessEmails extends Command
@@ -24,6 +25,7 @@ class ProcessEmails extends Command
 
     public function handle()
     {
-        ProcessEmailsJob::dispatch();
+        //ProcessEmailsJob::dispatch();
+        Log::info('Process');
     }
 }
