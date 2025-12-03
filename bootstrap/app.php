@@ -1,6 +1,5 @@
 <?php
 
-use App\Console\Commands\GoCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -19,8 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withSchedule(function (Schedule $schedule) {
-        $schedule->command('app:go')->everyMinute();
-        $schedule->command('emails:process')->everyFiveMinutes();
+        //$schedule->command('app:go')->everyMinute();
+        //$schedule->command('emails:process')->everyFiveMinutes();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

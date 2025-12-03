@@ -100,12 +100,14 @@ ul {
     list-style: auto;
 }
 
+
 li {
     list-style: auto;
 }
 
 .total_white {
     color: white;
+    margin: 0;
 }
 
 .total_green {
@@ -148,3 +150,14 @@ html, body, #app {
     background: #a8a8a8;
 }
 
+.editor-content p {
+    margin-top: 15px !important;
+}
+
+.editor-content p:first-child {
+    margin-top: 0 !important;
+}
+
+.editor-content p:last-child {
+    margin-bottom: 0 !important;
+}

@@ -70,6 +70,18 @@
     word-wrap: break-word;
 }
 
+.post-body p {
+    margin-top: 15px !important;
+}
+
+.post-body p:first-child {
+    margin-top: 0 !important;
+}
+
+.post-body p:last-child {
+    margin-bottom: 0 !important;
+}
+
 .post-divider {
     height: 2px;
     background-color: #2d2d2d;
