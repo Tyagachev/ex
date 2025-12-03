@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div ref="editor" className="border rounded p-2 min-h-[100px]"></div>
+        <div ref="editor" class="border rounded p-2 min-h-[100px]"></div>
     </div>
 </template>
 
