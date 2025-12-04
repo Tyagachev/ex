@@ -40,6 +40,7 @@
                     <tr>
                         <th class="py-3 px-6 text-left text-sm font-medium text-gray-300">#</th>
                         <th class="py-3 px-6 text-left text-sm font-medium text-gray-300">Название</th>
+                        <th class="py-3 px-6 text-left text-sm font-medium text-gray-300">Темы</th>
                         <th class="py-3 px-6 text-left text-sm font-medium text-gray-300">Создан</th>
                         <th class="py-3 px-6 text-left text-sm font-medium text-gray-300">Действия</th>
                     </tr>
@@ -52,6 +53,11 @@
                     >
                         <td class="py-4 px-6 text-gray-300">{{ topic.id }}</td>
                         <td class="py-4 px-6 text-white font-medium">{{ topic.title }}</td>
+                        <td class="py-4 px-6 text-white font-medium">
+                            <ul v-for="theme in topic.themes">
+                                <ol>{{theme.name}}</ol>
+                            </ul>
+                        </td>
                         <td class="py-4 px-6 text-gray-300">{{ topic.createdAtHuman }}</td>
                         <td class="py-4 px-6">
                             <button

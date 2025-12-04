@@ -7,6 +7,8 @@ use App\Http\Requests\Topic\StoreTopicRequest;
 use App\Http\Resources\Topic\TopicResourse;
 use App\Models\Topic;
 use App\Services\Topic\TopicService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TopicController extends Controller
 {
@@ -15,20 +17,21 @@ class TopicController extends Controller
      * Получение списка топиков
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
         $topics = Topic::all()->sortByDesc('created_at');
         return TopicResourse::collection($topics);
     }
+
 
     /**
      * Сохрание названия топика
      *
      * @param StoreTopicRequest $request
      * @param TopicService $service
-     * @return mixed
+     * @return JsonResponse|string
      */
-    public function store(StoreTopicRequest $request, TopicService $service)
+    public function store(StoreTopicRequest $request, TopicService $service): JsonResponse|string
     {
         $data = $request->validated();
         return $service->store($data);
@@ -38,10 +41,11 @@ class TopicController extends Controller
      * Удаление топика
      *
      * @param Topic $topic
-     * @return bool|null
+     * @param TopicService $service
+     * @return \Illuminate\Http\JsonResponse|string
      */
-    public function destroy(Topic $topic)
+    public function destroy(Topic $topic, TopicService $service): JsonResponse|string
     {
-        return $topic->delete();
+        return $service->delete($topic);
     }
 }

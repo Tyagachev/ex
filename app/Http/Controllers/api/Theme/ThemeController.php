@@ -3,17 +3,24 @@
 namespace App\Http\Controllers\api\Theme;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Theme\StoreThemeRequest;
+use App\Http\Resources\Theme\ThemeResource;
+use App\Models\Theme;
 use App\Services\Theme\ThemeService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ThemeController extends Controller
 {
+
     /**
-     * Display a listing of the resource.
+     * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
-        //
+        $themes = Theme::all()->sortByDesc('created_at');
+        return ThemeResource::collection($themes);
     }
 
     /**
@@ -24,12 +31,19 @@ class ThemeController extends Controller
         //
     }
 
+
     /**
-     * Store a newly created resource in storage.
+     * Сохранение темы и топика
+     *
+     * @param StoreThemeRequest $request
+     * @param ThemeService $service
+     * @return JsonResponse|string
      */
-    public function store(Request $request, ThemeService $service)
+    public function store(StoreThemeRequest $request, ThemeService $service): JsonResponse|string
     {
-        //
+        $data = $request->validated();
+        return $service->store($data);
+
     }
 
     /**
@@ -56,11 +70,16 @@ class ThemeController extends Controller
         //
     }
 
+
     /**
-     * Remove the specified resource from storage.
+     * Удаления темы и топика
+     *
+     * @param Theme $theme
+     * @param ThemeService $service
+     * @return \Illuminate\Http\JsonResponse|string
      */
-    public function destroy(string $id, ThemeService $service)
+    public function destroy(Theme $theme, ThemeService $service): JsonResponse|string
     {
-        //
+        return $service->delete($theme);
     }
 }

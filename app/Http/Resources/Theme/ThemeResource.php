@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Topic;
+namespace App\Http\Resources\Theme;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TopicResourse extends JsonResource
+class ThemeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,8 @@ class TopicResourse extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'themes' => $this->themes,
+            'name' => $this->name,
+            'topics' => $this->topics,
             'createdAtHuman' => $this->created_at->diffForHumans(),
             'updatedAtHuman' => $this->updated_at->diffForHumans(),
         ];
