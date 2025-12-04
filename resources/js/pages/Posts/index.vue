@@ -591,23 +591,6 @@ const closeMenuOnClickOutside = () => {
     background-color: #383737;
 }
 
-.post-menu-container {
-    position: relative;
-    margin-left: auto;
-}
-
-.post-menu {
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background: #2a2a2a;
-    border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-    width: auto;
-}
-
 .menu-item {
     display: flex;
     align-items: center;
@@ -627,12 +610,6 @@ const closeMenuOnClickOutside = () => {
 .menu-item i {
     margin-right: 8px;
     width: 16px;
-}
-
-.post-header {
-    position: relative;
-    display: flex;
-    align-items: center;
 }
 
 .content-wrapper {

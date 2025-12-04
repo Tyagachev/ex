@@ -18,10 +18,10 @@ export default {
             placeholder: "Введите текст...",
             modules: {
                 toolbar: [
-                    [{'color': []}, {'background': []}],
-                    ["bold", "italic", "underline"],
-                    ['blockquote'],
-                    [{list: "ordered"}, {list: "bullet"}],
+                    //[{'color': []}, {'background': []}],
+                    //["bold", "italic", "underline"],
+                    //['blockquote'],
+                    //[{list: "ordered"}, {list: "bullet"}],
                     ["link"],
                 ],
             },
