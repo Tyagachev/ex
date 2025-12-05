@@ -276,6 +276,7 @@ const user = computed(() => userStore.user)
 const posts = computed(() => {
     return props.isTabbedPage ? tabbedStore.tabbedData : postsStore.allPosts;
 });
+
 /**
  * Перепроверка высоты контента при обновлении компонента
  */

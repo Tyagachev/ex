@@ -17,7 +17,7 @@
                 <label class="block text-white mb-2 md:mb-0 md:inline-block md:mr-2" for="topic-select"></label>
                 <select
                     id="topic-select"
-                    class="w-full md:w-64 px-4 py-2 text-white bg-gray-800 rounded-lg border border-gray-600 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition duration-200"
+                    class="cursor-pointer w-full md:w-64 px-4 py-2 text-white bg-gray-800 rounded-lg border border-gray-600 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition duration-200"
                     v-model="selectedTopic"
                 >
                     <option value="" disabled>--Выберите тему --</option>

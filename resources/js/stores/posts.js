@@ -188,7 +188,7 @@ export const usePostsStore = defineStore('posts', {
                     if (index !== -1) {
                         this.posts.splice(index, 1);
                     }
-                    await window.location.reload();
+                    //await window.location.reload();
                     if (this.posts.length < 10 && this.hasMore && !this.loading) {
                         await this.getPosts();
                     }
